@@ -4868,3 +4868,469 @@ main button:not(.nav-btn) {
     height: 76px;
   }
 }
+
+
+/* v2.09 — QA-ready ecosystem system pass */
+.system-check-guide-panel {
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 28px;
+  padding: 16px;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(190, 242, 100, .18), transparent 30%),
+    radial-gradient(circle at 10% 98%, rgba(34, 211, 238, .18), transparent 34%),
+    linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
+  box-shadow: var(--ff-shadow-soft), inset 0 1px 0 rgba(255,255,255,.09);
+  display: grid;
+  gap: 14px;
+}
+
+.system-check-hero {
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 24px;
+  padding: 15px;
+  background:
+    radial-gradient(circle at 86% 0%, rgba(168,85,247,.20), transparent 36%),
+    rgba(0,0,0,.18);
+}
+
+.system-check-hero span {
+  color: rgba(255,255,255,.62);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+}
+
+.system-check-hero h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(22px, 7vw, 32px);
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.system-check-hero p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.system-check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.system-check-card {
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 22px;
+  padding: 13px;
+  background: rgba(0,0,0,.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.system-check-card::after {
+  content: '';
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  right: -36px;
+  top: -40px;
+  border-radius: 50%;
+  opacity: .26;
+  filter: blur(3px);
+}
+
+.system-check-card.violet::after { background: var(--ff-violet); }
+.system-check-card.cyan::after { background: var(--ff-cyan); }
+.system-check-card.magenta::after { background: var(--ff-magenta); }
+.system-check-card.lime::after { background: var(--ff-lime); }
+
+.system-check-card b {
+  display: block;
+  margin-bottom: 9px;
+  letter-spacing: -.02em;
+}
+
+.system-check-card p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.system-check-result-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.system-check-result-row div {
+  border: 1px solid rgba(255,255,255,.11);
+  background: rgba(255,255,255,.045);
+  border-radius: 18px;
+  padding: 11px;
+}
+
+.system-check-result-row span {
+  display: block;
+  color: rgba(255,255,255,.62);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+  margin-bottom: 5px;
+}
+
+.system-check-result-row b {
+  font-size: 12px;
+  line-height: 1.32;
+}
+
+.system-section-button:active,
+.system-subsection-button:active,
+.system-inner-tab:active,
+.nav-btn:active,
+main button:not(.nav-btn):active {
+  transform: scale(.985);
+}
+
+@media (max-width: 620px) {
+  .system-check-grid,
+  .system-check-result-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* v2.10 — Compact premium UI / mobile overflow fix */
+:root {
+  --ff-text-sm: 12px;
+  --ff-text-md: 14px;
+  --ff-text-lg: 18px;
+  --ff-space-tight: 8px;
+  --ff-space: 12px;
+  --ff-space-lg: 16px;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+.app-shell,
+.card,
+.system-detail-shell,
+.system-module-window,
+.telegram-device-test-panel,
+.telegram-staging-panel,
+.verification-checklist-panel {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.logo-subtitle,
+.card-description,
+.deployment-head p,
+.verification-head p,
+.system-detail-hero p,
+.tab-command-card p,
+.telegram-device-result p,
+.telegram-staging-item p,
+.verification-stage p,
+.system-check-card p {
+  overflow-wrap: anywhere;
+}
+
+.deployment-head.compact,
+.verification-head.compact,
+.system-check-hero {
+  padding: 12px;
+  gap: 4px;
+}
+
+.deployment-head.compact p,
+.verification-head.compact p,
+.system-check-hero p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.system-inner-tabs,
+.system-subsection-grid {
+  gap: 7px;
+}
+
+.system-inner-tab,
+.system-subsection-button {
+  min-height: 52px;
+  padding: 9px;
+  border-radius: 18px;
+}
+
+.system-inner-tab small,
+.system-subsection-button small,
+.system-section-button small {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.telegram-device-summary-grid,
+.telegram-device-diagnostics-grid,
+.telegram-staging-summary-grid,
+.readiness-grid,
+.system-check-result-row {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 430px) {
+  .telegram-device-summary-grid,
+  .telegram-staging-summary-grid,
+  .readiness-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.telegram-device-diagnostics-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.telegram-device-diagnostics-grid small {
+  min-width: 0;
+  font-size: 11px;
+  padding: 8px 9px;
+}
+
+.runtime-results-head,
+.compact-checklist-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.runtime-results-head > span,
+.compact-checklist-head > span {
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  border-radius: 999px;
+  padding: 5px 9px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.telegram-device-result,
+.telegram-staging-item,
+.verification-stage {
+  min-width: 0;
+  overflow: hidden;
+  padding: 10px;
+}
+
+.runtime-result-main,
+.compact-check-row,
+.verification-stage-main {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.compact-check-row,
+.verification-stage-main {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.runtime-result-main > span,
+.compact-check-row > span,
+.verification-stage-main > span,
+.telegram-device-result > span,
+.telegram-staging-item > span {
+  display: inline-grid;
+  place-items: center;
+  min-width: 42px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.075);
+  color: rgba(255,255,255,.74);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.runtime-result-main > strong,
+.compact-check-row > strong,
+.verification-stage-main > b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  letter-spacing: -.02em;
+}
+
+.runtime-result-main > small {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.runtime-result-details {
+  margin-top: 7px;
+}
+
+.runtime-result-details summary {
+  width: fit-content;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 999px;
+  padding: 5px 9px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+  list-style: none;
+}
+
+.runtime-result-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.runtime-result-details[open] summary {
+  color: #fff;
+  background: rgba(255,255,255,.08);
+}
+
+.runtime-result-details p,
+.runtime-result-details small {
+  display: block;
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.compact-checklist,
+.telegram-device-results,
+.telegram-staging-checklist,
+.verification-stage-list {
+  gap: 8px;
+}
+
+.telegram-device-actions {
+  grid-template-columns: 1fr;
+}
+
+.telegram-device-actions button,
+.verification-stage-controls button,
+.verification-handoff-actions button,
+.system-check-result-row div {
+  border-radius: 999px;
+}
+
+.verification-stage-controls {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.verification-stage-controls button {
+  min-height: 34px;
+  padding: 7px 6px;
+  font-size: 11px;
+}
+
+.verification-stage textarea {
+  min-height: 42px;
+  max-height: 90px;
+  font-size: 12px;
+}
+
+.system-check-grid {
+  gap: 10px;
+}
+
+.system-check-card {
+  padding: 12px;
+}
+
+.system-check-card p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+@media (max-width: 420px) {
+  .app-shell {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom));
+  }
+
+  .topbar {
+    border-radius: 24px;
+    padding: 10px 10px 12px;
+  }
+
+  .logo-title {
+    font-size: 24px;
+  }
+
+  .logo-subtitle {
+    font-size: 11px;
+    max-width: 220px;
+  }
+
+  .card,
+  .system-root-card,
+  .system-detail-shell,
+  .telegram-device-test-panel,
+  .telegram-staging-panel,
+  .verification-checklist-panel,
+  .system-check-guide-panel {
+    border-radius: 24px;
+    padding: 14px;
+  }
+
+  .system-section-button {
+    min-height: 78px;
+    border-radius: 22px;
+  }
+
+  .system-section-emoji {
+    font-size: 20px;
+  }
+
+  .system-detail-hero h2,
+  .system-check-hero h2 {
+    font-size: 18px;
+  }
+
+  .runtime-result-main {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .runtime-result-main > small {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .bottom-nav {
+    width: min(calc(100% - 20px), 500px);
+    gap: 4px;
+    padding: 7px;
+  }
+
+  .nav-btn {
+    font-size: 10px;
+    padding: 8px 2px;
+  }
+}

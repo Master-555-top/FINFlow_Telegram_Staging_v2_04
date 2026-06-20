@@ -7,6 +7,7 @@ import { DailyQuickInputPanel } from '@/components/day-core/DailyQuickInputPanel
 import { DevErrorLogPanel } from '@/components/dev/DevErrorLogPanel';
 import { LiveTimeWidget, TimeOfDayPill } from '@/components/live/LiveTimeWidget';
 import { TelegramSessionPill } from '@/components/telegram/TelegramSessionPill';
+import { SystemCheckGuidePanel } from '@/components/dashboard/SystemCheckGuidePanel';
 import { EcosystemReadinessBoard } from '@/components/project/EcosystemReadinessBoard';
 import { ImportReviewQueuePanel } from '@/components/import-review/ImportReviewQueuePanel';
 import { PrivateDeploymentPanel } from '@/components/deployment/PrivateDeploymentPanel';
@@ -21,7 +22,7 @@ import { dayCoreInputMock } from '@/lib/day-core/dayCoreInputModel';
 import { createDailyLiveStateOriginId, readDailyLiveStateSnapshot, subscribeDailyLiveState } from '@/lib/day-core/dailyLiveStatePersistence';
 
 type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'ai' | 'system';
-type SystemSectionId = 'telegram' | 'overview' | 'cloud' | 'backup' | 'deploy' | 'dev';
+type SystemSectionId = 'telegram' | 'overview' | 'cloud' | 'backup' | 'qa' | 'dev';
 type SystemSubsectionId =
   | 'telegram_device'
   | 'telegram_launch'
@@ -30,6 +31,7 @@ type SystemSubsectionId =
   | 'cloud_center'
   | 'cloud_wizard'
   | 'backup_local'
+  | 'qa_guide'
   | 'deploy_readiness'
   | 'deploy_acceptance'
   | 'dev_logs';
@@ -144,15 +146,16 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     ]
   },
   {
-    id: 'deploy',
-    emoji: '🚀',
-    title: 'Deploy / QA',
-    shortTitle: 'Deploy',
-    description: 'Private deploy checklist, acceptance runner и Vercel readiness.',
-    status: 'staging',
+    id: 'qa',
+    emoji: '✅',
+    title: 'Проверка / QA',
+    shortTitle: 'QA',
+    description: 'Что проверять после deploy: System UX, Telegram verify, safe API и mobile ergonomics.',
+    status: 'проверка',
     subsections: [
+      { id: 'qa_guide', label: 'Что проверить', caption: 'короткий маршрут' },
       { id: 'deploy_readiness', label: 'Readiness', caption: 'deploy status' },
-      { id: 'deploy_acceptance', label: 'QA', caption: 'acceptance runner' }
+      { id: 'deploy_acceptance', label: 'Runner', caption: 'acceptance tests' }
     ]
   },
   {
@@ -173,7 +176,7 @@ const DEFAULT_SYSTEM_SUBSECTIONS: Record<SystemSectionId, SystemSubsectionId> = 
   overview: 'overview_readiness',
   cloud: 'cloud_center',
   backup: 'backup_local',
-  deploy: 'deploy_readiness',
+  qa: 'qa_guide',
   dev: 'dev_logs'
 };
 
@@ -244,6 +247,8 @@ export function DashboardShell() {
         return <ManualCloudTestWizardPanel />;
       case 'backup_local':
         return <BrowserLocalStorageBackupPanel />;
+      case 'qa_guide':
+        return <SystemCheckGuidePanel />;
       case 'deploy_readiness':
         return <PrivateDeploymentPanel />;
       case 'deploy_acceptance':
@@ -261,7 +266,7 @@ export function DashboardShell() {
         <header className="topbar">
           <div className="logo">
             <div className="logo-title">FinFlow</div>
-            <div className="logo-subtitle">{dayCoreMock.version} • Day Core • live-state v2.00 • session v2.01 • staging/device v2.04.1 • ecosystem UI v2.08</div>
+            <div className="logo-subtitle">{dayCoreMock.version} • Day Core • live-state v2.00 • session v2.01 • staging/device v2.04.1 • ecosystem UI v2.10</div>
           </div>
           <div className="topbar-pills">
             <TelegramSessionPill />
@@ -305,15 +310,16 @@ export function DashboardShell() {
           <>
             {!activeSystemMeta ? (
               <section className="card system-root-card">
-                <div className="section-kicker">v2.08 • Ecosystem UI / command center</div>
+                <div className="section-kicker">v2.10 • Ecosystem UI / compact command center</div>
                 <h2 className="card-heading">Система</h2>
                 <p className="card-description">
-                  Центр управления экосистемой: сначала выбираешь область, затем конкретное окно. Без простынь, без хаоса, с единым мобильным стилем.
+                  Центр управления экосистемой: сначала выбираешь область, затем конкретное окно. QA теперь выделен отдельно, чтобы после каждого deploy было понятно, что проверять.
                 </p>
                 <div className="system-root-highlights">
                   <span>glass UI</span>
                   <span>mobile first</span>
                   <span>safe by design</span>
+                  <span>QA route</span>
                 </div>
 
                 <div className="system-section-grid system-section-grid--root" role="tablist" aria-label="Разделы System">

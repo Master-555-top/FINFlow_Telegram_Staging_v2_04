@@ -20,10 +20,10 @@ export function TelegramStagingDeployPanel() {
     <section className="telegram-staging-panel system-module-panel">
       <div className="deployment-head compact">
         <div>
-          <span>v2.07 • Telegram launch center</span>
-          <b>Deploy-safe + BotFather без простыни</b>
+          <span>v2.10 • Launch</span>
+          <b>Запуск Telegram</b>
         </div>
-        <p>{runbook.goal}</p>
+        <p>Коротко: что загрузить, какие env нужны и где поставить кнопку Mini App.</p>
       </div>
 
       <div className="system-inner-tabs" role="tablist" aria-label="Telegram launch center">
@@ -85,13 +85,21 @@ export function TelegramStagingDeployPanel() {
 
 function ChecklistBlock(props: { title: string; items: ReturnType<typeof buildTelegramStagingRunbook>['requiredEnvironment'] }) {
   return (
-    <div className="telegram-staging-checklist system-module-window">
-      <b>{props.title}</b>
+    <div className="telegram-staging-checklist system-module-window compact-checklist">
+      <div className="compact-checklist-head">
+        <b>{props.title}</b>
+        <span>{props.items.length} шаг.</span>
+      </div>
       {props.items.map(item => (
         <article className={`telegram-staging-item ${item.status}`} key={item.id}>
-          <span>{statusLabel(item.status)}</span>
-          <strong>{item.title}</strong>
-          <p>{item.detail}</p>
+          <div className="compact-check-row">
+            <span>{statusLabel(item.status)}</span>
+            <strong>{item.title}</strong>
+          </div>
+          <details className="runtime-result-details">
+            <summary>детали</summary>
+            <p>{item.detail}</p>
+          </details>
         </article>
       ))}
     </div>

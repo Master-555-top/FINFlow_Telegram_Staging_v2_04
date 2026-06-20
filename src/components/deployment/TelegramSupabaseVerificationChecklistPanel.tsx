@@ -96,9 +96,9 @@ export function TelegramSupabaseVerificationChecklistPanel() {
   return (
     <section className="verification-checklist-panel system-module-panel">
       <div className="verification-head compact">
-        <span>v2.07 • Verification center</span>
-        <b>Чеклист без бесконечного списка</b>
-        <p>Отметки, export и критический путь разделены на короткие окна. Реальные секреты не выводятся.</p>
+        <span>v2.10 • Verification</span>
+        <b>Проверка экосистемы</b>
+        <p>Короткие статусы, фильтры и handoff без секретов.</p>
       </div>
 
       <div className="system-inner-tabs" role="tablist" aria-label="Verification center">
@@ -213,25 +213,35 @@ function VerificationStageRow(props: {
 }) {
   return (
     <div className={`verification-stage ${props.status}`}>
-      <div>
+      <div className="verification-stage-main">
         <b>{props.stage.title}</b>
-        <span>{props.stage.area} • {props.status}</span>
+        <span>{props.stage.area} • {compactStageStatus(props.status)}</span>
       </div>
-      <p>{props.stage.description}</p>
-      <small>{props.stage.evidence}</small>
+      <details className="runtime-result-details">
+        <summary>детали</summary>
+        <p>{props.stage.description}</p>
+        <small>{props.stage.evidence}</small>
+      </details>
       <div className="verification-stage-controls">
-        <button type="button" onClick={() => props.onStatusChange('not_started')}>не начато</button>
+        <button type="button" onClick={() => props.onStatusChange('not_started')}>нет</button>
         <button type="button" onClick={() => props.onStatusChange('in_progress')}>в работе</button>
         <button type="button" onClick={() => props.onStatusChange('done')}>готово</button>
-        <button type="button" onClick={() => props.onStatusChange('blocked')}>блокер</button>
+        <button type="button" onClick={() => props.onStatusChange('blocked')}>блок</button>
       </div>
       <textarea
-        placeholder="заметка / ссылка / что проверить дальше"
+        placeholder="короткая заметка"
         value={props.note}
         onChange={event => props.onNoteChange(event.target.value)}
       />
     </div>
   );
+}
+
+function compactStageStatus(status: VerificationStageUserStatus) {
+  if (status === 'not_started') return 'нет';
+  if (status === 'in_progress') return 'работа';
+  if (status === 'done') return 'ok';
+  return 'блок';
 }
 
 function ReadinessCard(props: { title: string; value: number }) {

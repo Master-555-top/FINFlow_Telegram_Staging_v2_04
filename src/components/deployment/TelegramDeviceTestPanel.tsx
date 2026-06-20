@@ -65,11 +65,11 @@ export function TelegramDeviceTestPanel() {
 
     nextResults.push({
       id: 'device_bridge',
-      title: 'Telegram device bridge',
+      title: 'Telegram bridge',
       status: initData ? 'passed' : 'expected_safe_fail',
       detail: initData
-        ? 'Telegram WebApp bridge и initData обнаружены. Можно проверять server verify.'
-        : 'initData отсутствует. Это нормально для обычного браузера; реальный test нужен из Telegram.'
+        ? 'Telegram WebApp bridge и initData есть.'
+        : 'initData нет. Это нормально для обычного браузера; открой Mini App в Telegram.'
     });
     setResults([...nextResults]);
 
@@ -111,10 +111,10 @@ export function TelegramDeviceTestPanel() {
     <section className="telegram-device-test-panel system-module-panel">
       <div className="deployment-head compact">
         <div>
-          <span>v2.07 • Telegram test center</span>
-          <b>Проверка Mini App без длинной ленты</b>
+          <span>v2.10 • Telegram cockpit</span>
+          <b>Короткая проверка Mini App</b>
         </div>
-        <p>{runbook.goal}</p>
+        <p>Проверяем Telegram, server verify и безопасный cloud read без лишнего текста.</p>
       </div>
 
       <div className="system-inner-tabs" role="tablist" aria-label="Telegram test center">
@@ -160,7 +160,7 @@ export function TelegramDeviceTestPanel() {
               <small>expanded: <strong>{String(Boolean(diagnostics.isExpanded))}</strong></small>
               <small>user: <strong>{diagnostics.userDetected ? 'detected safely' : 'not exposed'}</strong></small>
             </div>
-            <p>Raw initData/hash и полный профиль не выводятся в UI. Панель показывает только безопасные признаки.</p>
+            <p>Секреты и raw initData скрыты. Показываем только безопасные признаки.</p>
           </div>
 
           <div className="telegram-device-actions">
@@ -172,18 +172,27 @@ export function TelegramDeviceTestPanel() {
 
           {results.length ? (
             <div className="telegram-device-results compact-list">
-              <b>Runtime результаты</b>
+              <div className="runtime-results-head">
+                <b>Результат</b>
+                <span>{results.filter(result => result.status === 'passed' || result.status === 'expected_safe_fail').length}/{results.length} ok</span>
+              </div>
               {results.map(result => (
                 <article className={`telegram-device-result ${result.status}`} key={result.id}>
-                  <span>{runtimeLabel(result.status)}</span>
-                  <strong>{result.title}{result.httpStatus ? ` • HTTP ${result.httpStatus}` : ''}</strong>
-                  <p>{result.detail}</p>
+                  <div className="runtime-result-main">
+                    <span>{runtimeLabel(result.status)}</span>
+                    <strong title={result.title}>{compactRuntimeTitle(result)}</strong>
+                    {result.httpStatus ? <small>HTTP {result.httpStatus}</small> : null}
+                  </div>
+                  <details className="runtime-result-details">
+                    <summary>детали</summary>
+                    <p>{result.detail}</p>
+                  </details>
                 </article>
               ))}
             </div>
           ) : (
             <div className="system-empty-hint">
-              Нажми `запустить safe checks`, чтобы получить реальные API-статусы. Cloud write не запускается.
+              Нажми safe checks. Запись в облако не запускается.
             </div>
           )}
         </div>
@@ -217,18 +226,34 @@ export function TelegramDeviceTestPanel() {
 
 function ChecklistBlock(props: { title: string; items: ReturnType<typeof buildTelegramDeviceTestRunbook>['deviceChecks'] }) {
   return (
-    <div className="telegram-device-checklist">
-      <b>{props.title}</b>
+    <div className="telegram-device-checklist compact-checklist">
+      <div className="compact-checklist-head">
+        <b>{props.title}</b>
+        <span>{props.items.length} шаг.</span>
+      </div>
       {props.items.map(item => (
         <article className={`telegram-device-item ${item.status}`} key={item.id}>
-          <span>{item.status}</span>
-          <strong>{item.title}</strong>
-          <p>{item.detail}</p>
-          <small>Успех: {item.successCriteria}</small>
+          <div className="compact-check-row">
+            <span>{compactItemStatus(item.status)}</span>
+            <strong>{item.title}</strong>
+          </div>
+          <details className="runtime-result-details">
+            <summary>подробнее</summary>
+            <p>{item.detail}</p>
+            <small>Успех: {item.successCriteria}</small>
+          </details>
         </article>
       ))}
     </div>
   );
+}
+
+function compactItemStatus(status: string) {
+  if (status === 'ready') return 'ok';
+  if (status === 'blocked') return 'block';
+  if (status === 'test_required') return 'test';
+  if (status === 'manual_required') return 'manual';
+  return status.replace('_', ' ');
 }
 
 function collectDiagnostics(): DeviceDiagnostics {
@@ -265,7 +290,7 @@ async function postVerify(initData: string): Promise<RuntimeCheckResult> {
         title: '/api/telegram/verify',
         status: 'passed',
         httpStatus: response.status,
-        detail: `verify ok; mode=${data.mode ?? 'unknown'}; profileReady=${Boolean(data.profileReady)}`
+        detail: `OK · mode=${data.mode ?? 'unknown'} · profile=${Boolean(data.profileReady)}`
       };
     }
     return {
@@ -282,20 +307,33 @@ async function postVerify(initData: string): Promise<RuntimeCheckResult> {
 
 async function getJsonCheck(url: string, id: string, title: string): Promise<RuntimeCheckResult> {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { cache: 'no-store' });
     const data = await response.json().catch(() => null);
-    const secretLeak = JSON.stringify(data).match(/(service_role|bot_token|apikey|secret|token\s*[:=])/i);
-    const safeMarker = data && !secretLeak;
+    const secretLeak = hasRawSecretLeak(data);
+    const ok = response.ok && Boolean(data) && !secretLeak;
     return {
       id,
       title,
-      status: response.ok && safeMarker ? 'passed' : 'failed',
+      status: ok ? 'passed' : 'failed',
       httpStatus: response.status,
-      detail: safeMarker ? 'readiness доступен; raw secret values не возвращаются.' : 'readiness ответ требует проверки: либо HTTP error, либо safety marker подозрительный.'
+      detail: ok
+        ? 'OK · endpoint доступен, raw secret values не показаны.'
+        : response.status === 404
+          ? 'Route не найден. Проверь, что загружен свежий deploy-safe пакет и Vercel redeploy стал Ready.'
+          : secretLeak
+            ? 'Возможная утечка raw secret value. Нужно остановиться и проверить endpoint.'
+            : 'Endpoint ответил, но формат требует проверки.'
     };
   } catch {
     return { id, title, status: 'failed', detail: 'network error during readiness check' };
   }
+}
+
+function hasRawSecretLeak(data: unknown) {
+  const text = JSON.stringify(data ?? '');
+  return /\d{6,}:[A-Za-z0-9_-]{20,}/.test(text)
+    || /eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}/.test(text)
+    || /(sk-[A-Za-z0-9_-]{20,})/.test(text);
 }
 
 async function cloudReadDryRun(initData: string, localDate: string): Promise<RuntimeCheckResult> {
@@ -311,7 +349,7 @@ async function cloudReadDryRun(initData: string, localDate: string): Promise<Run
         title: 'Cloud read dry-run',
         status: 'passed',
         httpStatus: response.status,
-        detail: `GET ok; record=${data?.record ? 'exists' : 'null'}; no write executed.`
+        detail: `GET OK · record=${data?.record ? 'есть' : 'нет'} · без записи.`
       };
     }
     const reason = data?.reason ?? data?.error ?? 'safe_fail';
@@ -320,16 +358,26 @@ async function cloudReadDryRun(initData: string, localDate: string): Promise<Run
       title: 'Cloud read dry-run',
       status: reason === 'FINFLOW_ENABLE_CLOUD_SYNC_not_true' ? 'expected_safe_fail' : 'failed',
       httpStatus: response.status,
-      detail: `GET finished without write; reason=${reason}`
+      detail: `Без записи · reason=${reason}`
     };
   } catch {
     return { id: 'cloud_read_dry_run', title: 'Cloud read dry-run', status: 'failed', detail: 'network error during cloud dry-run' };
   }
 }
 
+
+function compactRuntimeTitle(result: RuntimeCheckResult) {
+  if (result.id === 'device_bridge') return 'Telegram';
+  if (result.id === 'verify_api') return 'Verify';
+  if (result.id === 'deployment_readiness') return 'Deploy';
+  if (result.id === 'supabase_readiness') return 'Supabase';
+  if (result.id === 'cloud_read_dry_run') return 'Cloud read';
+  return result.title;
+}
+
 function runtimeLabel(status: RuntimeCheckStatus) {
-  if (status === 'passed') return 'pass';
-  if (status === 'expected_safe_fail') return 'safe fail';
+  if (status === 'passed') return 'ok';
+  if (status === 'expected_safe_fail') return 'safe';
   if (status === 'skipped') return 'skipped';
   if (status === 'running') return 'running';
   if (status === 'failed') return 'fail';

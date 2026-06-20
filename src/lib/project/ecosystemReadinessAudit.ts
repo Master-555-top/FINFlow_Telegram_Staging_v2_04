@@ -1,0 +1,182 @@
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_04' as const;
+
+export type EcosystemReadinessArea = {
+  id: string;
+  title: string;
+  previousPercent: number;
+  percent: number;
+  status: 'done' | 'usable' | 'needs_real_test' | 'in_progress' | 'not_started';
+  summary: string;
+  done: string[];
+  remaining: string[];
+};
+
+export type EcosystemReadinessAudit = {
+  version: typeof ECOSYSTEM_READINESS_AUDIT_VERSION;
+  previousOverallProductionPercent: number;
+  overallProductionPercent: number;
+  previousLocalDailyUsePercent: number;
+  localDailyUsePercent: number;
+  previousSafeLaunchPercent: number;
+  safeLaunchPercent: number;
+  areas: EcosystemReadinessArea[];
+  topRisks: string[];
+  nextActions: string[];
+};
+
+export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
+  const areas: EcosystemReadinessArea[] = [
+    {
+      id: 'local_day_core',
+      title: 'Локальная mini app / Day Core',
+      previousPercent: 94,
+      percent: 95,
+      status: 'usable',
+      summary: 'Основной локальный дневной контур уже пригоден для реального ручного использования.',
+      done: [
+        'быстрый ввод денег, заказов, расходов и задач',
+        'грязный/чистый доход',
+        'фонды, обязательства, ремонт машины',
+        'топливо/одометр/масло',
+        'локальный AI-помощник и daily decision summary',
+        'история, records, templates, bank review decisions'
+      ],
+      remaining: [
+        'несколько дней реального ручного теста на телефоне',
+        'mobile touch polish for Telegram viewport',
+        'real device test for New Day rollover and restore',
+        'first staging deploy smoke test'
+      ]
+    },
+    {
+      id: 'telegram_mini_app',
+      title: 'Telegram Mini App слой',
+      previousPercent: 81,
+      percent: 84,
+      status: 'needs_real_test',
+      summary: 'Клиентский Telegram bridge, server verify и device-test панель готовы; теперь нужен фактический запуск на телефоне и заполнение runtime результатов.',
+      done: [
+        'Telegram WebApp SDK подключён',
+        'Telegram session pill добавлен',
+        'server-side initData verification есть',
+        'Telegram/Supabase verification checklist есть'
+      ],
+      remaining: [
+        'настроить BotFather Mini App URL',
+        'запустить на реальном телефоне через Telegram',
+        'проверить initData/profileReady/cloud readiness',
+        'пройти runtime checks в TelegramDeviceTestPanel',
+        'deploy-safe package v2.04 собран без private_vault'
+      ]
+    },
+    {
+      id: 'supabase_cloud_sync',
+      title: 'Supabase cloud sync foundation',
+      previousPercent: 80,
+      percent: 81,
+      status: 'needs_real_test',
+      summary: 'Cloud sync архитектура и safety-слои готовы, но production требует реальной Supabase/Vercel проверки.',
+      done: [
+        'GET/PUT /api/sync/day',
+        'safe cloud read dry-run checklist без PUT/write',
+        'Telegram initData auth',
+        'feature flags для cloud writes',
+        'revision/conflict guard',
+        'cloud preview diff',
+        'cloud apply rollback',
+        'cloud save preflight gate'
+      ],
+      remaining: [
+        'создать/проверить приватный Supabase project',
+        'применить migration',
+        'пройти real save/load/conflict test',
+        'проверить RLS/security вручную'
+      ]
+    },
+    {
+      id: 'security_backup',
+      title: 'Безопасность, backup, rollback',
+      previousPercent: 85,
+      percent: 86,
+      status: 'usable',
+      summary: 'Safety-архитектура сильная для личного проекта; до production нужен внешний ручной security review.',
+      done: [
+        'MASTER PRIVATE FULL разделяет finflow_app и private_vault',
+        'локальный backup/restore',
+        'restore diff preview',
+        'cloud apply rollback',
+        'cloud save preflight gate',
+        'секреты не нужны в client bundle'
+      ],
+      remaining: [
+        'финальный manual RLS test',
+        'отдельный deploy-safe package без private_vault',
+        'device-test panel не выводит raw initData/hash',
+        'password manager / env storage discipline'
+      ]
+    },
+    {
+      id: 'ux_daily_use',
+      title: 'Удобство ежедневного использования',
+      previousPercent: 79,
+      percent: 80,
+      status: 'in_progress',
+      summary: 'Функций много, но интерфейс пока больше похож на мощную dev-панель, чем на спокойный ежедневный режим.',
+      done: [
+        'всё ключевое доступно в одном dashboard',
+        'есть быстрые кнопки и расчёты',
+        'есть подсказки и safety-панели'
+      ],
+      remaining: [
+        'режим “Сегодня” с минимумом блоков',
+        'режим “Разработка/Проверки” отдельно',
+        'мобильная визуальная полировка',
+        'реальный Telegram viewport/device test'
+      ]
+    },
+    {
+      id: 'ecosystem_memory',
+      title: 'Память проекта и протоколы',
+      previousPercent: 92,
+      percent: 93,
+      status: 'done',
+      summary: 'Проектная память и протоколы хорошо сохранены внутри MASTER PRIVATE FULL.',
+      done: [
+        'MASTER_PRIVATE_DOCS',
+        'private_vault',
+        'context ledgers',
+        'operation ledgers',
+        'changelog',
+        'security scans',
+        'build reports',
+        'regression checks'
+      ],
+      remaining: [
+        'периодически сжимать старые отчёты в summary, чтобы app root не разрастался'
+      ]
+    }
+  ];
+
+  return {
+    version: ECOSYSTEM_READINESS_AUDIT_VERSION,
+    previousOverallProductionPercent: 74,
+    overallProductionPercent: 76,
+    previousLocalDailyUsePercent: 92,
+    localDailyUsePercent: 93,
+    previousSafeLaunchPercent: 83,
+    safeLaunchPercent: 86,
+    areas,
+    topRisks: [
+      'Deploy-safe staging package и device-test panel готовы, но фактический телефонный Telegram run ещё нужно пройти.',
+      'Интерфейс пока перегружен developer/safety-панелями для обычного ежедневного режима.',
+      'MASTER PRIVATE FULL нельзя путать с deploy-safe архивом.',
+      'Cloud writes должны оставаться за feature flags до RLS/security review.'
+    ],
+    nextActions: [
+      'Загрузить deploy-safe package v2.04 в приватный GitHub/Vercel staging или Vercel direct import.',
+      'Настроить BotFather Mini App URL на staging-домен.',
+      'Пройти Real Telegram Device Test panel: initData, viewport, readiness API, cloud GET dry-run.',
+      'Применить Supabase migration и пройти save/load/conflict/RLS checklist.'
+    ]
+  };
+}

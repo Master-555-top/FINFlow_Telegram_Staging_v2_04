@@ -1,0 +1,31 @@
+node_modules
+.next
+out
+.env*.local
+.env
+.DS_Store
+*.log
+
+# FinFlow private/sensitive local data — NEVER COMMIT
+private_raw_data/*
+!private_raw_data/README_PRIVATE.md
+*.sqlite
+*.db
+*.bak
+*.backup
+
+# Secrets and local env files
+.env
+.env.*
+!.env.example
+
+# Exports that may contain personal data
+exports/*
+!exports/.gitkeep
+
+# FinFlow private raw data - local only
+private_raw_data/**
+!private_raw_data/README_PRIVATE.md
+*.env
+.env*
+!.env.example

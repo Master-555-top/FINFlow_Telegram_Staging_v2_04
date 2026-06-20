@@ -1,0 +1,25 @@
+# Deploy-footprint optimization.
+# These paths are kept in the repository for project continuity / AI-context,
+# but they are NOT needed at runtime and are excluded from the deploy bundle.
+# Removing them here does NOT delete them from the repo.
+
+# Historical project memory / audit artifacts (not imported by any code)
+docs/
+*.md
+FILE_MANIFEST_v*.json
+
+# Raw SQL is applied manually to Supabase, not executed by the app at runtime
+supabase/
+
+# Local-only sensitive data (must never deploy)
+private_raw_data/
+exports/
+
+# Misc
+.env.local
+*.log
+
+# Docker build context extras
+node_modules/
+.next/
+.git/

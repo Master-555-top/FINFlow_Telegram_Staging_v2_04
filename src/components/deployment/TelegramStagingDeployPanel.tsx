@@ -20,10 +20,9 @@ export function TelegramStagingDeployPanel() {
     <section className="telegram-staging-panel system-module-panel">
       <div className="deployment-head compact">
         <div>
-          <span>v2.10 • Launch</span>
-          <b>Запуск Telegram</b>
+          <span>v2.11</span>
+          <b>Launch</b>
         </div>
-        <p>Коротко: что загрузить, какие env нужны и где поставить кнопку Mini App.</p>
       </div>
 
       <div className="system-inner-tabs" role="tablist" aria-label="Telegram launch center">
@@ -75,7 +74,7 @@ export function TelegramStagingDeployPanel() {
           <div className="telegram-staging-next">
             <b>Rollback</b>
             {runbook.rollbackPlan.map(item => <p key={item}>↩ {item}</p>)}
-            <strong>Следующий шаг: {runbook.nextStepAfterStaging}</strong>
+            
           </div>
         </div>
       )}

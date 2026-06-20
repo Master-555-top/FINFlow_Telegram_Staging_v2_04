@@ -96,9 +96,8 @@ export function TelegramSupabaseVerificationChecklistPanel() {
   return (
     <section className="verification-checklist-panel system-module-panel">
       <div className="verification-head compact">
-        <span>v2.10 • Verification</span>
-        <b>Проверка экосистемы</b>
-        <p>Короткие статусы, фильтры и handoff без секретов.</p>
+        <span>v2.11</span>
+        <b>Checklist</b>
       </div>
 
       <div className="system-inner-tabs" role="tablist" aria-label="Verification center">
@@ -134,8 +133,8 @@ export function TelegramSupabaseVerificationChecklistPanel() {
             <div className="readiness-track">
               <div style={{ width: `${summary.percentDone}%` }} />
             </div>
-            <p>Выполнено {summary.done}/{summary.total}. Следующий шаг: {summary.nextManualStage?.title ?? 'все шаги отмечены'}.</p>
-            <button type="button" onClick={resetProgress}>сбросить отметки</button>
+            <p>{summary.done}/{summary.total} готово</p>
+            <button type="button" onClick={resetProgress}>сброс</button>
           </div>
 
           <div className="verification-summary-row">
@@ -176,7 +175,7 @@ export function TelegramSupabaseVerificationChecklistPanel() {
         <div className="verification-handoff-box system-module-window">
           <div>
             <b>Export / Handoff report</b>
-            <p>Безопасный отчёт для следующего чата, Codex или ручной проверки. Реальные секреты не включаются.</p>
+            
           </div>
           <div className="verification-handoff-actions">
             <button type="button" onClick={() => buildHandoff('markdown')}>собрать Markdown</button>
@@ -196,7 +195,7 @@ export function TelegramSupabaseVerificationChecklistPanel() {
 
       {activeView === 'path' && (
         <div className="critical-path-box system-module-window">
-          <b>Критический путь до реального ежедневного Mini App</b>
+          <b>Критический путь</b>
           {checklist.nextCriticalPath.map(step => <p key={step}>{step}</p>)}
         </div>
       )}

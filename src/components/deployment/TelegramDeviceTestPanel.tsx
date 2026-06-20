@@ -111,10 +111,9 @@ export function TelegramDeviceTestPanel() {
     <section className="telegram-device-test-panel system-module-panel">
       <div className="deployment-head compact">
         <div>
-          <span>v2.10 • Telegram cockpit</span>
-          <b>Короткая проверка Mini App</b>
+          <span>v2.11</span>
+          <b>Telegram test</b>
         </div>
-        <p>Проверяем Telegram, server verify и безопасный cloud read без лишнего текста.</p>
       </div>
 
       <div className="system-inner-tabs" role="tablist" aria-label="Telegram test center">
@@ -164,9 +163,9 @@ export function TelegramDeviceTestPanel() {
           </div>
 
           <div className="telegram-device-actions">
-            <button type="button" onClick={refreshDiagnostics}>обновить диагностику</button>
+            <button type="button" onClick={refreshDiagnostics}>обновить</button>
             <button type="button" onClick={runSafeDeviceChecks} disabled={running}>
-              {running ? 'проверяю…' : 'запустить safe checks'}
+              {running ? 'проверяю…' : 'проверить'}
             </button>
           </div>
 
@@ -192,7 +191,7 @@ export function TelegramDeviceTestPanel() {
             </div>
           ) : (
             <div className="system-empty-hint">
-              Нажми safe checks. Запись в облако не запускается.
+              Нажми «проверить». Cloud write выключен.
             </div>
           )}
         </div>
@@ -216,7 +215,7 @@ export function TelegramDeviceTestPanel() {
           <div className="telegram-staging-next">
             <b>Rollback</b>
             {runbook.rollbackPlan.map(item => <p key={item}>↩ {item}</p>)}
-            <strong>Следующий шаг: {runbook.nextStepAfterDeviceTest}</strong>
+            
           </div>
         </div>
       )}
@@ -310,16 +309,17 @@ async function getJsonCheck(url: string, id: string, title: string): Promise<Run
     const response = await fetch(url, { cache: 'no-store' });
     const data = await response.json().catch(() => null);
     const secretLeak = hasRawSecretLeak(data);
+    const optionalSupabaseOff = id === 'supabase_readiness' && response.status === 404;
     const ok = response.ok && Boolean(data) && !secretLeak;
     return {
       id,
       title,
-      status: ok ? 'passed' : 'failed',
+      status: ok ? 'passed' : optionalSupabaseOff ? 'expected_safe_fail' : 'failed',
       httpStatus: response.status,
       detail: ok
         ? 'OK · endpoint доступен, raw secret values не показаны.'
-        : response.status === 404
-          ? 'Route не найден. Проверь, что загружен свежий deploy-safe пакет и Vercel redeploy стал Ready.'
+        : optionalSupabaseOff
+          ? 'Supabase сейчас не подключён / route не активен в текущем deploy. Для локального Telegram-теста это не блокер.'
           : secretLeak
             ? 'Возможная утечка raw secret value. Нужно остановиться и проверить endpoint.'
             : 'Endpoint ответил, но формат требует проверки.'

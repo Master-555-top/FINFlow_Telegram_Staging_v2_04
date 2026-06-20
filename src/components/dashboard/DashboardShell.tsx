@@ -263,10 +263,10 @@ export function DashboardShell() {
   return (
     <>
       <main className={`app-shell app-shell--${activeTab}`}>
-        <header className="topbar">
+        <header className={`topbar${activeTab === 'system' ? ' topbar--system' : ''}`}>
           <div className="logo">
             <div className="logo-title">FinFlow</div>
-            <div className="logo-subtitle">{dayCoreMock.version} • Day Core • live-state v2.00 • session v2.01 • staging/device v2.04.1 • ecosystem UI v2.10</div>
+            <div className="logo-subtitle">{activeTab === 'system' ? 'v2.11' : `${dayCoreMock.version} • v2.11`}</div>
           </div>
           <div className="topbar-pills">
             <TelegramSessionPill />
@@ -274,12 +274,14 @@ export function DashboardShell() {
           </div>
         </header>
 
-        <LiveTimeWidget />
+        {activeTab !== 'system' && <LiveTimeWidget />}
 
-        <div className="daily-live-state-banner">
-          <b>Live-state:</b> День / Деньги / Работа / Фонды / AI читают общий локальный state.
-          <span>{dailyLiveStateSyncedAt ? `Последняя синхронизация: ${new Date(dailyLiveStateSyncedAt).toLocaleTimeString('ru-RU')}` : 'Ожидаю первый ввод дня.'}</span>
-        </div>
+        {activeTab !== 'system' && (
+          <div className="daily-live-state-banner">
+            <b>Live-state:</b> День / Деньги / Работа / Фонды / AI читают общий локальный state.
+            <span>{dailyLiveStateSyncedAt ? `Последняя синхронизация: ${new Date(dailyLiveStateSyncedAt).toLocaleTimeString('ru-RU')}` : 'Ожидаю первый ввод дня.'}</span>
+          </div>
+        )}
 
         {activeTab !== 'day' && activeTab !== 'system' && TAB_COMMANDS[activeTab] ? (
           <TabCommandCard meta={TAB_COMMANDS[activeTab] as TabCommandMeta} />
@@ -309,17 +311,13 @@ export function DashboardShell() {
         {activeTab === 'system' && (
           <>
             {!activeSystemMeta ? (
-              <section className="card system-root-card">
-                <div className="section-kicker">v2.10 • Ecosystem UI / compact command center</div>
-                <h2 className="card-heading">Система</h2>
-                <p className="card-description">
-                  Центр управления экосистемой: сначала выбираешь область, затем конкретное окно. QA теперь выделен отдельно, чтобы после каждого deploy было понятно, что проверять.
-                </p>
-                <div className="system-root-highlights">
-                  <span>glass UI</span>
-                  <span>mobile first</span>
-                  <span>safe by design</span>
-                  <span>QA route</span>
+              <section className="card system-root-card system-root-card--minimal">
+                <div className="system-mini-head">
+                  <div>
+                    <span>System</span>
+                    <h2>Система</h2>
+                  </div>
+                  <small>v2.11</small>
                 </div>
 
                 <div className="system-section-grid system-section-grid--root" role="tablist" aria-label="Разделы System">
@@ -334,7 +332,6 @@ export function DashboardShell() {
                     >
                       <span className="system-section-emoji">{section.emoji}</span>
                       <b>{section.shortTitle}</b>
-                      <small>{section.status}</small>
                     </button>
                   ))}
                 </div>
@@ -351,16 +348,9 @@ export function DashboardShell() {
                   </div>
                 </div>
 
-                <div className="system-detail-hero">
-                  <div>
-                    <span>{activeSystemMeta.status}</span>
-                    <h2>{activeSystemMeta.title}</h2>
-                    <p>{activeSystemMeta.description}</p>
-                  </div>
-                  <div className="system-detail-count">
-                    <strong>{activeSystemMeta.subsections.length}</strong>
-                    <small>окна</small>
-                  </div>
+                <div className="system-detail-title-row">
+                  <h2>{activeSystemMeta.emoji} {activeSystemMeta.shortTitle}</h2>
+                  <span>v2.11</span>
                 </div>
 
                 {activeSystemMeta.subsections.length > 1 ? (

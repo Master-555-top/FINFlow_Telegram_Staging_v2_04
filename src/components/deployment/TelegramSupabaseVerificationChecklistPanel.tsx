@@ -19,8 +19,20 @@ import {
 
 const checklist = buildTelegramSupabaseVerificationChecklist();
 
+type VerificationView = 'overview' | 'stages' | 'export' | 'path';
+type StageAreaFilter = 'all' | VerificationStage['area'];
+
+const VERIFICATION_VIEWS: { id: VerificationView; label: string; caption: string }[] = [
+  { id: 'overview', label: 'Обзор', caption: 'прогресс' },
+  { id: 'stages', label: 'Этапы', caption: 'отметки' },
+  { id: 'export', label: 'Export', caption: 'handoff' },
+  { id: 'path', label: 'Путь', caption: 'критические шаги' }
+];
+
 export function TelegramSupabaseVerificationChecklistPanel() {
   const [hydrated, setHydrated] = useState(false);
+  const [activeView, setActiveView] = useState<VerificationView>('overview');
+  const [areaFilter, setAreaFilter] = useState<StageAreaFilter>('all');
   const [progressState, setProgressState] = useState<VerificationChecklistProgressState>(() => createInitialVerificationChecklistProgressState(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`));
   const [handoffText, setHandoffText] = useState('');
   const [handoffMode, setHandoffMode] = useState<'markdown' | 'json'>('markdown');
@@ -49,6 +61,9 @@ export function TelegramSupabaseVerificationChecklistPanel() {
     { done: 0, manual_required: 0, blocked: 0, planned: 0 }
   );
 
+  const stageAreas = useMemo(() => Array.from(new Set(checklist.stages.map(stage => stage.area))), []);
+  const filteredStages = areaFilter === 'all' ? checklist.stages : checklist.stages.filter(stage => stage.area === areaFilter);
+
   function updateStage(stageId: VerificationStageId, status: VerificationStageUserStatus) {
     setProgressState(previous => setVerificationStageStatus({ state: previous, stageId, status }));
   }
@@ -56,7 +71,6 @@ export function TelegramSupabaseVerificationChecklistPanel() {
   function updateNote(stageId: VerificationStageId, note: string) {
     setProgressState(previous => setVerificationStageNote({ state: previous, stageId, note }));
   }
-
 
   function buildHandoff(mode: 'markdown' | 'json') {
     const report = buildVerificationHandoffReport({ checklist, progressState });
@@ -80,83 +94,112 @@ export function TelegramSupabaseVerificationChecklistPanel() {
   }
 
   return (
-    <section className="verification-checklist-panel">
-      <div className="verification-head">
-        <span>v1.84 • Verification Export / Handoff</span>
-        <b>Готовность проекта</b>
-        <p>
-          Чеклист можно отмечать, сохранять локально и выгружать как безопасный handoff-отчёт без секретов.
-        </p>
+    <section className="verification-checklist-panel system-module-panel">
+      <div className="verification-head compact">
+        <span>v2.07 • Verification center</span>
+        <b>Чеклист без бесконечного списка</b>
+        <p>Отметки, export и критический путь разделены на короткие окна. Реальные секреты не выводятся.</p>
       </div>
 
-      <div className="readiness-grid">
-        <ReadinessCard title="Local Foundation" value={checklist.readiness.localFoundation} />
-        <ReadinessCard title="Daily local use" value={checklist.readiness.dailyLocalUse} />
-        <ReadinessCard title="Cloud foundation" value={checklist.readiness.cloudFoundation} />
-        <ReadinessCard title="Production ecosystem" value={checklist.readiness.productionEcosystem} />
-      </div>
-
-      <div className="verification-progress-box">
-        <div>
-          <span>Verification progress</span>
-          <b>{summary.percentDone}%</b>
-        </div>
-        <div className="readiness-track">
-          <div style={{ width: `${summary.percentDone}%` }} />
-        </div>
-        <p>
-          Выполнено {summary.done}/{summary.total}. Следующий шаг: {summary.nextManualStage?.title ?? 'все шаги отмечены'}.
-        </p>
-        <button type="button" onClick={resetProgress}>сбросить отметки</button>
-      </div>
-
-      <div className="verification-summary-row">
-        <span>template done: <b>{totals.done}</b></span>
-        <span>manual: <b>{totals.manual_required}</b></span>
-        <span>blocked: <b>{totals.blocked}</b></span>
-        <span>planned: <b>{totals.planned}</b></span>
-        <span>local done: <b>{summary.done}</b></span>
-      </div>
-
-      <div className="verification-stage-list">
-        {checklist.stages.map(stage => (
-          <VerificationStageRow
-            key={stage.id}
-            stage={stage}
-            status={getVerificationStageProgress(progressState, stage.id)?.status ?? defaultUserStatusFromStage(stage)}
-            note={getVerificationStageProgress(progressState, stage.id)?.note ?? ''}
-            onStatusChange={status => updateStage(stage.id, status)}
-            onNoteChange={note => updateNote(stage.id, note)}
-          />
+      <div className="system-inner-tabs" role="tablist" aria-label="Verification center">
+        {VERIFICATION_VIEWS.map(view => (
+          <button
+            key={view.id}
+            type="button"
+            role="tab"
+            aria-selected={activeView === view.id}
+            className={`system-inner-tab${activeView === view.id ? ' active' : ''}`}
+            onClick={() => setActiveView(view.id)}
+          >
+            <b>{view.label}</b>
+            <small>{view.caption}</small>
+          </button>
         ))}
       </div>
 
+      {activeView === 'overview' && (
+        <div className="system-module-window">
+          <div className="readiness-grid">
+            <ReadinessCard title="Local Foundation" value={checklist.readiness.localFoundation} />
+            <ReadinessCard title="Daily local use" value={checklist.readiness.dailyLocalUse} />
+            <ReadinessCard title="Cloud foundation" value={checklist.readiness.cloudFoundation} />
+            <ReadinessCard title="Production ecosystem" value={checklist.readiness.productionEcosystem} />
+          </div>
 
-      <div className="verification-handoff-box">
-        <div>
-          <b>Export / Handoff report</b>
-          <p>Безопасный отчёт для следующего чата, Codex или ручной проверки. Реальные секреты не включаются.</p>
+          <div className="verification-progress-box">
+            <div>
+              <span>Verification progress</span>
+              <b>{summary.percentDone}%</b>
+            </div>
+            <div className="readiness-track">
+              <div style={{ width: `${summary.percentDone}%` }} />
+            </div>
+            <p>Выполнено {summary.done}/{summary.total}. Следующий шаг: {summary.nextManualStage?.title ?? 'все шаги отмечены'}.</p>
+            <button type="button" onClick={resetProgress}>сбросить отметки</button>
+          </div>
+
+          <div className="verification-summary-row">
+            <span>template done: <b>{totals.done}</b></span>
+            <span>manual: <b>{totals.manual_required}</b></span>
+            <span>blocked: <b>{totals.blocked}</b></span>
+            <span>planned: <b>{totals.planned}</b></span>
+            <span>local done: <b>{summary.done}</b></span>
+          </div>
         </div>
-        <div className="verification-handoff-actions">
-          <button type="button" onClick={() => buildHandoff('markdown')}>собрать Markdown</button>
-          <button type="button" onClick={() => buildHandoff('json')}>собрать JSON</button>
-          <button type="button" disabled={!handoffText} onClick={copyHandoff}>копировать</button>
+      )}
+
+      {activeView === 'stages' && (
+        <div className="system-module-window">
+          <div className="verification-filter-row">
+            <button type="button" className={areaFilter === 'all' ? 'active' : ''} onClick={() => setAreaFilter('all')}>Все</button>
+            {stageAreas.map(area => (
+              <button key={area} type="button" className={areaFilter === area ? 'active' : ''} onClick={() => setAreaFilter(area)}>{area}</button>
+            ))}
+          </div>
+
+          <div className="verification-stage-list compact-list">
+            {filteredStages.map(stage => (
+              <VerificationStageRow
+                key={stage.id}
+                stage={stage}
+                status={getVerificationStageProgress(progressState, stage.id)?.status ?? defaultUserStatusFromStage(stage)}
+                note={getVerificationStageProgress(progressState, stage.id)?.note ?? ''}
+                onStatusChange={status => updateStage(stage.id, status)}
+                onNoteChange={note => updateNote(stage.id, note)}
+              />
+            ))}
+          </div>
         </div>
-        {handoffText ? (
-          <textarea
-            className="verification-handoff-output"
-            readOnly
-            value={handoffText}
-            aria-label={`Verification handoff ${handoffMode}`}
-          />
-        ) : null}
-      </div>
+      )}
 
+      {activeView === 'export' && (
+        <div className="verification-handoff-box system-module-window">
+          <div>
+            <b>Export / Handoff report</b>
+            <p>Безопасный отчёт для следующего чата, Codex или ручной проверки. Реальные секреты не включаются.</p>
+          </div>
+          <div className="verification-handoff-actions">
+            <button type="button" onClick={() => buildHandoff('markdown')}>собрать Markdown</button>
+            <button type="button" onClick={() => buildHandoff('json')}>собрать JSON</button>
+            <button type="button" disabled={!handoffText} onClick={copyHandoff}>копировать</button>
+          </div>
+          {handoffText ? (
+            <textarea
+              className="verification-handoff-output"
+              readOnly
+              value={handoffText}
+              aria-label={`Verification handoff ${handoffMode}`}
+            />
+          ) : null}
+        </div>
+      )}
 
-      <div className="critical-path-box">
-        <b>Критический путь до реального ежедневного Mini App</b>
-        {checklist.nextCriticalPath.map(step => <p key={step}>{step}</p>)}
-      </div>
+      {activeView === 'path' && (
+        <div className="critical-path-box system-module-window">
+          <b>Критический путь до реального ежедневного Mini App</b>
+          {checklist.nextCriticalPath.map(step => <p key={step}>{step}</p>)}
+        </div>
+      )}
     </section>
   );
 }

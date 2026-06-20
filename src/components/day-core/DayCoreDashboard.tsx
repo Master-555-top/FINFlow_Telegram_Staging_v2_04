@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { dayCoreMock, formatPercent, formatRub, getModeExplanation, getModeLabel, type MoneyBucket } from '@/lib/day-core/dayCoreModel';
 import { dayCoreInputMock, type DayCoreInputModel } from '@/lib/day-core/dayCoreInputModel';
 import { calculateDayNet } from '@/lib/day-core/netCalculationModel';
@@ -76,6 +77,16 @@ export function DayCoreDashboard(props: { dayInput?: DayCoreInputModel }) {
         <p className="card-description">
           Цель дня: {formatRub(day.goals.targetGrossToday)} • уже сделано: {formatRub(day.shift.grossDone)} • заказов: {day.shift.ordersDone}
         </p>
+        <div className="day-hero-visual">
+          <div className="day-hero-ring" style={{ '--day-progress': `${progress * 3.6}deg` } as CSSProperties}>
+            <span>{progress}%</span>
+            <small>день</small>
+          </div>
+          <div className="day-hero-mini-copy">
+            <b>{getModeLabel(day.mode)}</b>
+            <span>{net.remainingGrossToTarget > 0 ? 'ещё нужно добить план' : 'цель дня закрыта'}</span>
+          </div>
+        </div>
         <ProgressBar value={progress} />
         <div className="hero-mini-grid">
           <MiniMetric label="Режим" value={getModeLabel(day.mode)} />

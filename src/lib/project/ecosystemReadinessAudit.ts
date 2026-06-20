@@ -1,4 +1,4 @@
-export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_05' as const;
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_08' as const;
 
 export type EcosystemReadinessArea = {
   id: string;
@@ -51,8 +51,8 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
     {
       id: 'telegram_mini_app',
       title: 'Telegram Mini App слой',
-      previousPercent: 89,
-      percent: 90,
+      previousPercent: 94,
+      percent: 94,
       status: 'needs_real_test',
       summary: 'Клиентский Telegram bridge, server verify и device-test панель готовы; v2.05 вынесла Telegram-тест в отдельный быстрый раздел System, чтобы его не искать в длинной ленте.',
       done: [
@@ -118,10 +118,10 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
     {
       id: 'ux_daily_use',
       title: 'Удобство ежедневного использования',
-      previousPercent: 81,
-      percent: 84,
+      previousPercent: 88,
+      percent: 90,
       status: 'in_progress',
-      summary: 'System больше не выглядит как бесконечная dev-лента: панели сгруппированы по кнопкам Telegram / Аудит / Cloud / Backup / Deploy / Dev.',
+      summary: 'FINFlow получил цельную cosmic/glass дизайн-систему: единый фон, карточки, навигация, command headers и более премиальный mobile-first стиль.',
       done: [
         'всё ключевое доступно в одном dashboard',
         'есть быстрые кнопки и расчёты',
@@ -129,7 +129,7 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
       ],
       remaining: [
         'режим “Сегодня” с минимумом блоков',
-        'System-разделы по кнопкам: Telegram, Аудит, Cloud, Backup, Deploy, Dev',
+        'единая дизайн-система для всех вкладок, не только System',
         'мобильная визуальная полировка',
         'дальше пройти реальный Telegram viewport/device test внутри нового раздела Telegram'
       ]
@@ -159,21 +159,21 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
 
   return {
     version: ECOSYSTEM_READINESS_AUDIT_VERSION,
-    previousOverallProductionPercent: 78,
-    overallProductionPercent: 79,
-    previousLocalDailyUsePercent: 93,
-    localDailyUsePercent: 94,
-    previousSafeLaunchPercent: 89,
-    safeLaunchPercent: 89,
+    previousOverallProductionPercent: 83,
+    overallProductionPercent: 84,
+    previousLocalDailyUsePercent: 95,
+    localDailyUsePercent: 96,
+    previousSafeLaunchPercent: 91,
+    safeLaunchPercent: 91,
     areas,
     topRisks: [
-      'System menu теперь разделён по кнопкам, но фактический телефонный Telegram run ещё нужно пройти.',
+      'Интерфейс стал цельнее, но реальные дневные сценарии всё ещё нужно прогнать на телефоне несколько дней.',
       'Cloud/Supabase writes должны оставаться выключенными до backup + RLS/security review.',
       'MASTER PRIVATE FULL нельзя путать с deploy-safe архивом.',
       'BotFather URL и real Telegram device test всё ещё нужно пройти руками.'
     ],
     nextActions: [
-      'Загрузить deploy-safe package v2.05 в приватный GitHub/Vercel staging или обновить текущий staging repo.',
+      'Загрузить deploy-safe package v2.08 в приватный GitHub/Vercel staging или обновить текущий staging repo.',
       'Настроить BotFather Mini App URL на staging-домен.',
       'В Telegram открыть System → Telegram и пройти Real Telegram Device Test: initData, viewport, readiness API, cloud GET dry-run.',
       'Применить Supabase migration и пройти save/load/conflict/RLS checklist.'

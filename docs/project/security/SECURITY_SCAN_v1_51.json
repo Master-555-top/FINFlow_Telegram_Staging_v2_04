@@ -1,0 +1,13 @@
+{
+  "version": "v1.51",
+  "secrets_added": false,
+  "telegram_bot_token_added": false,
+  "supabase_keys_added": false,
+  "service_role_exposed": false,
+  "profile_resolver_draft_added": true,
+  "supabase_write_enabled": false,
+  "local_fallback_preserved": true,
+  "memory_preflight_completed": true,
+  "transcript_ledger_updated": true,
+  "context_files_updated": true
+}

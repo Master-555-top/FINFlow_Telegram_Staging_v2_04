@@ -1,0 +1,14 @@
+{
+  "version": "v1.78",
+  "daily_decision_summary_added": true,
+  "secrets_added": false,
+  "external_api_call_added": false,
+  "external_ai_call_added": false,
+  "supabase_writes_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "codex_sync_preserved": true,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

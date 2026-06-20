@@ -1,0 +1,14 @@
+{
+  "version": "v1.70",
+  "secrets_added": false,
+  "trend_model_added": true,
+  "mini_chart_added": true,
+  "external_chart_library_added": false,
+  "supabase_writes_added": false,
+  "external_api_call_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

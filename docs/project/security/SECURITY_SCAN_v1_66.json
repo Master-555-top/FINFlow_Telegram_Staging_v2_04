@@ -1,0 +1,11 @@
+{
+  "version": "v1.66",
+  "secrets_added": false,
+  "editable_odometer_inputs_added": true,
+  "editable_fuel_inputs_added": true,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

@@ -1,0 +1,8 @@
+{
+  "version": "v1.34",
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_imported": false,
+  "restore_snapshot_added": true,
+  "storage": "browser localStorage demo"
+}

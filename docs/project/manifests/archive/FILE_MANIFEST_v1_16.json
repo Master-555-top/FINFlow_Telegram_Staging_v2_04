@@ -1,0 +1,350 @@
+[
+  {
+    "path": ".env.example",
+    "size": 57
+  },
+  {
+    "path": ".gitignore",
+    "size": 447
+  },
+  {
+    "path": "CHANGELOG_LATEST.md",
+    "size": 8930
+  },
+  {
+    "path": "FILE_MANIFEST_v1_10.json",
+    "size": 5516
+  },
+  {
+    "path": "FILE_MANIFEST_v1_11.json",
+    "size": 5670
+  },
+  {
+    "path": "FILE_MANIFEST_v1_12.json",
+    "size": 5842
+  },
+  {
+    "path": "FILE_MANIFEST_v1_13.json",
+    "size": 6118
+  },
+  {
+    "path": "FILE_MANIFEST_v1_14.json",
+    "size": 6297
+  },
+  {
+    "path": "FILE_MANIFEST_v1_15.json",
+    "size": 6751
+  },
+  {
+    "path": "FILE_MANIFEST_v1_2.json",
+    "size": 5466
+  },
+  {
+    "path": "FILE_MANIFEST_v1_3.json",
+    "size": 6918
+  },
+  {
+    "path": "FILE_MANIFEST_v1_4.json",
+    "size": 7589
+  },
+  {
+    "path": "FILE_MANIFEST_v1_5.json",
+    "size": 9516
+  },
+  {
+    "path": "FILE_MANIFEST_v1_6.json",
+    "size": 10239
+  },
+  {
+    "path": "FILE_MANIFEST_v1_7.json",
+    "size": 9904
+  },
+  {
+    "path": "FILE_MANIFEST_v1_8.json",
+    "size": 10991
+  },
+  {
+    "path": "FILE_MANIFEST_v1_9.json",
+    "size": 10577
+  },
+  {
+    "path": "README_START_HERE.md",
+    "size": 5531
+  },
+  {
+    "path": "README_STEP_01.md",
+    "size": 950
+  },
+  {
+    "path": "app/globals.css",
+    "size": 8418
+  },
+  {
+    "path": "app/layout.tsx",
+    "size": 525
+  },
+  {
+    "path": "app/page.tsx",
+    "size": 258
+  },
+  {
+    "path": "docs/project/ANTI_REGRESSION_CHECKLIST.md",
+    "size": 864
+  },
+  {
+    "path": "docs/project/CURRENT_CONTEXT_v0_3.md",
+    "size": 3971
+  },
+  {
+    "path": "docs/project/STEP_02_DAILY_MONEY_PLANNER_SPEC.md",
+    "size": 1822
+  },
+  {
+    "path": "docs/project/audit/CONTEXT_CONTROL_DASHBOARD_v1_15.md",
+    "size": 1434
+  },
+  {
+    "path": "docs/project/audit/FULL_CONTEXT_AUDIT_REPORT_v1_15.md",
+    "size": 5117
+  },
+  {
+    "path": "docs/project/audit/LOST_REQUIREMENTS_RECOVERY_REPORT_v1_15.md",
+    "size": 2652
+  },
+  {
+    "path": "docs/project/audit/MASTER_REQUIREMENTS_INDEX.md",
+    "size": 2739
+  },
+  {
+    "path": "docs/project/audit/PRE_START_FULL_REVIEW_STATUS.md",
+    "size": 2599
+  },
+  {
+    "path": "docs/project/audit/REQUIREMENTS_COVERAGE_AUDIT.md",
+    "size": 9706
+  },
+  {
+    "path": "docs/project/audit/SOURCE_TO_REQUIREMENT_MAP_v1_15.md",
+    "size": 3390
+  },
+  {
+    "path": "docs/project/backlog/ERROR_LOG_SYSTEM_SPEC.md",
+    "size": 575
+  },
+  {
+    "path": "docs/project/backlog/FEATURE_BACKLOG.md",
+    "size": 540
+  },
+  {
+    "path": "docs/project/data/AI_MEMORY_AND_LEARNING_SPEC.md",
+    "size": 868
+  },
+  {
+    "path": "docs/project/data/CALENDAR_TIME_PLANNER_SPEC.md",
+    "size": 766
+  },
+  {
+    "path": "docs/project/data/DAILY_MONEY_PLANNER_SPEC.md",
+    "size": 2385
+  },
+  {
+    "path": "docs/project/data/FUNDS_AND_ALLOCATION_MODEL.md",
+    "size": 1931
+  },
+  {
+    "path": "docs/project/data/LIVE_SHIFT_PROGRESS_AND_ORDER_TRACKING_SPEC.md",
+    "size": 4104
+  },
+  {
+    "path": "docs/project/data/MEETINGS_FUND_AND_RELATIONSHIP_TIME_SPEC.md",
+    "size": 3473
+  },
+  {
+    "path": "docs/project/data/MONEY_ALLOCATION_RECOMMENDATION_ENGINE_SPEC.md",
+    "size": 5004
+  },
+  {
+    "path": "docs/project/data/REAL_TIME_ALLOCATION_ADVISOR_SPEC.md",
+    "size": 7066
+  },
+  {
+    "path": "docs/project/data/TAXI_VEHICLE_COST_MODEL.md",
+    "size": 1584
+  },
+  {
+    "path": "docs/project/history/CHAT_TIMELINE_AND_DECISION_HISTORY.md",
+    "size": 7754
+  },
+  {
+    "path": "docs/project/history/CONVERSATION_PROVENANCE_AND_SOURCE_DATES.md",
+    "size": 2939
+  },
+  {
+    "path": "docs/project/history/EXTERNAL_SHARE_LINKS_AND_IMPORTED_PROJECT_CONTEXT.md",
+    "size": 2073
+  },
+  {
+    "path": "docs/project/import/DATA_SOURCES_AND_IMPORT_PLAN.md",
+    "size": 2282
+  },
+  {
+    "path": "docs/project/import/HISTORICAL_DATA_NORMALIZATION_PLAN.md",
+    "size": 3883
+  },
+  {
+    "path": "docs/project/import/HISTORICAL_SOURCE_INDEX.md",
+    "size": 3529
+  },
+  {
+    "path": "docs/project/import/IMPORTED_PROJECT_SOURCE_POLICY.md",
+    "size": 1795
+  },
+  {
+    "path": "docs/project/import/NORMALIZED_DATA_TEMPLATE.md",
+    "size": 2079
+  },
+  {
+    "path": "docs/project/import/normalized/EXPENSE_CANDIDATES_REVIEW.csv",
+    "size": 1122774
+  },
+  {
+    "path": "docs/project/import/normalized/HISTORICAL_NORMALIZED_CANDIDATES_REVIEW.csv",
+    "size": 3513087
+  },
+  {
+    "path": "docs/project/import/normalized/INCOME_CANDIDATES_REVIEW.csv",
+    "size": 1955363
+  },
+  {
+    "path": "docs/project/import/normalized/RAW_TEXT_LINE_INDEX_REDACTED.csv",
+    "size": 3859627
+  },
+  {
+    "path": "docs/project/import/normalized/ROUGH_CATEGORY_SUMMARY_REVIEW.csv",
+    "size": 280
+  },
+  {
+    "path": "docs/project/import/reports/HISTORICAL_NORMALIZATION_REPORT.md",
+    "size": 3407
+  },
+  {
+    "path": "docs/project/import/reports/HISTORICAL_SOURCE_INVENTORY.json",
+    "size": 6094
+  },
+  {
+    "path": "docs/project/memory/PROJECT_MEMORY.md",
+    "size": 6622
+  },
+  {
+    "path": "docs/project/memory/USER_AND_FINANCIAL_CONTEXT.md",
+    "size": 1426
+  },
+  {
+    "path": "docs/project/protocols/AI_DEVELOPMENT_PROTOCOL.md",
+    "size": 1008
+  },
+  {
+    "path": "docs/project/protocols/ANTI_REGRESSION_CHECKLIST.md",
+    "size": 1129
+  },
+  {
+    "path": "docs/project/protocols/CODE_CHANGE_PROTOCOL.md",
+    "size": 1648
+  },
+  {
+    "path": "docs/project/protocols/CONTEXT_AWARE_RESPONSE_PROTOCOL.md",
+    "size": 3096
+  },
+  {
+    "path": "docs/project/protocols/INCREMENTAL_FILE_AND_CODE_UPDATE_PROTOCOL.md",
+    "size": 2592
+  },
+  {
+    "path": "docs/project/protocols/LOCKED_DECISIONS.md",
+    "size": 4583
+  },
+  {
+    "path": "docs/project/protocols/PROJECT_UPDATE_PROTOCOL.md",
+    "size": 2393
+  },
+  {
+    "path": "docs/project/protocols/RESPONSE_INTEGRITY_AND_CONTEXT_CHECK_PROTOCOL.md",
+    "size": 2717
+  },
+  {
+    "path": "docs/project/security/SECURITY_AND_PRIVATE_DATA_RULES.md",
+    "size": 1903
+  },
+  {
+    "path": "docs/project/state/CODE_IMPLEMENTATION_STATUS_v1_16.md",
+    "size": 1711
+  },
+  {
+    "path": "docs/project/state/CURRENT_STATE.md",
+    "size": 4242
+  },
+  {
+    "path": "exports/.gitkeep",
+    "size": 0
+  },
+  {
+    "path": "next-env.d.ts",
+    "size": 247
+  },
+  {
+    "path": "next.config.js",
+    "size": 119
+  },
+  {
+    "path": "package-lock.json",
+    "size": 36116
+  },
+  {
+    "path": "package.json",
+    "size": 490
+  },
+  {
+    "path": "private_raw_data/README_PRIVATE.md",
+    "size": 567
+  },
+  {
+    "path": "src/components/dashboard/DashboardShell.tsx",
+    "size": 1417
+  },
+  {
+    "path": "src/components/day-core/DayCoreDashboard.tsx",
+    "size": 5541
+  },
+  {
+    "path": "src/components/dev/DevErrorLogPanel.tsx",
+    "size": 2347
+  },
+  {
+    "path": "src/components/dev/ErrorBoundary.tsx",
+    "size": 1188
+  },
+  {
+    "path": "src/components/live/LiveTimeWidget.tsx",
+    "size": 1331
+  },
+  {
+    "path": "src/lib/day-core/dayCoreModel.ts",
+    "size": 5600
+  },
+  {
+    "path": "src/lib/error-log/errorLog.ts",
+    "size": 1276
+  },
+  {
+    "path": "src/lib/mock/finflowMock.ts",
+    "size": 721
+  },
+  {
+    "path": "src/lib/time/timeOfDay.ts",
+    "size": 826
+  },
+  {
+    "path": "tsconfig.json",
+    "size": 721
+  }
+]

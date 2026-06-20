@@ -1,0 +1,13 @@
+{
+  "version": "v1.54",
+  "secrets_added": false,
+  "supabase_package_added": true,
+  "server_wrapper_added": true,
+  "database_write_added": false,
+  "writes_feature_flag_required": true,
+  "service_role_exposed": false,
+  "local_fallback_preserved": true,
+  "memory_preflight_completed": true,
+  "transcript_ledger_updated": true,
+  "context_files_updated": true
+}

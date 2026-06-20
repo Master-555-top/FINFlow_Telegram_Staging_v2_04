@@ -1,0 +1,301 @@
+{
+  "version": "v1.6",
+  "generated_at": "2026-06-15 04:11:15 UTC",
+  "files": [
+    {
+      "path": ".env.example",
+      "size": 57,
+      "sha256": "880651b62ad7d43311db022f66855e4552a4f0e7d82488a80f16def193124dee"
+    },
+    {
+      "path": ".gitignore",
+      "size": 447,
+      "sha256": "cbec221173635f09ca00a1f8c0ea0f10783e1003f2017c2d4c1aa79dc73c816a"
+    },
+    {
+      "path": "CHANGELOG_LATEST.md",
+      "size": 3284,
+      "sha256": "4c971ce3f9aeb3c9e85354f324cb919274ae7f6a70c6c199d9c723bbb6f3ad66"
+    },
+    {
+      "path": "FILE_MANIFEST_v1_2.json",
+      "size": 5466,
+      "sha256": "27d63611f002a755df8f0cd809aab3848337cb67daf9a267e7baecd0fd631221"
+    },
+    {
+      "path": "FILE_MANIFEST_v1_3.json",
+      "size": 6918,
+      "sha256": "d91a24b8f23439fdb144f65f47326b9cdb35fc82f71f370bfb8716b8e0219aae"
+    },
+    {
+      "path": "FILE_MANIFEST_v1_4.json",
+      "size": 7589,
+      "sha256": "7888c69dc099246e73bebada3f41205a944a7bc608f8cb7fdd439a148249d171"
+    },
+    {
+      "path": "FILE_MANIFEST_v1_5.json",
+      "size": 9516,
+      "sha256": "db5c7585c70d17d08eb18b9050ccdce0b64a62f7fc4688a4203fa0d02218a2a6"
+    },
+    {
+      "path": "README_START_HERE.md",
+      "size": 5289,
+      "sha256": "bed905e1b5a62f9e8488017634cbe235a18c878f217e6be883407d85eba7c72c"
+    },
+    {
+      "path": "README_STEP_01.md",
+      "size": 950,
+      "sha256": "03f609488a6a7000731a1b09018d69cc2adbae94d435a9cd7c14ecc15d475800"
+    },
+    {
+      "path": "app/globals.css",
+      "size": 5468,
+      "sha256": "ff5922343043e44ded685ed04dd8daf38e4d8154f885592615f12ab6edf33641"
+    },
+    {
+      "path": "app/layout.tsx",
+      "size": 525,
+      "sha256": "978fcc41bc5e695789cc428af96393d9d4ea71d68aec06974ec98c33adaad7ea"
+    },
+    {
+      "path": "app/page.tsx",
+      "size": 258,
+      "sha256": "7d8fe625e8f6bfa53be43b785b53a97c197d33fa7eb97744cdc9b58699a0ebd0"
+    },
+    {
+      "path": "docs/project/ANTI_REGRESSION_CHECKLIST.md",
+      "size": 864,
+      "sha256": "f25b9907939be9d7a367281a2618d3f676a6c6bd3b2ea840e14f43078f5ae742"
+    },
+    {
+      "path": "docs/project/CURRENT_CONTEXT_v0_3.md",
+      "size": 3971,
+      "sha256": "f91eece0c66f4c42838818aa66459a65f7b2839aa60506f25048fd04f1ded144"
+    },
+    {
+      "path": "docs/project/STEP_02_DAILY_MONEY_PLANNER_SPEC.md",
+      "size": 1822,
+      "sha256": "c7c2b998b8f49e985a745ab92797c33ca7c3c7e8d5af0fe6f56d7b09b19c18c2"
+    },
+    {
+      "path": "docs/project/audit/PRE_START_FULL_REVIEW_STATUS.md",
+      "size": 2599,
+      "sha256": "5f6fb69f07580f2d21bea49d8606a0efaeb9d5bfb40a4a9332417f02eddac43b"
+    },
+    {
+      "path": "docs/project/audit/REQUIREMENTS_COVERAGE_AUDIT.md",
+      "size": 5260,
+      "sha256": "d93e12e59056943ddbf68edb73207f0ff57f2e1fefaac655e9b22b3bac76dd63"
+    },
+    {
+      "path": "docs/project/backlog/ERROR_LOG_SYSTEM_SPEC.md",
+      "size": 575,
+      "sha256": "ddd9ee79534fc510a60e4d98c847a5994f29d709690eeacd13d3169f9c77a274"
+    },
+    {
+      "path": "docs/project/backlog/FEATURE_BACKLOG.md",
+      "size": 540,
+      "sha256": "e60102a19b6f68374d4fcf1ed89d670f0f54240dea6602ebc442ca1615b3f035"
+    },
+    {
+      "path": "docs/project/data/AI_MEMORY_AND_LEARNING_SPEC.md",
+      "size": 868,
+      "sha256": "9d161511f4659c164f96c41a8249938e0ce6126e5067dc49871e726b4faf105f"
+    },
+    {
+      "path": "docs/project/data/CALENDAR_TIME_PLANNER_SPEC.md",
+      "size": 766,
+      "sha256": "d4ff75efdff299c1f7e42d7f24adda124ba032d874c08af310c87eaa88110369"
+    },
+    {
+      "path": "docs/project/data/DAILY_MONEY_PLANNER_SPEC.md",
+      "size": 1749,
+      "sha256": "cfc60918a7d3f309e455e937bc1ed053f39e392d3031b228a2037aa07ded036e"
+    },
+    {
+      "path": "docs/project/data/FUNDS_AND_ALLOCATION_MODEL.md",
+      "size": 1931,
+      "sha256": "f12b0850c8552d7dc6547254a821d0b4800304e21d3a528f4c293c7fe0bdcf7a"
+    },
+    {
+      "path": "docs/project/data/REAL_TIME_ALLOCATION_ADVISOR_SPEC.md",
+      "size": 6161,
+      "sha256": "0dbb52784eb5de33cdfc4930607f0b37c12537a4c2dcca9b63f01b75cc38bf7a"
+    },
+    {
+      "path": "docs/project/data/TAXI_VEHICLE_COST_MODEL.md",
+      "size": 1584,
+      "sha256": "654cd627920279d409ee45dd1a51c32464811f1551da7955c82f6adecc38255c"
+    },
+    {
+      "path": "docs/project/history/CHAT_TIMELINE_AND_DECISION_HISTORY.md",
+      "size": 12760,
+      "sha256": "77177d0fb69b349f6b0ef9676d40bd0734b975bb3e781ed887fd96c01f4d18dc"
+    },
+    {
+      "path": "docs/project/import/DATA_SOURCES_AND_IMPORT_PLAN.md",
+      "size": 1844,
+      "sha256": "a499ef464b745ae0cf43c1c080562170f44a3597c821c3ca02f79dab84c9bbf3"
+    },
+    {
+      "path": "docs/project/import/HISTORICAL_DATA_NORMALIZATION_PLAN.md",
+      "size": 3883,
+      "sha256": "af81baca85cbe3b2038370c1a17f74924bdc2f0a6c4bad426991753573f3ee3f"
+    },
+    {
+      "path": "docs/project/import/HISTORICAL_SOURCE_INDEX.md",
+      "size": 3529,
+      "sha256": "ddaf26f1cc059b04156d4f3354e27c655b329cec01941071c7b722d10af89c67"
+    },
+    {
+      "path": "docs/project/import/NORMALIZED_DATA_TEMPLATE.md",
+      "size": 2079,
+      "sha256": "729ea767500c28abc78fbccd762ff0aada033c9c28d1d54c2130ebade1c0823e"
+    },
+    {
+      "path": "docs/project/import/normalized/EXPENSE_CANDIDATES_REVIEW.csv",
+      "size": 1122774,
+      "sha256": "256f7dbd6e522de0710d6342252799b9c014be95c6d50af5650ecd19019c0e90"
+    },
+    {
+      "path": "docs/project/import/normalized/HISTORICAL_NORMALIZED_CANDIDATES_REVIEW.csv",
+      "size": 3513087,
+      "sha256": "b2ce0edfc12fd03b479d727cd7d71048327b7c8c534c3df1b65b78a78945527b"
+    },
+    {
+      "path": "docs/project/import/normalized/INCOME_CANDIDATES_REVIEW.csv",
+      "size": 1955363,
+      "sha256": "01cf5a02c66eabf666065c8b8beed42dfb792ac39a8df540c6514451b416a226"
+    },
+    {
+      "path": "docs/project/import/normalized/RAW_TEXT_LINE_INDEX_REDACTED.csv",
+      "size": 3859627,
+      "sha256": "94b2602b1d6bd597c892b2bf27727c643c258f01083aa89aed72d8253bcd8c14"
+    },
+    {
+      "path": "docs/project/import/normalized/ROUGH_CATEGORY_SUMMARY_REVIEW.csv",
+      "size": 280,
+      "sha256": "756bdabb07d7f4b5f1650a9168851a54c112eb64df855a1ad222d9a1abaf103a"
+    },
+    {
+      "path": "docs/project/import/reports/HISTORICAL_NORMALIZATION_REPORT.md",
+      "size": 3407,
+      "sha256": "0b0823f81dc1a25dbb5084a87cbb9a3fa7a9051cc256445cce3232b2db153c06"
+    },
+    {
+      "path": "docs/project/import/reports/HISTORICAL_SOURCE_INVENTORY.json",
+      "size": 6094,
+      "sha256": "76fb72e5cd8d3b2079d639c07a9bbbfb296ca3e73f3805be48e17638136bc282"
+    },
+    {
+      "path": "docs/project/memory/PROJECT_MEMORY.md",
+      "size": 2389,
+      "sha256": "1bbc3fb5672b37d872a027acf25760284e6e8668f497deebfab6aa7b7079a546"
+    },
+    {
+      "path": "docs/project/memory/USER_AND_FINANCIAL_CONTEXT.md",
+      "size": 1426,
+      "sha256": "e1b71fd5659de6404f88b003668dbf4b4fce938989d15c21a0e1bc0a2dcf9acd"
+    },
+    {
+      "path": "docs/project/protocols/AI_DEVELOPMENT_PROTOCOL.md",
+      "size": 1008,
+      "sha256": "9fe61c6ee92697eeb70c14d9a6d8b73c73587c3717d7365ffe056550ca8b4a44"
+    },
+    {
+      "path": "docs/project/protocols/ANTI_REGRESSION_CHECKLIST.md",
+      "size": 1129,
+      "sha256": "058ef2084b2a169eecc09e446198f1c1ed0e460bc0e5d659c54efbb7e6f0d40b"
+    },
+    {
+      "path": "docs/project/protocols/CODE_CHANGE_PROTOCOL.md",
+      "size": 1031,
+      "sha256": "30ed5f8d7334c3a19f4665d27e0648c559d516164258f7854f7f32c40ff25c06"
+    },
+    {
+      "path": "docs/project/protocols/LOCKED_DECISIONS.md",
+      "size": 2466,
+      "sha256": "9f7eb7c8269f72f540c1a8068217ba51e453a2003480f4f12ba308fec3a18d68"
+    },
+    {
+      "path": "docs/project/protocols/PROJECT_UPDATE_PROTOCOL.md",
+      "size": 1799,
+      "sha256": "6d3e1fe34cc3a067aeb5abe745e71f63c5e7192ad93ed9a8770458ef3a15fe9d"
+    },
+    {
+      "path": "docs/project/security/SECURITY_AND_PRIVATE_DATA_RULES.md",
+      "size": 1903,
+      "sha256": "a9001e1f524faacd63b6e586469031f976e3a2dadd792279b5c2be81a62febc8"
+    },
+    {
+      "path": "docs/project/state/CURRENT_STATE.md",
+      "size": 745,
+      "sha256": "684f7e62a443e4582a3fe2aca0dd44e5bfbf0b7ab65fdd77a9896d54381e2913"
+    },
+    {
+      "path": "exports/.gitkeep",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "next-env.d.ts",
+      "size": 147,
+      "sha256": "0301ab7a1789add87f2821f8411bbf13267abbd381013b527e9da37e366a61a2"
+    },
+    {
+      "path": "next.config.js",
+      "size": 119,
+      "sha256": "ea91b4da7798ba5d5490a02c73764b4db874161f2d12c423cc6420c5a494a6ac"
+    },
+    {
+      "path": "package.json",
+      "size": 483,
+      "sha256": "4ab1c20cbcc7ae9f1306deaf4e2692cc56e19f6b2b586afa3b1e96d19a46da62"
+    },
+    {
+      "path": "private_raw_data/README_PRIVATE.md",
+      "size": 567,
+      "sha256": "10146f25437bbb1374c30c28293461658b597a00018baf0021ffa0557a623430"
+    },
+    {
+      "path": "src/components/dashboard/DashboardShell.tsx",
+      "size": 3060,
+      "sha256": "31bdd9ffdcb683f0cca6dee710085bb813558a88683b4317336fc1d7fdc7ce82"
+    },
+    {
+      "path": "src/components/dev/DevErrorLogPanel.tsx",
+      "size": 2347,
+      "sha256": "034204f658b4d846e3ff4a88a0a4c56fc40331d783e118cf61f98da8e7a8226a"
+    },
+    {
+      "path": "src/components/dev/ErrorBoundary.tsx",
+      "size": 1188,
+      "sha256": "3cbc7fd610a0e968e50e17e1ab6fdb79aafaba6f51414f20410d18ecfe04a290"
+    },
+    {
+      "path": "src/components/live/LiveTimeWidget.tsx",
+      "size": 1331,
+      "sha256": "0443d49ea781b9c047427c7490d18688d47820915723e8eed072475408a4ba6a"
+    },
+    {
+      "path": "src/lib/error-log/errorLog.ts",
+      "size": 1276,
+      "sha256": "e69b030f2b2968b0a84005ff3e8f3d44571a71282fdd31a0290f89f2209999b4"
+    },
+    {
+      "path": "src/lib/mock/finflowMock.ts",
+      "size": 721,
+      "sha256": "85d12092654bb1b87e47d654fef40da908589ed1af11ea2d9abd3f23545f7401"
+    },
+    {
+      "path": "src/lib/time/timeOfDay.ts",
+      "size": 826,
+      "sha256": "efb2b6885630eecba604c3979a98e3170f8b10633a7e4309d7b6e727f94b8514"
+    },
+    {
+      "path": "tsconfig.json",
+      "size": 558,
+      "sha256": "b49db1f7718e3d9f431f3160128c84828b5e37fec1b7617f9fcf3d7ab7f2d072"
+    }
+  ]
+}

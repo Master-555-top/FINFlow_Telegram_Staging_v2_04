@@ -1,0 +1,9 @@
+{
+  "version": "v1.58",
+  "secrets_added": false,
+  "external_ai_call_added": false,
+  "assistant_chat_ui_added": true,
+  "local_rule_based_only": true,
+  "private_raw_data_rendered": false,
+  "transcript_ledger_updated": true
+}

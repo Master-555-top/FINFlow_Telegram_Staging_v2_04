@@ -1,0 +1,480 @@
+{
+  "source_number": "05",
+  "archive_filename": "Все файлы с контекстами для проекта(2).7z",
+  "archive_size_bytes": 3928424,
+  "archive_sha256": "03d7c4b861a57c12d39983a0ffad3285b1f1f4b72308fe702213180c31cb2edc",
+  "extracted_root": "/mnt/data/source05_context_archive_extracted/Users/gta55/Desktop/Новая папка",
+  "total_files": 44,
+  "category_counts": {
+    "screenshot_or_image": 3,
+    "other": 4,
+    "context_document": 26,
+    "app_or_config": 10,
+    "bank_or_pdf_document": 1
+  },
+  "extension_counts": {
+    ".png": 3,
+    "[no_ext]": 4,
+    ".md": 11,
+    ".json": 7,
+    ".example": 1,
+    ".html": 1,
+    ".ts": 1,
+    ".txt": 14,
+    ".docx": 1,
+    ".pdf": 1
+  },
+  "top_keyword_files": {
+    "finflow_core": [
+      {
+        "path": "Вставленный текст(6).txt",
+        "count": 216,
+        "category": "context_document",
+        "text_chars": 91448
+      },
+      {
+        "path": "Вставленный текст(14).txt",
+        "count": 130,
+        "category": "context_document",
+        "text_chars": 88444
+      },
+      {
+        "path": "Вставленный текст(3).txt",
+        "count": 130,
+        "category": "context_document",
+        "text_chars": 88061
+      },
+      {
+        "path": "Вставленный текст(9).txt",
+        "count": 91,
+        "category": "context_document",
+        "text_chars": 101518
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 81,
+        "category": "context_document",
+        "text_chars": 73488
+      },
+      {
+        "path": "Вставленный текст(10).txt",
+        "count": 78,
+        "category": "context_document",
+        "text_chars": 137074
+      },
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 51,
+        "category": "context_document",
+        "text_chars": 25131
+      },
+      {
+        "path": "Вставленный текст(15).txt",
+        "count": 41,
+        "category": "context_document",
+        "text_chars": 14163
+      }
+    ],
+    "money_targets": [
+      {
+        "path": "Вставленный текст(6).txt",
+        "count": 533,
+        "category": "context_document",
+        "text_chars": 91448
+      },
+      {
+        "path": "Вставленный текст(9).txt",
+        "count": 177,
+        "category": "context_document",
+        "text_chars": 101518
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 132,
+        "category": "context_document",
+        "text_chars": 73488
+      },
+      {
+        "path": "Вставленный текст(14).txt",
+        "count": 115,
+        "category": "context_document",
+        "text_chars": 88444
+      },
+      {
+        "path": "Вставленный текст(3).txt",
+        "count": 114,
+        "category": "context_document",
+        "text_chars": 88061
+      },
+      {
+        "path": "Вставленный текст(15).txt",
+        "count": 86,
+        "category": "context_document",
+        "text_chars": 14163
+      },
+      {
+        "path": "Вставленный текст(10).txt",
+        "count": 85,
+        "category": "context_document",
+        "text_chars": 137074
+      },
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 83,
+        "category": "context_document",
+        "text_chars": 25131
+      }
+    ],
+    "taxi_work": [
+      {
+        "path": "Вставленный текст(14).txt",
+        "count": 920,
+        "category": "context_document",
+        "text_chars": 88444
+      },
+      {
+        "path": "Вставленный текст(3).txt",
+        "count": 920,
+        "category": "context_document",
+        "text_chars": 88061
+      },
+      {
+        "path": "Вставленный текст(9).txt",
+        "count": 500,
+        "category": "context_document",
+        "text_chars": 101518
+      },
+      {
+        "path": "Вставленный текст(6).txt",
+        "count": 281,
+        "category": "context_document",
+        "text_chars": 91448
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 275,
+        "category": "context_document",
+        "text_chars": 73488
+      },
+      {
+        "path": "Вставленный текст(8).txt",
+        "count": 140,
+        "category": "context_document",
+        "text_chars": 13112
+      },
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 132,
+        "category": "context_document",
+        "text_chars": 25131
+      },
+      {
+        "path": "Вставленный текст(7).txt",
+        "count": 124,
+        "category": "context_document",
+        "text_chars": 12840
+      }
+    ],
+    "expenses": [
+      {
+        "path": "Вставленный текст(6).txt",
+        "count": 223,
+        "category": "context_document",
+        "text_chars": 91448
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 205,
+        "category": "context_document",
+        "text_chars": 73488
+      },
+      {
+        "path": "Вставленный текст(13).txt",
+        "count": 129,
+        "category": "context_document",
+        "text_chars": 40777
+      },
+      {
+        "path": "Вставленный текст(4).txt",
+        "count": 88,
+        "category": "context_document",
+        "text_chars": 21299
+      },
+      {
+        "path": "Вставленный текст(5).txt",
+        "count": 37,
+        "category": "context_document",
+        "text_chars": 19077
+      },
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 24,
+        "category": "context_document",
+        "text_chars": 25131
+      },
+      {
+        "path": "index.html",
+        "count": 17,
+        "category": "app_or_config",
+        "text_chars": 57107
+      },
+      {
+        "path": "Вставленный текст(9).txt",
+        "count": 14,
+        "category": "context_document",
+        "text_chars": 101518
+      }
+    ],
+    "ai_protocol": [
+      {
+        "path": "Вставленный текст(9).txt",
+        "count": 167,
+        "category": "context_document",
+        "text_chars": 101518
+      },
+      {
+        "path": "index.html",
+        "count": 57,
+        "category": "app_or_config",
+        "text_chars": 57107
+      },
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 54,
+        "category": "context_document",
+        "text_chars": 25131
+      },
+      {
+        "path": "Вставленный текст(10).txt",
+        "count": 50,
+        "category": "context_document",
+        "text_chars": 137074
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 46,
+        "category": "context_document",
+        "text_chars": 73488
+      },
+      {
+        "path": "Вставленный текст(6).txt",
+        "count": 30,
+        "category": "context_document",
+        "text_chars": 91448
+      },
+      {
+        "path": "Вставленный текст(12).txt",
+        "count": 28,
+        "category": "context_document",
+        "text_chars": 11490
+      },
+      {
+        "path": "README.md",
+        "count": 25,
+        "category": "context_document",
+        "text_chars": 6044
+      }
+    ],
+    "import_editing": [
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 44,
+        "category": "context_document",
+        "text_chars": 25131
+      },
+      {
+        "path": "IMPORT_PLAN.md",
+        "count": 34,
+        "category": "context_document",
+        "text_chars": 1608
+      },
+      {
+        "path": "README.md",
+        "count": 27,
+        "category": "context_document",
+        "text_chars": 6044
+      },
+      {
+        "path": "Вставленный текст(9).txt",
+        "count": 25,
+        "category": "context_document",
+        "text_chars": 101518
+      },
+      {
+        "path": "index.html",
+        "count": 24,
+        "category": "app_or_config",
+        "text_chars": 57107
+      },
+      {
+        "path": "CHANGELOG.md",
+        "count": 21,
+        "category": "context_document",
+        "text_chars": 1631
+      },
+      {
+        "path": "REGRESSION_CHECKLIST.md",
+        "count": 21,
+        "category": "context_document",
+        "text_chars": 1825
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 14,
+        "category": "context_document",
+        "text_chars": 73488
+      }
+    ],
+    "security": [
+      {
+        "path": "Вставленный текст(9).txt",
+        "count": 57,
+        "category": "context_document",
+        "text_chars": 101518
+      },
+      {
+        "path": "package-lock.json",
+        "count": 25,
+        "category": "app_or_config",
+        "text_chars": 52481
+      },
+      {
+        "path": "README.md",
+        "count": 18,
+        "category": "context_document",
+        "text_chars": 6044
+      },
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 15,
+        "category": "context_document",
+        "text_chars": 25131
+      },
+      {
+        "path": "env(1).example",
+        "count": 8,
+        "category": "app_or_config",
+        "text_chars": 299
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 8,
+        "category": "context_document",
+        "text_chars": 73488
+      },
+      {
+        "path": "IMPORT_PLAN.md",
+        "count": 6,
+        "category": "context_document",
+        "text_chars": 1608
+      },
+      {
+        "path": "index.html",
+        "count": 4,
+        "category": "app_or_config",
+        "text_chars": 57107
+      }
+    ],
+    "relationship_time": [
+      {
+        "path": "Вставленный текст(6).txt",
+        "count": 143,
+        "category": "context_document",
+        "text_chars": 91448
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 63,
+        "category": "context_document",
+        "text_chars": 73488
+      },
+      {
+        "path": "Вставленный текст(13).txt",
+        "count": 25,
+        "category": "context_document",
+        "text_chars": 40777
+      },
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 18,
+        "category": "context_document",
+        "text_chars": 25131
+      },
+      {
+        "path": "Вставленный текст(4).txt",
+        "count": 16,
+        "category": "context_document",
+        "text_chars": 21299
+      },
+      {
+        "path": "Вставленный текст(9).txt",
+        "count": 12,
+        "category": "context_document",
+        "text_chars": 101518
+      },
+      {
+        "path": "Вставленный текст(15).txt",
+        "count": 10,
+        "category": "context_document",
+        "text_chars": 14163
+      },
+      {
+        "path": "Вставленный текст(10).txt",
+        "count": 9,
+        "category": "context_document",
+        "text_chars": 137074
+      }
+    ],
+    "learning_exit": [
+      {
+        "path": "package-lock.json",
+        "count": 18,
+        "category": "app_or_config",
+        "text_chars": 52481
+      },
+      {
+        "path": "Вставленный текст(6).txt",
+        "count": 8,
+        "category": "context_document",
+        "text_chars": 91448
+      },
+      {
+        "path": "Вставленный текст(10).txt",
+        "count": 7,
+        "category": "context_document",
+        "text_chars": 137074
+      },
+      {
+        "path": "Вставленный текст(15).txt",
+        "count": 3,
+        "category": "context_document",
+        "text_chars": 14163
+      },
+      {
+        "path": "Вставленный текст (2).txt",
+        "count": 2,
+        "category": "context_document",
+        "text_chars": 73488
+      },
+      {
+        "path": "Вставленный текст(11).txt",
+        "count": 2,
+        "category": "context_document",
+        "text_chars": 14482
+      },
+      {
+        "path": "Текст актуального чата в котором работаем.docx",
+        "count": 2,
+        "category": "context_document",
+        "text_chars": 25131
+      },
+      {
+        "path": "README.md",
+        "count": 1,
+        "category": "context_document",
+        "text_chars": 6044
+      }
+    ]
+  },
+  "secret_sensitive_file_count": 4
+}

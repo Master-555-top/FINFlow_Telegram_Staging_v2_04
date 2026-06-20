@@ -1,0 +1,10 @@
+{
+  "version": "v1.56",
+  "secrets_added": false,
+  "openai_key_added": false,
+  "external_ai_call_added": false,
+  "local_rule_based_assistant_added": true,
+  "assistant_panel_added": true,
+  "private_raw_data_rendered": false,
+  "transcript_ledger_updated": true
+}

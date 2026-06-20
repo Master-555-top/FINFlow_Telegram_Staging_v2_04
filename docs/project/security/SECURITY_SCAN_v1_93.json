@@ -1,0 +1,11 @@
+{
+  "version": "v1.93",
+  "cloud_restore_preview_diff_added": true,
+  "manual_apply_confirmation_added": true,
+  "apply_is_local_only": true,
+  "automatic_cloud_writes_added": false,
+  "private_vault_preserved": true,
+  "claude_vault_preserved": true,
+  "codex_vault_preserved": true,
+  "secrets_added": false
+}

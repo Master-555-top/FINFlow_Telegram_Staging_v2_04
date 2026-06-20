@@ -1,0 +1,12 @@
+﻿source_file,domain,finding,requirement,priority,implementation_target,import_action,risk
+README.md / PROJECT_MEMORY.md,product_core,"FinFlow is a life/finance/day OS, not a tracker",Preserve OS-level Day Core concept,P0,Day Core + Dashboard,No data import; preserve as spec,Regression if simplified to expense tracker
+Вставленный текст(14).txt,taxi_income,Contains taxi/shift/income history and analysis patterns,Build shift/order import review queue,P0,Import Review Queue + Taxi module,"Parse candidates, require approval",Incorrect historical accounting if blind-imported
+Вставленный текст(3).txt,taxi_income,Repeats/overlaps taxi goals and order logic,Deduplicate with text(14),P1,Import Review Queue,Use as supporting context,Duplicate shifts/orders
+Вставленный текст(4).txt / (5).txt / (13).txt,expenses,Contains historical spending patterns,Expense parser with review status and categories,P0,Expenses module,"Parse candidates, require manual review",Wrong categories if automatic
+Вставленный текст(15).txt,finance_model,"Confirms 8,500 net / 11,000 gross / 59,500 week / 212,500 month",Use as default target profile,P0,Settings + Planning Engine,"Convert to defaults, editable",Overconfidence if treated as permanent
+Вставленный текст(12).txt,dev_protocol,Contains AI development/anti-regression protocol,Add to development workflow,P0,Docs + release checklist,No data import,Future regressions if ignored
+FULL_EDITING_SPEC.md,editing,All entities require edit/soft-delete/restore,Implement common entity lifecycle,P0,Data layer + UI,No import,Data loss if hard delete used
+IMPORT_PLAN.md,imports,Old history must be reviewed before live use,Import queue states required,P0,Import Review Queue,Use as architecture input,Blind import corrupts data
+REGRESSION_CHECKLIST.md,quality,Release checklist exists,Run before every package,P0,QA process,No import,Repeated breakages
+private_raw_data/source_intake/*,security,Raw sources include sensitive personal data,Exclude from public/deployment packages,P0,Packaging + .gitignore,Keep private only,Data leak
+Чаплыгин Дмитрий Сергеевич.pdf,bank_statement,Bank PDF can support transaction history,Keep in private review-only pipeline,P1,Bank import pipeline,"Candidates only, never automatic final accounting",Privacy and accounting errors

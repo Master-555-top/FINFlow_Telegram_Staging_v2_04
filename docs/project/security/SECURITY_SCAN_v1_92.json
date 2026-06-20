@@ -1,0 +1,12 @@
+{
+  "version": "v1.92",
+  "claude_package_analyzed": true,
+  "claude_full_source_preserved_in_private_vault": true,
+  "claude_private_raw_data_preserved_in_private_vault": true,
+  "telegram_webapp_client_bridge_merged": true,
+  "dashboard_telegram_session_pill_added": true,
+  "newer_v1_91_systems_preserved": true,
+  "automatic_cloud_writes_added": false,
+  "private_vault_in_master_package": true,
+  "private_vault_imported_into_runtime": false
+}

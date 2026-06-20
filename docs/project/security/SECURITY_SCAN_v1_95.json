@@ -1,0 +1,17 @@
+{
+  "version": "v1.95",
+  "cloud_save_preflight_backup_gate_added": true,
+  "save_blocks_without_safety_net": true,
+  "save_blocks_with_pending_cloud_preview": true,
+  "automatic_cloud_writes_added": false,
+  "private_vault_preserved": true,
+  "secrets_added": false,
+  "readiness_percent_estimate": {
+    "local_mini_app": 90,
+    "daily_local_use": 85,
+    "telegram_mini_app_layer": 76,
+    "cloud_sync_foundation": 78,
+    "safe_launch_readiness": 74,
+    "production_ecosystem": 64
+  }
+}

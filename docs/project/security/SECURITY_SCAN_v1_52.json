@@ -1,0 +1,13 @@
+{
+  "version": "v1.52",
+  "secrets_added": false,
+  "supabase_package_added": false,
+  "database_write_added": false,
+  "service_role_exposed": false,
+  "server_only_profile_resolver_draft_added": true,
+  "route_returns_safe_plan": true,
+  "local_fallback_preserved": true,
+  "memory_preflight_completed": true,
+  "transcript_ledger_updated": true,
+  "context_files_updated": true
+}

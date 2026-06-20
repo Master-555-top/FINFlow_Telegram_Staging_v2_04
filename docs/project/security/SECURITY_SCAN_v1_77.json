@@ -1,0 +1,14 @@
+{
+  "version": "v1.77",
+  "codex_branch_synchronized": true,
+  "secrets_added": false,
+  "external_ai_call_added": false,
+  "n8n_call_added": false,
+  "supabase_writes_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "v1_73_to_v1_76_features_preserved": true,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

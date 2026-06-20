@@ -1,0 +1,9 @@
+{
+  "version": "v1.94",
+  "cloud_apply_rollback_snapshot_added": true,
+  "rollback_is_local_only": true,
+  "session_storage_used": true,
+  "automatic_cloud_writes_added": false,
+  "private_vault_preserved": true,
+  "secrets_added": false
+}

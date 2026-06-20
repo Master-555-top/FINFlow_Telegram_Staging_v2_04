@@ -1,0 +1,13 @@
+{
+  "version": "v1.73",
+  "secrets_added": false,
+  "fuel_chat_context_added": true,
+  "external_ai_call_added": false,
+  "n8n_call_added": false,
+  "supabase_writes_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

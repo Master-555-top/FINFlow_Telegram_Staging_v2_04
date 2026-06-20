@@ -1,0 +1,14 @@
+{
+  "version": "v1.45",
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_pdf_exposed": false,
+  "raw_private_transaction_csv_exposed": false,
+  "bank_filters_added": true,
+  "bank_pagination_added": true,
+  "redacted_bank_preview_count": 60,
+  "bank_candidate_rows_recounted": 2766,
+  "blind_bank_import": false,
+  "memory_preflight_completed": true,
+  "context_files_updated": true
+}

@@ -1,0 +1,17 @@
+{
+  "version": "v1.84",
+  "verification_handoff_export_added": true,
+  "markdown_export_added": true,
+  "json_export_added": true,
+  "copy_action_added": true,
+  "secret_like_note_sanitization_added": true,
+  "external_api_call_added": false,
+  "supabase_writes_added": false,
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "env_local_included": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

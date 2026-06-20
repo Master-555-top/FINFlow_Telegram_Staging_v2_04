@@ -1,0 +1,12 @@
+{
+  "version": "v1.26",
+  "status": "passed_with_notes",
+  "secrets_added": false,
+  "raw_private_data_exposed_to_ui": false,
+  "database_connection_added": false,
+  "notes": [
+    "Supabase schema is SQL documentation only and contains no keys.",
+    "Local persistence stores redacted candidate metadata and audit events only.",
+    "private_raw_data must remain outside GitHub, public cloud, Vercel, Supabase Storage, and public archives."
+  ]
+}

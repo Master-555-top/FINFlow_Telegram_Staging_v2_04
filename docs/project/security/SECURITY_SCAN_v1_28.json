@@ -1,0 +1,10 @@
+{
+  "version": "v1.28",
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_imported": false,
+  "storage": "browser localStorage demo only",
+  "warnings": [
+    "Do not use localStorage for real sensitive financial data in production."
+  ]
+}

@@ -1,0 +1,45 @@
+path,size_bytes,category,ext,text_chars,line_count,sha256,secret_pattern_hits,finflow_core,money_targets,taxi_work,expenses,ai_protocol,import_editing,security,relationship_time,learning_exit
+0aacf68d-d8f5-4305-ae5a-7425738e8ed8.png,100115,screenshot_or_image,.png,0,0,e5f7bd437926a67933418041ab6f3daab52c9341db22af0298c2ea06216c232c,0,0,0,0,0,0,0,0,0,0
+3a96b3dc-4eb0-4337-8ea8-9dae3e50dae4.png,1535345,screenshot_or_image,.png,0,0,966df62d5fc7c42d34fc0572ad8c349442b964e16ea2759d72de1d4dd93a75c7,0,0,0,0,0,0,0,0,0,0
+BUILD_ID(1),21,other,,0,0,01bbeffecbdce80b3f2f4a6294ff22268aea117ea2232dde073fe18f8b4665f4,0,0,0,0,0,0,0,0,0,0
+CHANGELOG.md,2335,context_document,.md,1631,57,7a38bf6bc57e4bfb4e9326faffa3de164625459e1d1abcfc3b4de08e85b19310,0,5,2,1,2,2,21,2,0,0
+CORE_REQUIREMENTS.md,609,context_document,.md,351,12,425969fcb7f73244041f494bb52a07ebb2201d0132dde2947b129fd3c484e1d0,0,3,2,1,1,0,0,0,0,0
+DECISIONS.md,3187,context_document,.md,1966,42,5a24fc6325e37b53d3f9e094b8244e7223dd84752a6cf2e0fd9655f5b08139ea,0,8,10,2,1,5,13,0,0,0
+FEATURE_MAP.md,1989,context_document,.md,1243,88,7e14158bd7d3680841e4a292832c691b1bd76432cc9ea4c93dc2f347a5e97bfc,0,4,7,10,3,3,8,1,2,0
+FULL_EDITING_SPEC.md,1097,context_document,.md,733,21,96c2abb351ef3dd9175d8a40492a8aa8697db1eb2472dc687d4b8c741b232196,0,1,3,1,1,6,12,0,0,0
+GOLDEN_BASE.md,1707,context_document,.md,1095,26,4c8c3a29e8732f65d5171c16e1a37476af60732b68a6f9c2f04cc044d6064680,0,5,0,0,0,4,5,0,0,0
+IMPORT_PLAN.md,2340,context_document,.md,1608,42,b3feca968bee10427e1f2c99f1e6c8a571508ef8c9ac481fa4a1734be745e224,0,2,1,1,1,4,34,6,0,0
+INTEGRITY_AUDIT.md,2359,context_document,.md,1379,41,52f14d8771dbad7a4ed73697d78f62b64f74bb5e141ebe6f2a2d664a1351b62f,0,4,1,1,1,1,1,0,0,0
+PROJECT_MEMORY.md,2997,context_document,.md,1778,72,7a2b54da7f66a187a54b7031bf006c89532783f35230f919849efd63dbce73e2,0,11,14,6,2,1,0,0,1,0
+README.md,8890,context_document,.md,6044,157,fada81f22d22d3a44f389218646365596a190c665860a24ec8c31599273e5d46,2,8,13,7,7,25,27,18,2,1
+REGRESSION_CHECKLIST.md,2949,context_document,.md,1825,53,7b432c49b19658e56a17a36ff4f9f95cd1d142f4fe968520b4a14a2146870721,0,5,9,0,4,1,21,0,2,0
+app-path-routes-manifest(1).json,172,app_or_config,.json,172,7,e43d822ef1c14bdfbe1c3515e958ea312a4c4066bd6412e60a5de8945c6d3e57,0,0,0,0,0,4,0,0,0,0
+build-manifest(2).json,503,app_or_config,.json,503,20,ce52c97cfa8ea63ec4541e299fd158f6edb7f050d125ba530fae6c5ec9b83eb3,0,0,0,0,0,1,0,0,0,0
+build-manifest(3).json,1021,app_or_config,.json,1021,26,35f3b303cfeb62eb444929bc116c84a524f88f48b7ad9b16cf82d57cddd3d3dc,0,0,0,0,0,1,0,0,0,0
+env(1).example,299,app_or_config,.example,299,9,bee3b49bfd7ec32a91b45ce0d96d26b0648ef61b51b5ece4c065b5bfac393014,3,0,0,0,0,4,0,8,0,0
+f1e88daa-a61c-44d8-b5c9-e4f3b5c33a10.png,332080,screenshot_or_image,.png,0,0,8d4722bf357b52fa846ddb5011d95ad66620046a3a5a16e89201d94a8a9462a7,0,0,0,0,0,0,0,0,0,0
+index.html,60956,app_or_config,.html,57107,1126,e4e577de480ce1f4d2f69b0b4b1efa5e207c24adc2defbbaf9254226338c3453,0,7,18,25,17,57,24,4,5,0
+next-env.d.ts,257,app_or_config,.ts,251,7,083e23c4c5e7761db151134ea1ef7896120c86c5888cdc8a861f534f7e86d6fd,0,0,0,0,0,0,1,0,0,0
+package-lock.json,52481,app_or_config,.json,52481,1534,747fdf8c9d5d8b01ef8e09a30a00cac200d7eb79771741e64dc3c1ff72fa6b81,0,1,0,0,0,14,0,25,0,18
+package.json,549,app_or_config,.json,549,23,a61bb6d10404bc9d086397c97fe8eda6a44db7311f125952cccf85ccaf367ad9,0,0,0,0,0,0,4,3,0,0
+previewinfo(1),262,other,,0,0,3660e761585eebd2d805ab6db5ff771a64e11bcb8f609c13a2d5187991a846ed,0,0,0,0,0,0,0,0,0,0
+rscinfo(2),102,other,,0,0,d11c911d57bfda95da45d7f1f361e194e163b8e8d3bee18bc97172eee466f122,0,0,0,0,0,0,0,0,0,0
+tsbuildinfo(1),136901,other,,0,0,bd31e5f783d289fab332f7db776e94d992f985a36822586bf81665064f018896,0,0,0,0,0,0,0,0,0,0
+tsconfig.json,638,app_or_config,.json,637,37,4ade17bf67b9edb66dad2bed78b6b436cb8a7ccb10fd36c80096aa6a2d008f90,0,0,0,0,0,0,0,0,0,0
+vercel.json,404,app_or_config,.json,392,13,b6f96a581d7f884ea06a16890bcab8ed2b36ed731b1ec1331697feb6279d4394,0,0,0,0,0,0,1,0,0,0
+Вставленный текст (2).txt,121151,context_document,.txt,73488,3091,edc4ad01fa47ed207653869017c54efce556f5be6a0d59a4e55e6b5218c63dcc,1,81,132,275,205,46,14,8,63,2
+Вставленный текст(10).txt,196182,context_document,.txt,137074,6130,1812e20f470b6845ca4611b8b4647e8e95bac2c73b67e10068569fc5355c6b71,0,78,85,118,5,50,1,0,9,7
+Вставленный текст(11).txt,24049,context_document,.txt,14482,729,c4f80f340284eb51f080268b03c244fcc228c2f03702f68186490bc896f72770,0,5,1,19,2,11,0,0,0,2
+Вставленный текст(12).txt,20366,context_document,.txt,11490,303,6fc230675ba41e05de4d70eb47182be876f877193bc13afb3d64465169919fd5,0,0,1,6,1,28,0,1,0,0
+Вставленный текст(13).txt,57673,context_document,.txt,40777,2098,26b1b346e4f51b2dd2b33a7bb6206a54ab0fb1623ff9b064fa58982405bac2be,0,0,30,120,129,4,0,0,25,0
+Вставленный текст(14).txt,136883,context_document,.txt,88444,5315,62fc5a1a2b0af344c01ee0d8e7bdd868da0b1f4afcb30496f9999a9d58d3ffc3,0,130,115,920,8,22,0,0,4,0
+Вставленный текст(15).txt,25576,context_document,.txt,14163,829,376b7a4e444d4f1d61454cd4bbd4b17241e8b1499069d965c9b7a2080fe39df6,0,41,86,53,6,7,0,0,10,3
+Вставленный текст(3).txt,136195,context_document,.txt,88061,5305,505171153b812b7789be1dd40c7dc70609a3516f35727725f6eec5046d654f26,0,130,114,920,6,21,0,0,4,0
+Вставленный текст(4).txt,30526,context_document,.txt,21299,1154,1361da0f285a163a92e32eda752f3ba2f16ccc472612c057c094837c5ce60fa9,0,0,27,47,88,0,0,0,16,0
+Вставленный текст(5).txt,26319,context_document,.txt,19077,906,dd6b1e104cf7346ac525c72148ddf31539b2c62e9074b5b6853c4c0168695ec6,0,0,2,72,37,4,0,0,8,0
+Вставленный текст(6).txt,167563,context_document,.txt,91448,5492,55ad20ccdd3a62891e0ce5d26f99d7b357a70063de74c5ba90b9927f05f88466,0,216,533,281,223,30,0,0,143,8
+Вставленный текст(7).txt,22612,context_document,.txt,12840,567,9f7bdc1771adf693e05208c5b668d9ab8b270d1a17e6ca52184656b61c8bde39,0,21,39,124,2,5,0,0,0,0
+Вставленный текст(8).txt,22194,context_document,.txt,13112,663,b2c639b98d97d5001e4ae9f4c9f9d86a6f2a2db16341ad05fe83225ca5b06081,0,25,24,140,1,4,0,0,0,0
+Вставленный текст(9).txt,161065,context_document,.txt,101518,6414,1fae99f48ef9bc5f350968bfb265e41deef49c0096951322519a4543f791d89f,1,91,177,500,14,167,25,57,12,1
+Текст актуального чата в котором работаем.docx,47339,context_document,.docx,25131,1142,23fbeb195e704cfcc0c2ee769aa43c29c17a1e0596146be330da95868613a6a5,0,51,83,132,24,54,44,15,18,2
+Чаплыгин Дмитрий Сергеевич.pdf,2805915,bank_or_pdf_document,.pdf,0,0,81de82db42c481c0c44d990969aa8309969e842a0baf16d4a3b9ef8badceabf0,0,0,0,0,0,0,0,0,0,0

@@ -1,0 +1,12 @@
+{
+  "version": "v1.25",
+  "raw_private_data_rendered": false,
+  "new_sensitive_files_added_to_ui": false,
+  "env_files_modified": false,
+  "build_passed": true,
+  "notes": [
+    "Review action audit events intentionally use redacted notes only.",
+    "Sensitive candidates are blocked from approve action in demo UI.",
+    "private_raw_data must not be uploaded to public repositories or cloud storage."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "version": "v1.59",
+  "secrets_added": false,
+  "self_check_panel_added": true,
+  "readiness_estimate_added": true,
+  "external_api_call_added": false,
+  "private_raw_data_rendered": false,
+  "transcript_ledger_updated": true
+}

@@ -1,0 +1,10 @@
+{
+  "version": "v1.61",
+  "secrets_added": false,
+  "car_maintenance_model_added": true,
+  "oil_service_recorded": true,
+  "mileage_tracking_added": true,
+  "fuel_estimate_added": true,
+  "private_raw_data_rendered": false,
+  "transcript_ledger_updated": true
+}

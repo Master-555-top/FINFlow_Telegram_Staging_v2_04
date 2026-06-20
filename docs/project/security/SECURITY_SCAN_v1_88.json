@@ -1,0 +1,15 @@
+{
+  "version": "v1.88",
+  "backup_aware_cloud_test_flow_added": true,
+  "manual_write_requires_local_backup": true,
+  "automatic_cloud_writes_added": false,
+  "external_ai_call_added": false,
+  "supabase_writes_added": false,
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "env_local_included": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

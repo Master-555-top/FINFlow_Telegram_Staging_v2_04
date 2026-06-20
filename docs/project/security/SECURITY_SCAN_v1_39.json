@@ -1,0 +1,9 @@
+{
+  "version": "v1.39",
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_imported": false,
+  "context_system_added": true,
+  "verbatim_old_messages_claimed": false,
+  "future_context_update_required": true
+}

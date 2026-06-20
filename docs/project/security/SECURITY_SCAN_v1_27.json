@@ -1,0 +1,8 @@
+{
+  "version": "v1.27",
+  "secrets_added": false,
+  "raw_private_data_rendered_in_ui": false,
+  "private_raw_data_policy": "do_not_upload_to_github_cloud_public_repos",
+  "new_layer": "Apply-to-Day Core Layer",
+  "result": "passed_manual_security_scan"
+}

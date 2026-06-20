@@ -1,0 +1,14 @@
+{
+  "source_number": "04",
+  "filename": "Все файлы.rar",
+  "canonical_private_copy": "private_raw_data/source_intake/SOURCE_04_all_files_archive_original.rar",
+  "size_bytes": 24,
+  "sha256": "4301ec2e9592e7a22262d1c046954545033b73be322b33a8117d201556c4254b",
+  "signature_hex_first_8_bytes": "52 61 72 21 1a 07 01 00",
+  "is_rar5_signature": true,
+  "rarfile_readable": true,
+  "file_count": 0,
+  "names": [],
+  "processing_status": "processed_empty_archive",
+  "conclusion": "The uploaded archive is an empty RAR5 container / header-only archive. No files to extract."
+}

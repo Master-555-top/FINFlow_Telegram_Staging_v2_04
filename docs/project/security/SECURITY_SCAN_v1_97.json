@@ -1,0 +1,11 @@
+{
+  "version": "v1.97",
+  "claude_nav_review_analyzed": true,
+  "claude_nav_full_source_preserved_in_private_vault": true,
+  "functional_bottom_navigation_added": true,
+  "daily_system_split_added": true,
+  "newer_safety_layers_preserved": true,
+  "automatic_cloud_writes_added": false,
+  "private_vault_preserved": true,
+  "secrets_added": false
+}

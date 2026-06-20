@@ -1,0 +1,184 @@
+[
+  {
+    "file": "CHANGELOG.md",
+    "path": "/mnt/data/CHANGELOG.md",
+    "lines": 56,
+    "sha256": "7a38bf6bc57e4bfb4e9326faffa3de164625459e1d1abcfc3b4de08e85b19310",
+    "bytes": 2335
+  },
+  {
+    "file": "CORE_REQUIREMENTS.md",
+    "path": "/mnt/data/CORE_REQUIREMENTS.md",
+    "lines": 11,
+    "sha256": "425969fcb7f73244041f494bb52a07ebb2201d0132dde2947b129fd3c484e1d0",
+    "bytes": 609
+  },
+  {
+    "file": "DECISIONS.md",
+    "path": "/mnt/data/DECISIONS.md",
+    "lines": 41,
+    "sha256": "af56e38f7e3c22241fd414dc2400d2962f9762c9e2c29a76cf6a6512e658d798",
+    "bytes": 3187
+  },
+  {
+    "file": "FEATURE_MAP.md",
+    "path": "/mnt/data/FEATURE_MAP.md",
+    "lines": 87,
+    "sha256": "7e14158bd7d3680841e4a292832c691b1bd76432cc9ea4c93dc2f347a5e97bfc",
+    "bytes": 1989
+  },
+  {
+    "file": "FULL_EDITING_SPEC.md",
+    "path": "/mnt/data/FULL_EDITING_SPEC.md",
+    "lines": 20,
+    "sha256": "96c2abb351ef3dd9175d8a40492a8aa8697db1eb2472dc687d4b8c741b232196",
+    "bytes": 1097
+  },
+  {
+    "file": "GOLDEN_BASE.md",
+    "path": "/mnt/data/GOLDEN_BASE.md",
+    "lines": 25,
+    "sha256": "4c8c3a29e8732f65d5171c16e1a37476af60732b68a6f9c2f04cc044d6064680",
+    "bytes": 1707
+  },
+  {
+    "file": "IMPORT_PLAN.md",
+    "path": "/mnt/data/IMPORT_PLAN.md",
+    "lines": 41,
+    "sha256": "b3feca968bee10427e1f2c99f1e6c8a571508ef8c9ac481fa4a1734be745e224",
+    "bytes": 2340
+  },
+  {
+    "file": "INTEGRITY_AUDIT.md",
+    "path": "/mnt/data/INTEGRITY_AUDIT.md",
+    "lines": 40,
+    "sha256": "52f14d8771dbad7a4ed73697d78f62b64f74bb5e141ebe6f2a2d664a1351b62f",
+    "bytes": 2359
+  },
+  {
+    "file": "PROJECT_MEMORY.md",
+    "path": "/mnt/data/PROJECT_MEMORY.md",
+    "lines": 71,
+    "sha256": "87d29adc811b940bba6e803e20ff8134c91ef15fc238b64218eb49544bfaaafc",
+    "bytes": 2997
+  },
+  {
+    "file": "README.md",
+    "path": "/mnt/data/README.md",
+    "lines": 156,
+    "sha256": "fada81f22d22d3a44f389218646365596a190c665860a24ec8c31599273e5d46",
+    "bytes": 8890
+  },
+  {
+    "file": "REGRESSION_CHECKLIST.md",
+    "path": "/mnt/data/REGRESSION_CHECKLIST.md",
+    "lines": 52,
+    "sha256": "9d17b6ee2979a9e5b7e1c95f77b62fc4a68513d37ed9265192a71fbc1b9aef48",
+    "bytes": 2949
+  },
+  {
+    "file": "Вставленный текст (2).txt",
+    "path": "/mnt/data/Вставленный текст (2).txt",
+    "lines": 3091,
+    "sha256": "6c1a416a317e3fae5aaac897d472f6b877cce575439aac9688a330fcf4c53021",
+    "bytes": 121151
+  },
+  {
+    "file": "Вставленный текст(10).txt",
+    "path": "/mnt/data/Вставленный текст(10).txt",
+    "lines": 6130,
+    "sha256": "4152537862bc34c475e126fe9c12e5241fe1e700df20b4c4eeb7a5c39176b759",
+    "bytes": 196182
+  },
+  {
+    "file": "Вставленный текст(11).txt",
+    "path": "/mnt/data/Вставленный текст(11).txt",
+    "lines": 729,
+    "sha256": "61a1daac3d210d51987087c8902d9ba1b9d021fb5989ce3bef759b0c492fbd99",
+    "bytes": 24049
+  },
+  {
+    "file": "Вставленный текст(12).txt",
+    "path": "/mnt/data/Вставленный текст(12).txt",
+    "lines": 302,
+    "sha256": "a2583e6e726aa46cc4fd888c6a6070a4c017fbdbb18d6f2fb09cf6d9829b3337",
+    "bytes": 20366
+  },
+  {
+    "file": "Вставленный текст(13).txt",
+    "path": "/mnt/data/Вставленный текст(13).txt",
+    "lines": 2097,
+    "sha256": "ebc4ff83b700a1563a5682f7caf9e690d8c8cb21a5d04f3947fd3058bd016b01",
+    "bytes": 57673
+  },
+  {
+    "file": "Вставленный текст(14).txt",
+    "path": "/mnt/data/Вставленный текст(14).txt",
+    "lines": 5314,
+    "sha256": "65ffb9408f995303563870d4309d5adec160b3abce541b42ff0e26015a62a7b2",
+    "bytes": 136883
+  },
+  {
+    "file": "Вставленный текст(15).txt",
+    "path": "/mnt/data/Вставленный текст(15).txt",
+    "lines": 828,
+    "sha256": "36a6304b7c8faa262b5a10f35e9ec520c2ab301c8492f9de4f22fea6479b8eb9",
+    "bytes": 25576
+  },
+  {
+    "file": "Вставленный текст(3).txt",
+    "path": "/mnt/data/Вставленный текст(3).txt",
+    "lines": 5305,
+    "sha256": "c28ae65fa6fa4c4c349815bfe564516a79627f6a0f886347708a9708879a0527",
+    "bytes": 136195
+  },
+  {
+    "file": "Вставленный текст(4).txt",
+    "path": "/mnt/data/Вставленный текст(4).txt",
+    "lines": 1154,
+    "sha256": "7a862a8053756d9dad154b937394c3b3d866008e42ad26cc6f0449828822edf7",
+    "bytes": 30526
+  },
+  {
+    "file": "Вставленный текст(5).txt",
+    "path": "/mnt/data/Вставленный текст(5).txt",
+    "lines": 906,
+    "sha256": "b40d0929f24d0c3660021705cde6b1671601d2567cda3ad54af7834d673a97fb",
+    "bytes": 26319
+  },
+  {
+    "file": "Вставленный текст(6).txt",
+    "path": "/mnt/data/Вставленный текст(6).txt",
+    "lines": 5492,
+    "sha256": "aa140beb648362c7881a133c36a020c9e2fb20242d906fb968bc92c1943fbfdb",
+    "bytes": 167563
+  },
+  {
+    "file": "Вставленный текст(7).txt",
+    "path": "/mnt/data/Вставленный текст(7).txt",
+    "lines": 567,
+    "sha256": "4b7ac62dfc6cc6c3094701322e82ce40b81828f867b372901b33a50cfc716be6",
+    "bytes": 22612
+  },
+  {
+    "file": "Вставленный текст(8).txt",
+    "path": "/mnt/data/Вставленный текст(8).txt",
+    "lines": 663,
+    "sha256": "d20ed788b8e8a74749be76276662cfa5dca94e517245862c9dfe20821035a040",
+    "bytes": 22194
+  },
+  {
+    "file": "Вставленный текст(9).txt",
+    "path": "/mnt/data/Вставленный текст(9).txt",
+    "lines": 6414,
+    "sha256": "8dc44cff541b5cf6bccdd303aa8edcabb152a21c58417d7c2fc72fc5fc309451",
+    "bytes": 161065
+  },
+  {
+    "file": "tbank_statement_extracted_text_REDACT_BEFORE_UPLOAD.txt",
+    "path": "/mnt/data/finflow_v1_5/finflow_v3_latest_working_package_v1_5/private_raw_data/normalized_private/tbank_statement_extracted_text_REDACT_BEFORE_UPLOAD.txt",
+    "lines": 6833,
+    "sha256": "d57ddc8b41f8c735c419a36bff586fefc428db002ed1d8fde42422d53752d12c",
+    "bytes": 776209
+  }
+]

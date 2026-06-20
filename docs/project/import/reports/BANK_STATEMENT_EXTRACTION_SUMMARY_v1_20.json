@@ -1,0 +1,147 @@
+{
+  "source": "SOURCE_03_bank_statement_tbank.pdf",
+  "source_privacy_class": "PRIVATE_FINANCIAL + THIRD_PARTY_PERSONAL",
+  "page_count": 105,
+  "period": {
+    "from": "27.12.2025",
+    "to": "06.06.2026"
+  },
+  "available_balance_as_of_statement_date_rub": 2394.63,
+  "transactions_extracted": 2766,
+  "income_total_rub": 1486492.27,
+  "income_count": 1135,
+  "expense_total_rub": -1484097.64,
+  "expense_count": 1631,
+  "category_summary": [
+    {
+      "suggested_category": "person_to_person",
+      "count": 128,
+      "sum_rub": -399718.0
+    },
+    {
+      "suggested_category": "other",
+      "count": 411,
+      "sum_rub": -347127.58
+    },
+    {
+      "suggested_category": "internal_transfer_or_fund",
+      "count": 119,
+      "sum_rub": -300025.39
+    },
+    {
+      "suggested_category": "work_fuel",
+      "count": 183,
+      "sum_rub": -154383.6
+    },
+    {
+      "suggested_category": "food_cafe",
+      "count": 226,
+      "sum_rub": -98160.02
+    },
+    {
+      "suggested_category": "work_platform_commission",
+      "count": 316,
+      "sum_rub": -67024.0
+    },
+    {
+      "suggested_category": "food_products",
+      "count": 144,
+      "sum_rub": -57021.82
+    },
+    {
+      "suggested_category": "entertainment_games",
+      "count": 54,
+      "sum_rub": -22478.23
+    },
+    {
+      "suggested_category": "vehicle_parts_service",
+      "count": 19,
+      "sum_rub": -18050.0
+    },
+    {
+      "suggested_category": "communication",
+      "count": 10,
+      "sum_rub": -8868.0
+    },
+    {
+      "suggested_category": "leisure_relationship",
+      "count": 7,
+      "sum_rub": -4537.0
+    },
+    {
+      "suggested_category": "shopping_gifts_clothes",
+      "count": 2,
+      "sum_rub": -4398.0
+    },
+    {
+      "suggested_category": "bank_services",
+      "count": 11,
+      "sum_rub": -1506.0
+    },
+    {
+      "suggested_category": "government_services",
+      "count": 1,
+      "sum_rub": -800.0
+    },
+    {
+      "suggested_category": "taxi_or_platform_income",
+      "count": 1,
+      "sum_rub": 198.0
+    },
+    {
+      "suggested_category": "income_or_transfer",
+      "count": 15,
+      "sum_rub": 9353.76
+    },
+    {
+      "suggested_category": "money_movement_or_income",
+      "count": 1119,
+      "sum_rub": 1476940.51
+    }
+  ],
+  "month_summary": {
+    "12.2025": {
+      "income_total_rub": 14131.32,
+      "income_count": 3,
+      "expense_total_rub": -5438.69,
+      "expense_count": 12
+    },
+    "01.2026": {
+      "income_total_rub": 295501.22,
+      "income_count": 154,
+      "expense_total_rub": -301622.83,
+      "expense_count": 341
+    },
+    "02.2026": {
+      "income_total_rub": 217623.41,
+      "income_count": 220,
+      "expense_total_rub": -219300.11,
+      "expense_count": 340
+    },
+    "03.2026": {
+      "income_total_rub": 310232.08,
+      "income_count": 245,
+      "expense_total_rub": -309963.0,
+      "expense_count": 304
+    },
+    "04.2026": {
+      "income_total_rub": 383121.27,
+      "income_count": 273,
+      "expense_total_rub": -383773.88,
+      "expense_count": 292
+    },
+    "05.2026": {
+      "income_total_rub": 246929.97,
+      "income_count": 215,
+      "expense_total_rub": -240473.32,
+      "expense_count": 296
+    },
+    "06.2026": {
+      "income_total_rub": 18953.0,
+      "income_count": 25,
+      "expense_total_rub": -23525.81,
+      "expense_count": 46
+    }
+  },
+  "warning": "This is extracted candidate data. Transfers/replenishments are not final income/expense and require Import Center review."
+}

@@ -1,0 +1,12 @@
+{
+  "version": "v1.44",
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_pdf_exposed": false,
+  "raw_private_transaction_csv_exposed": false,
+  "bank_review_ui_added": true,
+  "bank_candidate_rows_recounted": 2766,
+  "blind_bank_import": false,
+  "memory_preflight_completed": true,
+  "context_files_updated": true
+}

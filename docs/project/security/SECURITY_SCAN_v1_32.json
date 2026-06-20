@@ -1,0 +1,8 @@
+{
+  "version": "v1.32",
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_imported": false,
+  "quick_daily_input_added": true,
+  "storage": "browser localStorage demo only"
+}

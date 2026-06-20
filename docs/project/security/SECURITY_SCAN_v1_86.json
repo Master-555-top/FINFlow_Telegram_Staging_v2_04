@@ -1,0 +1,15 @@
+{
+  "version": "v1.86",
+  "manual_cloud_test_wizard_added": true,
+  "automatic_cloud_writes_added": false,
+  "manual_conflict_test_flow_added": true,
+  "external_ai_call_added": false,
+  "supabase_writes_added": false,
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "env_local_included": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

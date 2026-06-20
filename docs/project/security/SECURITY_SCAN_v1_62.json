@@ -1,0 +1,9 @@
+{
+  "version": "v1.62",
+  "secrets_added": false,
+  "full_turn_protocol_added": true,
+  "active_work_state_added": true,
+  "interruption_queue_added": true,
+  "private_raw_data_rendered": false,
+  "transcript_ledger_updated": true
+}

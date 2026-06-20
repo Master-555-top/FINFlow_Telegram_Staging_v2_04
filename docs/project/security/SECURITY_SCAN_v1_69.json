@@ -1,0 +1,15 @@
+{
+  "version": "v1.69",
+  "secrets_added": false,
+  "json_export_added": true,
+  "csv_export_added": true,
+  "local_only_export": true,
+  "clear_history_control_added": true,
+  "supabase_writes_added": false,
+  "external_api_call_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

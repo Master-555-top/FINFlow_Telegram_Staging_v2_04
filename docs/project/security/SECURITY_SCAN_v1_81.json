@@ -1,0 +1,14 @@
+{
+  "version": "v1.81",
+  "verification_checklist_added": true,
+  "readiness_percentages_added": true,
+  "secrets_added": false,
+  "external_api_call_added": false,
+  "supabase_writes_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "env_local_included": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

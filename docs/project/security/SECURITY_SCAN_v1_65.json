@@ -1,0 +1,12 @@
+{
+  "version": "v1.65",
+  "secrets_added": false,
+  "daily_fuel_budget_added": true,
+  "odometer_based": true,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true,
+  "interruption_queue_updated": true
+}

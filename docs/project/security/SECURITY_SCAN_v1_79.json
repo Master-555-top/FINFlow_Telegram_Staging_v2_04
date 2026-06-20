@@ -1,0 +1,15 @@
+{
+  "version": "v1.79",
+  "cloud_sync_merged": true,
+  "telegram_server_auth_required": true,
+  "supabase_service_role_client_side_exposed": false,
+  "silent_cloud_overwrite_allowed": false,
+  "secrets_added": false,
+  "env_local_included": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "supabase_writes_default_enabled": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

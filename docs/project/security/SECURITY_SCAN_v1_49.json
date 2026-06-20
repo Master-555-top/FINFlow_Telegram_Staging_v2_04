@@ -1,0 +1,13 @@
+{
+  "version": "v1.49",
+  "secrets_added": false,
+  "supabase_keys_added": false,
+  "service_role_exposed": false,
+  "frontend_connected_to_supabase": false,
+  "local_fallback_preserved": true,
+  "persistence_contract_added": true,
+  "telegram_auth_implemented": false,
+  "memory_preflight_completed": true,
+  "transcript_ledger_updated": true,
+  "context_files_updated": true
+}

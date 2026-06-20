@@ -1,0 +1,10 @@
+{
+  "version": "v1.60",
+  "secrets_added": false,
+  "car_context_synced": true,
+  "bank_status_synced": true,
+  "ai_partner_context_synced": true,
+  "raw_bank_data_rendered": false,
+  "private_raw_data_rendered": false,
+  "transcript_ledger_updated": true
+}

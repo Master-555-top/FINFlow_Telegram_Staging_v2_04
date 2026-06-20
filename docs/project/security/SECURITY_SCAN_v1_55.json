@@ -1,0 +1,11 @@
+{
+  "version": "v1.55",
+  "secrets_added": false,
+  "profile_dry_run_added": true,
+  "database_write_added": false,
+  "readiness_route_added": true,
+  "status_report_added": true,
+  "service_role_exposed": false,
+  "local_fallback_preserved": true,
+  "transcript_ledger_updated": true
+}

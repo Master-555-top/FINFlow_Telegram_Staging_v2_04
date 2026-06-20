@@ -1,0 +1,15 @@
+{
+  "version": "v1.80",
+  "hardcoded_secrets_added": false,
+  "deployment_readiness_api_added": true,
+  "readiness_returns_secret_values": false,
+  "client_receives_service_role_key": false,
+  "cloud_sync_default_enabled": false,
+  "supabase_writes_default_enabled": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "env_local_included": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

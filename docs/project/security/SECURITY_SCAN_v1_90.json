@@ -1,0 +1,20 @@
+{
+  "version": "v1.90",
+  "codex_package_analyzed": true,
+  "codex_private_raw_data_excluded": true,
+  "codex_browser_localstorage_backup_added": true,
+  "cloud_document_validation_hardened": true,
+  "supabase_migration_hardened": true,
+  "deployment_acceptance_runner_hardened": true,
+  "manual_wizard_legacy_storage_and_skipped_status_merged": true,
+  "automatic_cloud_writes_added": false,
+  "external_ai_call_added": false,
+  "supabase_writes_added": false,
+  "secrets_added": false,
+  "private_raw_data_rendered": false,
+  "raw_bank_data_rendered": false,
+  "env_local_included": false,
+  "transcript_ledger_updated": true,
+  "operation_ledger_updated": true,
+  "active_state_updated": true
+}

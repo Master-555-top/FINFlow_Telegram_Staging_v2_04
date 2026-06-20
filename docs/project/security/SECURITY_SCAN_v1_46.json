@@ -1,0 +1,12 @@
+{
+  "version": "v1.46",
+  "secrets_added": false,
+  "raw_bank_pdf_exposed": false,
+  "raw_private_transaction_csv_exposed": false,
+  "private_raw_data_copied_to_public_docs": false,
+  "transcript_ledger_added": true,
+  "first_available_user_text": "Нужно изучить и проанализировать",
+  "source01_sha256": "2cb334ced3089b1dd4809037cc55a197bdf644656c6cf2b81d04783d6c554804",
+  "memory_preflight_completed": true,
+  "context_files_updated": true
+}

@@ -1,0 +1,12 @@
+{
+  "version": "v1.57",
+  "secrets_added": false,
+  "openai_key_added": false,
+  "n8n_secret_added": false,
+  "external_api_call_added": false,
+  "assistant_prompt_builder_added": true,
+  "assistant_dry_run_route_added": true,
+  "minimized_payload": true,
+  "private_raw_data_rendered": false,
+  "transcript_ledger_updated": true
+}

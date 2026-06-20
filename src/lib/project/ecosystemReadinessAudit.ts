@@ -1,4 +1,4 @@
-export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_04' as const;
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_05' as const;
 
 export type EcosystemReadinessArea = {
   id: string;
@@ -29,7 +29,7 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
     {
       id: 'local_day_core',
       title: 'Локальная mini app / Day Core',
-      previousPercent: 94,
+      previousPercent: 95,
       percent: 95,
       status: 'usable',
       summary: 'Основной локальный дневной контур уже пригоден для реального ручного использования.',
@@ -51,10 +51,10 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
     {
       id: 'telegram_mini_app',
       title: 'Telegram Mini App слой',
-      previousPercent: 81,
-      percent: 84,
+      previousPercent: 89,
+      percent: 90,
       status: 'needs_real_test',
-      summary: 'Клиентский Telegram bridge, server verify и device-test панель готовы; теперь нужен фактический запуск на телефоне и заполнение runtime результатов.',
+      summary: 'Клиентский Telegram bridge, server verify и device-test панель готовы; v2.05 вынесла Telegram-тест в отдельный быстрый раздел System, чтобы его не искать в длинной ленте.',
       done: [
         'Telegram WebApp SDK подключён',
         'Telegram session pill добавлен',
@@ -65,15 +65,15 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
         'настроить BotFather Mini App URL',
         'запустить на реальном телефоне через Telegram',
         'проверить initData/profileReady/cloud readiness',
-        'пройти runtime checks в TelegramDeviceTestPanel',
-        'deploy-safe package v2.04 собран без private_vault'
+        'пройти runtime checks в System → Telegram → TelegramDeviceTestPanel',
+        'deploy-safe package v2.05 собирается без private_vault и с .npmrc для Vercel install'
       ]
     },
     {
       id: 'supabase_cloud_sync',
       title: 'Supabase cloud sync foundation',
-      previousPercent: 80,
-      percent: 81,
+      previousPercent: 82,
+      percent: 82,
       status: 'needs_real_test',
       summary: 'Cloud sync архитектура и safety-слои готовы, но production требует реальной Supabase/Vercel проверки.',
       done: [
@@ -96,8 +96,8 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
     {
       id: 'security_backup',
       title: 'Безопасность, backup, rollback',
-      previousPercent: 85,
-      percent: 86,
+      previousPercent: 87,
+      percent: 87,
       status: 'usable',
       summary: 'Safety-архитектура сильная для личного проекта; до production нужен внешний ручной security review.',
       done: [
@@ -118,10 +118,10 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
     {
       id: 'ux_daily_use',
       title: 'Удобство ежедневного использования',
-      previousPercent: 79,
-      percent: 80,
+      previousPercent: 81,
+      percent: 84,
       status: 'in_progress',
-      summary: 'Функций много, но интерфейс пока больше похож на мощную dev-панель, чем на спокойный ежедневный режим.',
+      summary: 'System больше не выглядит как бесконечная dev-лента: панели сгруппированы по кнопкам Telegram / Аудит / Cloud / Backup / Deploy / Dev.',
       done: [
         'всё ключевое доступно в одном dashboard',
         'есть быстрые кнопки и расчёты',
@@ -129,16 +129,16 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
       ],
       remaining: [
         'режим “Сегодня” с минимумом блоков',
-        'режим “Разработка/Проверки” отдельно',
+        'System-разделы по кнопкам: Telegram, Аудит, Cloud, Backup, Deploy, Dev',
         'мобильная визуальная полировка',
-        'реальный Telegram viewport/device test'
+        'дальше пройти реальный Telegram viewport/device test внутри нового раздела Telegram'
       ]
     },
     {
       id: 'ecosystem_memory',
       title: 'Память проекта и протоколы',
-      previousPercent: 92,
-      percent: 93,
+      previousPercent: 93,
+      percent: 94,
       status: 'done',
       summary: 'Проектная память и протоколы хорошо сохранены внутри MASTER PRIVATE FULL.',
       done: [
@@ -159,23 +159,23 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
 
   return {
     version: ECOSYSTEM_READINESS_AUDIT_VERSION,
-    previousOverallProductionPercent: 74,
-    overallProductionPercent: 76,
-    previousLocalDailyUsePercent: 92,
-    localDailyUsePercent: 93,
-    previousSafeLaunchPercent: 83,
-    safeLaunchPercent: 86,
+    previousOverallProductionPercent: 78,
+    overallProductionPercent: 79,
+    previousLocalDailyUsePercent: 93,
+    localDailyUsePercent: 94,
+    previousSafeLaunchPercent: 89,
+    safeLaunchPercent: 89,
     areas,
     topRisks: [
-      'Deploy-safe staging package и device-test panel готовы, но фактический телефонный Telegram run ещё нужно пройти.',
-      'Интерфейс пока перегружен developer/safety-панелями для обычного ежедневного режима.',
+      'System menu теперь разделён по кнопкам, но фактический телефонный Telegram run ещё нужно пройти.',
+      'Cloud/Supabase writes должны оставаться выключенными до backup + RLS/security review.',
       'MASTER PRIVATE FULL нельзя путать с deploy-safe архивом.',
-      'Cloud writes должны оставаться за feature flags до RLS/security review.'
+      'BotFather URL и real Telegram device test всё ещё нужно пройти руками.'
     ],
     nextActions: [
-      'Загрузить deploy-safe package v2.04 в приватный GitHub/Vercel staging или Vercel direct import.',
+      'Загрузить deploy-safe package v2.05 в приватный GitHub/Vercel staging или обновить текущий staging repo.',
       'Настроить BotFather Mini App URL на staging-домен.',
-      'Пройти Real Telegram Device Test panel: initData, viewport, readiness API, cloud GET dry-run.',
+      'В Telegram открыть System → Telegram и пройти Real Telegram Device Test: initData, viewport, readiness API, cloud GET dry-run.',
       'Применить Supabase migration и пройти save/load/conflict/RLS checklist.'
     ]
   };

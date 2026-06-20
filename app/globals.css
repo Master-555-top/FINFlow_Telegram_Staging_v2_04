@@ -5734,3 +5734,993 @@ html, body {
     grid-column: auto;
   }
 }
+
+/* v2.12 — System app-like shell / no-document mode */
+.app-shell--system {
+  padding-top: 6px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.system-root-card--minimal,
+.system-detail-shell {
+  border-radius: 26px;
+  border-color: rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 82% 0%, rgba(143, 74, 255, .18), transparent 30%),
+    radial-gradient(circle at 8% 100%, rgba(34, 211, 238, .10), transparent 32%),
+    rgba(19, 13, 42, .62);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(24px);
+}
+
+.system-root-card--minimal {
+  padding: 12px;
+}
+
+.system-mini-head {
+  min-height: 34px;
+  padding: 0 2px 2px;
+}
+
+.system-mini-head h2,
+.system-detail-title-row h2 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -.06em;
+}
+
+.system-mini-head > small,
+.system-detail-title-row span {
+  min-width: 0;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.58);
+  font-size: 9px;
+  line-height: 1;
+}
+
+.system-root-card--minimal .system-section-grid--root {
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.system-root-card--minimal .system-section-button {
+  min-height: 64px;
+  border-radius: 19px;
+  padding: 9px 7px;
+  background: rgba(255,255,255,.045);
+  border-color: rgba(255,255,255,.10);
+}
+
+.system-root-card--minimal .system-section-button.primary,
+.system-root-card--minimal .system-section-button:hover,
+.system-root-card--minimal .system-section-button:focus-visible {
+  border-color: rgba(186, 126, 255, .54);
+  box-shadow: 0 0 0 1px rgba(186,126,255,.12), 0 14px 32px rgba(122,42,255,.20);
+}
+
+.system-section-emoji {
+  font-size: 19px;
+}
+
+.system-root-card--minimal .system-section-button b {
+  font-size: 12px;
+  letter-spacing: -.01em;
+}
+
+.system-detail-shell {
+  padding: 10px;
+  gap: 9px;
+}
+
+.system-detail-toolbar {
+  margin: 0;
+  min-height: 32px;
+}
+
+.system-back-button {
+  min-height: 32px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(255,255,255,.06);
+}
+
+.system-detail-title-row {
+  padding: 0 2px 1px;
+}
+
+.system-subsection-grid,
+.system-inner-tabs {
+  gap: 6px;
+}
+
+.system-subsection-button,
+.system-inner-tab {
+  min-height: 40px;
+  border-radius: 15px;
+  padding: 7px 8px;
+  background: rgba(255,255,255,.045);
+  border-color: rgba(255,255,255,.10);
+}
+
+.system-subsection-button b,
+.system-inner-tab b {
+  font-size: 11px;
+  letter-spacing: -.01em;
+}
+
+.system-subsection-button.active,
+.system-inner-tab.active {
+  border-color: rgba(170, 115, 255, .62);
+  background: linear-gradient(135deg, rgba(137, 74, 255, .24), rgba(34, 211, 238, .08));
+}
+
+.system-module-panel,
+.telegram-device-test-panel,
+.telegram-staging-panel,
+.verification-checklist-panel,
+.system-check-guide-panel {
+  padding: 10px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.045);
+  border-color: rgba(255,255,255,.09);
+}
+
+.deployment-head.compact,
+.verification-head.compact,
+.system-check-hero {
+  padding: 0;
+  min-height: 28px;
+}
+
+.deployment-head.compact span,
+.verification-head.compact span,
+.system-check-hero span {
+  min-height: 21px;
+  padding: 0 7px;
+  font-size: 9px;
+}
+
+.deployment-head.compact b,
+.verification-head.compact b,
+.system-check-hero h2 {
+  font-size: 15px;
+}
+
+.telegram-device-summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.telegram-device-summary-grid > div {
+  min-height: 54px;
+  border-radius: 16px;
+  padding: 8px;
+  background: rgba(255,255,255,.045);
+}
+
+.telegram-device-summary-grid span {
+  font-size: 8px;
+  letter-spacing: .08em;
+}
+
+.telegram-device-summary-grid b {
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.15;
+}
+
+.system-compact-details {
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.12);
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.system-compact-details summary {
+  min-height: 40px;
+  padding: 10px 12px;
+  cursor: pointer;
+  color: rgba(255,255,255,.84);
+  font-weight: 850;
+  list-style: none;
+}
+
+.system-compact-details summary::-webkit-details-marker { display: none; }
+
+.system-compact-details summary::after {
+  content: '›';
+  float: right;
+  opacity: .62;
+  transform: rotate(90deg);
+}
+
+.system-compact-details[open] summary::after { transform: rotate(-90deg); }
+
+.system-compact-details .telegram-device-diagnostics-grid {
+  padding: 0 9px 9px;
+}
+
+.telegram-device-diagnostics-grid small {
+  border-radius: 12px;
+  font-size: 9px;
+  padding: 7px;
+}
+
+.telegram-device-actions {
+  gap: 6px;
+}
+
+.telegram-device-actions button {
+  min-height: 38px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.telegram-device-results,
+.compact-list {
+  gap: 7px;
+}
+
+.runtime-results-head {
+  min-height: 28px;
+  margin-bottom: 2px;
+}
+
+.runtime-results-head > b {
+  font-size: 13px;
+}
+
+.runtime-results-head > span {
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 10px;
+}
+
+.telegram-device-result,
+.telegram-staging-item,
+.verification-stage,
+.system-check-card {
+  border-radius: 16px;
+  padding: 8px;
+  background: rgba(255,255,255,.04);
+}
+
+.runtime-result-main,
+.compact-check-row,
+.verification-stage-main {
+  gap: 7px;
+}
+
+.runtime-result-main > span,
+.compact-check-row > span,
+.verification-stage-main > span {
+  min-width: 34px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 8px;
+}
+
+.runtime-result-main > strong,
+.compact-check-row > strong,
+.verification-stage-main > b {
+  font-size: 13px;
+  line-height: 1.12;
+}
+
+.runtime-result-main > small {
+  font-size: 11px;
+  opacity: .68;
+}
+
+.runtime-result-details summary {
+  width: fit-content;
+  min-height: 24px;
+  margin-top: 7px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+}
+
+.runtime-result-details p,
+.runtime-result-details small,
+.telegram-device-safe-rules p,
+.telegram-staging-next p,
+.critical-path-box p {
+  font-size: 10px;
+  line-height: 1.28;
+}
+
+.system-empty-hint {
+  min-height: 48px;
+  border-radius: 16px;
+  font-size: 12px;
+}
+
+@media (max-width: 420px) {
+  .app-shell--system {
+    padding-top: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .system-root-card--minimal .system-section-grid--root {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .system-root-card--minimal .system-section-button {
+    min-height: 58px;
+    border-radius: 17px;
+  }
+
+  .system-root-card--minimal .system-section-button b {
+    font-size: 10px;
+  }
+
+  .system-section-emoji {
+    font-size: 17px;
+  }
+
+  .telegram-device-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .telegram-device-summary-grid > div {
+    padding: 7px 6px;
+  }
+
+  .runtime-result-main {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .runtime-result-main > small {
+    grid-column: 2;
+    margin-top: -3px;
+  }
+}
+
+/* v2.13 — System final polish / ultra compact control center */
+.app-shell--system {
+  padding-top: 8px !important;
+  padding-bottom: 124px !important;
+  gap: 10px !important;
+}
+
+.app-shell--system .card,
+.system-root-card--minimal,
+.system-detail-shell,
+.system-module-panel,
+.telegram-device-test-panel,
+.telegram-staging-panel,
+.verification-checklist-panel,
+.system-check-guide-panel {
+  border-radius: 28px !important;
+  border-color: rgba(183, 140, 255, .22) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(170, 77, 255, .16), transparent 34%),
+    radial-gradient(circle at 100% 10%, rgba(20, 184, 166, .12), transparent 36%),
+    rgba(16, 13, 32, .74) !important;
+  box-shadow: 0 18px 55px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+.system-root-card--minimal {
+  min-height: auto !important;
+  padding: 14px !important;
+}
+
+.system-mini-head {
+  min-height: 28px !important;
+  margin-bottom: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.system-mini-head h2,
+.system-detail-title-row h2 {
+  font-size: 24px !important;
+  line-height: 1 !important;
+  letter-spacing: -.05em !important;
+  margin: 0 !important;
+}
+
+.system-mini-head > small,
+.system-detail-path span,
+.system-detail-title-row span,
+.deployment-head.compact span,
+.verification-head.compact span,
+.system-check-hero span {
+  min-height: 22px !important;
+  padding: 3px 8px !important;
+  border-radius: 999px !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  color: rgba(255,255,255,.72) !important;
+  background: rgba(255,255,255,.07) !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+}
+
+.system-root-card--minimal .system-section-grid--root {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.system-root-card--minimal .system-section-button {
+  min-height: 72px !important;
+  padding: 9px 6px !important;
+  border-radius: 22px !important;
+  gap: 6px !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035)) !important;
+}
+
+.system-root-card--minimal .system-section-button b {
+  font-size: 11px !important;
+  letter-spacing: -.01em !important;
+}
+
+.system-section-emoji {
+  font-size: 20px !important;
+  filter: drop-shadow(0 0 12px rgba(190,126,255,.38));
+}
+
+.system-root-card--minimal .system-section-button.primary,
+.system-root-card--minimal .system-section-button:hover,
+.system-root-card--minimal .system-section-button:focus-visible {
+  border-color: rgba(32, 211, 238, .46) !important;
+  box-shadow: 0 0 0 1px rgba(32,211,238,.12), 0 14px 35px rgba(83, 43, 255, .22) !important;
+}
+
+.system-detail-shell {
+  padding: 12px !important;
+  gap: 10px !important;
+}
+
+.system-detail-toolbar {
+  min-height: 34px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.system-back-button {
+  min-height: 34px !important;
+  padding: 7px 11px !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+}
+
+.system-detail-path {
+  gap: 4px !important;
+  justify-items: end !important;
+}
+
+.system-detail-path b {
+  font-size: 12px !important;
+}
+
+.system-detail-title-row--minimal {
+  min-height: 28px !important;
+  padding: 0 2px !important;
+}
+
+.system-subsection-grid,
+.system-inner-tabs {
+  grid-template-columns: repeat(3, minmax(0,1fr)) !important;
+  gap: 7px !important;
+}
+
+.system-subsection-button,
+.system-inner-tab {
+  min-height: 38px !important;
+  padding: 8px 6px !important;
+  border-radius: 16px !important;
+  text-align: center !important;
+  place-items: center !important;
+  background: rgba(255,255,255,.045) !important;
+}
+
+.system-subsection-button b,
+.system-inner-tab b {
+  font-size: 11px !important;
+  line-height: 1.05 !important;
+}
+
+.system-subsection-button small,
+.system-inner-tab small {
+  display: none !important;
+}
+
+.system-subsection-button.active,
+.system-inner-tab.active {
+  border-color: rgba(187, 134, 255, .62) !important;
+  background: linear-gradient(135deg, rgba(143, 83, 255, .28), rgba(20,184,166,.10)) !important;
+}
+
+.system-content-window,
+.system-module-window {
+  gap: 8px !important;
+}
+
+.system-module-panel,
+.telegram-device-test-panel,
+.telegram-staging-panel,
+.verification-checklist-panel,
+.system-check-guide-panel {
+  padding: 10px !important;
+  gap: 9px !important;
+}
+
+.deployment-head.compact,
+.verification-head.compact,
+.system-check-hero {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+.deployment-head.compact b,
+.verification-head.compact b,
+.system-check-hero h2 {
+  font-size: 16px !important;
+  line-height: 1.05 !important;
+}
+
+.telegram-device-summary-grid {
+  gap: 6px !important;
+}
+
+.telegram-device-summary-grid > div {
+  min-height: 58px !important;
+  border-radius: 18px !important;
+  padding: 8px 6px !important;
+  display: grid !important;
+  align-content: center !important;
+}
+
+.telegram-device-summary-grid span {
+  font-size: 8px !important;
+}
+
+.telegram-device-summary-grid b {
+  font-size: 12px !important;
+}
+
+.system-compact-details summary {
+  min-height: 34px !important;
+  padding: 8px 10px !important;
+  font-size: 11px !important;
+}
+
+.telegram-device-actions {
+  grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+}
+
+.telegram-device-actions button {
+  min-height: 36px !important;
+  font-size: 11px !important;
+}
+
+.runtime-results-head {
+  min-height: 26px !important;
+}
+
+.runtime-results-head > b {
+  font-size: 13px !important;
+}
+
+.runtime-results-head > span {
+  min-height: 22px !important;
+  font-size: 10px !important;
+}
+
+.telegram-device-result,
+.telegram-staging-item,
+.verification-stage,
+.system-check-card {
+  padding: 8px !important;
+  border-radius: 18px !important;
+}
+
+.runtime-result-main,
+.compact-check-row,
+.verification-stage-main {
+  grid-template-columns: auto minmax(0,1fr) auto !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.runtime-result-main > span,
+.compact-check-row > span,
+.verification-stage-main > span {
+  min-width: 38px !important;
+  height: 22px !important;
+  font-size: 8px !important;
+}
+
+.runtime-result-main > strong,
+.compact-check-row > strong,
+.verification-stage-main > b {
+  font-size: 14px !important;
+  line-height: 1.1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.runtime-result-main > small {
+  font-size: 10px !important;
+  white-space: nowrap !important;
+}
+
+.runtime-result-details summary {
+  min-height: 22px !important;
+  margin-top: 6px !important;
+  padding: 3px 9px !important;
+  font-size: 10px !important;
+}
+
+.runtime-result-details p,
+.runtime-result-details small,
+.telegram-device-safe-rules p,
+.telegram-staging-next p,
+.critical-path-box p {
+  font-size: 10px !important;
+  line-height: 1.26 !important;
+}
+
+.system-empty-hint {
+  min-height: 44px !important;
+  font-size: 11px !important;
+}
+
+@media (max-width: 420px) {
+  .app-shell--system {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .system-root-card--minimal,
+  .system-detail-shell {
+    border-radius: 26px !important;
+  }
+
+  .system-root-card--minimal .system-section-grid--root {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .system-root-card--minimal .system-section-button {
+    min-height: 66px !important;
+  }
+
+  .system-mini-head h2,
+  .system-detail-title-row h2 {
+    font-size: 22px !important;
+  }
+
+  .system-subsection-grid,
+  .system-inner-tabs {
+    grid-template-columns: repeat(3, minmax(0,1fr)) !important;
+  }
+
+  .runtime-result-main {
+    grid-template-columns: auto minmax(0,1fr) auto !important;
+  }
+
+  .runtime-result-main > small {
+    grid-column: auto !important;
+    margin-top: 0 !important;
+  }
+}
+
+
+/* v2.14 — System color/spacing calibration / less document, more app */
+.app-shell--system {
+  --system-accent: #9f6bff;
+  --system-accent-2: #22d3ee;
+  --system-glass: rgba(18, 12, 36, .72);
+  padding-top: 6px !important;
+  gap: 8px !important;
+}
+
+.app-shell--system .card,
+.system-root-card--minimal,
+.system-detail-shell,
+.system-module-panel,
+.telegram-device-test-panel,
+.telegram-staging-panel,
+.verification-checklist-panel,
+.system-check-guide-panel {
+  border-color: rgba(168, 132, 255, .18) !important;
+  background:
+    radial-gradient(circle at 22% 0%, rgba(126, 74, 255, .13), transparent 36%),
+    radial-gradient(circle at 100% 0%, rgba(34, 211, 238, .08), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.026)),
+    var(--system-glass) !important;
+  box-shadow: 0 16px 46px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.075) !important;
+}
+
+.system-root-card--minimal,
+.system-detail-shell {
+  padding: 11px !important;
+  border-radius: 26px !important;
+}
+
+.system-mini-head {
+  min-height: 24px !important;
+  margin-bottom: 10px !important;
+}
+
+.system-mini-head h2,
+.system-detail-title-row h2 {
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  letter-spacing: -.055em !important;
+}
+
+.system-mini-head > small,
+.system-detail-title-row span,
+.deployment-head.compact span,
+.verification-head.compact span,
+.system-check-hero span {
+  min-height: 19px !important;
+  padding: 2px 7px !important;
+  font-size: 9px !important;
+  color: rgba(255,255,255,.62) !important;
+  background: rgba(255,255,255,.055) !important;
+}
+
+.system-root-card--minimal .system-section-grid--root {
+  gap: 7px !important;
+}
+
+.system-root-card--minimal .system-section-button {
+  min-height: 64px !important;
+  border-radius: 20px !important;
+  padding: 8px 5px !important;
+  gap: 5px !important;
+  border-color: rgba(255,255,255,.085) !important;
+  background:
+    radial-gradient(circle at 70% 0%, rgba(163, 96, 255, .16), transparent 42%),
+    rgba(255,255,255,.035) !important;
+}
+
+.system-section-button--telegram.primary,
+.system-section-button--telegram:hover,
+.system-section-button--telegram:focus-visible {
+  border-color: rgba(34, 211, 238, .42) !important;
+  background: radial-gradient(circle at 60% 0%, rgba(34, 211, 238, .16), transparent 44%), rgba(255,255,255,.04) !important;
+}
+
+.system-section-button--overview:hover,
+.system-section-button--overview:focus-visible,
+.system-section-button--qa:hover,
+.system-section-button--qa:focus-visible {
+  border-color: rgba(159, 107, 255, .45) !important;
+}
+
+.system-section-button--cloud:hover,
+.system-section-button--cloud:focus-visible {
+  border-color: rgba(56, 189, 248, .36) !important;
+}
+
+.system-section-button--backup:hover,
+.system-section-button--backup:focus-visible {
+  border-color: rgba(244, 114, 182, .34) !important;
+}
+
+.system-section-button--dev:hover,
+.system-section-button--dev:focus-visible {
+  border-color: rgba(148, 163, 184, .30) !important;
+}
+
+.system-root-card--minimal .system-section-button b {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  opacity: .92;
+}
+
+.system-section-emoji {
+  font-size: 18px !important;
+  filter: none !important;
+}
+
+.system-detail-toolbar--single {
+  display: grid !important;
+  grid-template-columns: 34px minmax(0, 1fr) !important;
+  gap: 8px !important;
+  min-height: 34px !important;
+}
+
+.system-back-button {
+  width: 34px !important;
+  min-width: 34px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  font-size: 16px !important;
+  color: rgba(255,255,255,.86) !important;
+}
+
+.system-detail-title-row--minimal {
+  min-height: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  padding: 0 !important;
+}
+
+.system-subsection-grid,
+.system-inner-tabs {
+  gap: 6px !important;
+}
+
+.system-subsection-button,
+.system-inner-tab {
+  min-height: 35px !important;
+  border-radius: 15px !important;
+  padding: 6px 5px !important;
+  background: rgba(255,255,255,.035) !important;
+  border-color: rgba(255,255,255,.075) !important;
+}
+
+.system-subsection-button b,
+.system-inner-tab b {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+}
+
+.system-subsection-button.active,
+.system-inner-tab.active {
+  border-color: rgba(159, 107, 255, .48) !important;
+  background: linear-gradient(135deg, rgba(159, 107, 255, .25), rgba(34, 211, 238, .08)) !important;
+}
+
+.system-module-panel,
+.telegram-device-test-panel,
+.telegram-staging-panel,
+.verification-checklist-panel,
+.system-check-guide-panel {
+  padding: 9px !important;
+  gap: 7px !important;
+  border-radius: 22px !important;
+}
+
+.deployment-head.compact,
+.verification-head.compact,
+.system-check-hero {
+  min-height: 25px !important;
+  padding: 0 !important;
+}
+
+.deployment-head.compact b,
+.verification-head.compact b,
+.system-check-hero h2 {
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+.telegram-device-summary-grid {
+  gap: 5px !important;
+}
+
+.telegram-device-summary-grid > div {
+  min-height: 49px !important;
+  border-radius: 15px !important;
+  padding: 7px 5px !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+.telegram-device-summary-grid span {
+  font-size: 7px !important;
+  opacity: .66;
+}
+
+.telegram-device-summary-grid b {
+  font-size: 11px !important;
+}
+
+.system-compact-details summary,
+.runtime-result-details summary {
+  color: rgba(255,255,255,.68) !important;
+  background: rgba(255,255,255,.035) !important;
+}
+
+.telegram-device-actions button {
+  min-height: 34px !important;
+  font-size: 10px !important;
+  background: linear-gradient(135deg, rgba(159,107,255,.25), rgba(34,211,238,.08)) !important;
+}
+
+.runtime-results-head > b {
+  font-size: 12px !important;
+}
+
+.runtime-results-head > span {
+  min-height: 20px !important;
+  font-size: 9px !important;
+}
+
+.telegram-device-result,
+.telegram-staging-item,
+.verification-stage,
+.system-check-card {
+  border-radius: 15px !important;
+  padding: 7px !important;
+}
+
+.runtime-result-main,
+.compact-check-row,
+.verification-stage-main {
+  gap: 6px !important;
+}
+
+.runtime-result-main > span,
+.compact-check-row > span,
+.verification-stage-main > span {
+  min-width: 31px !important;
+  height: 19px !important;
+  font-size: 7px !important;
+  letter-spacing: .08em !important;
+}
+
+.runtime-result-main > strong,
+.compact-check-row > strong,
+.verification-stage-main > b {
+  font-size: 12px !important;
+}
+
+.runtime-result-main > small {
+  font-size: 10px !important;
+}
+
+.system-check-grid {
+  gap: 6px !important;
+}
+
+.system-check-card p,
+.system-check-result-row b {
+  font-size: 10px !important;
+}
+
+.bottom-nav {
+  border-radius: 25px !important;
+  background: linear-gradient(180deg, rgba(36, 21, 68, .78), rgba(8, 4, 21, .88)) !important;
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, rgba(159,107,255,.42), rgba(34,211,238,.10)) !important;
+}
+
+@media (max-width: 420px) {
+  .app-shell--system {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .system-root-card--minimal .system-section-button {
+    min-height: 58px !important;
+  }
+
+  .system-mini-head h2,
+  .system-detail-title-row h2 {
+    font-size: 20px !important;
+  }
+
+  .system-subsection-button,
+  .system-inner-tab {
+    min-height: 34px !important;
+  }
+
+  .telegram-device-summary-grid > div {
+    min-height: 46px !important;
+  }
+}

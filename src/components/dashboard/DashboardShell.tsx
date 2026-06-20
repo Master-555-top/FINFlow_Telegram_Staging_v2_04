@@ -60,6 +60,8 @@ type TabCommandMeta = {
   chips: string[];
 };
 
+const SYSTEM_UI_VERSION = 'v2.14';
+
 const NAV_TABS: { id: NavTabId; emoji: string; label: string }[] = [
   { id: 'day', emoji: '🌌', label: 'День' },
   { id: 'money', emoji: '💰', label: 'Деньги' },
@@ -100,73 +102,73 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
   {
     id: 'telegram',
     emoji: '📱',
-    title: 'Telegram / Device test',
+    title: 'Telegram',
     shortTitle: 'Telegram',
-    description: 'BotFather, Vercel staging, initData, viewport и real device test.',
-    status: 'текущий шаг',
+    description: 'Mini App test.',
+    status: 'ok',
     primary: true,
     subsections: [
-      { id: 'telegram_device', label: 'Тест', caption: 'initData + viewport' },
-      { id: 'telegram_launch', label: 'Запуск', caption: 'BotFather + staging' },
-      { id: 'telegram_checklist', label: 'Чеклист', caption: 'пошаговая проверка' }
+      { id: 'telegram_device', label: 'Тест', caption: '' },
+      { id: 'telegram_launch', label: 'Старт', caption: '' },
+      { id: 'telegram_checklist', label: 'Чек', caption: '' }
     ]
   },
   {
     id: 'overview',
     emoji: '📊',
-    title: 'Готовность / аудит',
+    title: 'Аудит',
     shortTitle: 'Аудит',
-    description: 'Проценты готовности, риски, next actions и общий status проекта.',
-    status: 'обзор',
+    description: 'Готовность и риски.',
+    status: 'info',
     subsections: [
-      { id: 'overview_readiness', label: 'Готовность', caption: 'проценты + риски' }
+      { id: 'overview_readiness', label: 'Статус', caption: '' }
     ]
   },
   {
     id: 'cloud',
     emoji: '☁️',
-    title: 'Cloud sync / Supabase',
+    title: 'Cloud',
     shortTitle: 'Cloud',
-    description: 'Safe cloud read/write flow, manual conflict wizard и feature flags.',
-    status: 'writes off',
+    description: 'Cloud flags and sync.',
+    status: 'off',
     subsections: [
-      { id: 'cloud_center', label: 'Центр', caption: 'sync + flags' },
-      { id: 'cloud_wizard', label: 'Wizard', caption: 'ручной сценарий' }
+      { id: 'cloud_center', label: 'Sync', caption: '' },
+      { id: 'cloud_wizard', label: 'Wizard', caption: '' }
     ]
   },
   {
     id: 'backup',
     emoji: '🧯',
-    title: 'Backup / Restore',
+    title: 'Backup',
     shortTitle: 'Backup',
-    description: 'Локальные backup, restore-preview и защита перед облачными тестами.',
-    status: 'safety',
+    description: 'Local safety.',
+    status: 'safe',
     subsections: [
-      { id: 'backup_local', label: 'Backup', caption: 'локальная защита' }
+      { id: 'backup_local', label: 'Backup', caption: '' }
     ]
   },
   {
     id: 'qa',
     emoji: '✅',
-    title: 'Проверка / QA',
+    title: 'QA',
     shortTitle: 'QA',
-    description: 'Что проверять после deploy: System UX, Telegram verify, safe API и mobile ergonomics.',
-    status: 'проверка',
+    description: 'Post-deploy route.',
+    status: 'qa',
     subsections: [
-      { id: 'qa_guide', label: 'Что проверить', caption: 'короткий маршрут' },
-      { id: 'deploy_readiness', label: 'Readiness', caption: 'deploy status' },
-      { id: 'deploy_acceptance', label: 'Runner', caption: 'acceptance tests' }
+      { id: 'qa_guide', label: 'План', caption: '' },
+      { id: 'deploy_readiness', label: 'Статус', caption: '' },
+      { id: 'deploy_acceptance', label: 'Runner', caption: '' }
     ]
   },
   {
     id: 'dev',
     emoji: '🛠️',
-    title: 'Dev / logs',
+    title: 'Dev',
     shortTitle: 'Dev',
-    description: 'Технический журнал, ошибки и dev-only панели.',
-    status: 'служебное',
+    description: 'Logs.',
+    status: 'dev',
     subsections: [
-      { id: 'dev_logs', label: 'Логи', caption: 'ошибки и debug' }
+      { id: 'dev_logs', label: 'Логи', caption: '' }
     ]
   }
 ];
@@ -263,16 +265,18 @@ export function DashboardShell() {
   return (
     <>
       <main className={`app-shell app-shell--${activeTab}`}>
-        <header className={`topbar${activeTab === 'system' ? ' topbar--system' : ''}`}>
-          <div className="logo">
-            <div className="logo-title">FinFlow</div>
-            <div className="logo-subtitle">{activeTab === 'system' ? 'v2.11' : `${dayCoreMock.version} • v2.11`}</div>
-          </div>
-          <div className="topbar-pills">
-            <TelegramSessionPill />
-            <TimeOfDayPill />
-          </div>
-        </header>
+        {activeTab !== 'system' && (
+          <header className="topbar">
+            <div className="logo">
+              <div className="logo-title">FinFlow</div>
+              <div className="logo-subtitle">{`${dayCoreMock.version} • ${SYSTEM_UI_VERSION}`}</div>
+            </div>
+            <div className="topbar-pills">
+              <TelegramSessionPill />
+              <TimeOfDayPill />
+            </div>
+          </header>
+        )}
 
         {activeTab !== 'system' && <LiveTimeWidget />}
 
@@ -313,11 +317,8 @@ export function DashboardShell() {
             {!activeSystemMeta ? (
               <section className="card system-root-card system-root-card--minimal">
                 <div className="system-mini-head">
-                  <div>
-                    <span>System</span>
-                    <h2>Система</h2>
-                  </div>
-                  <small>v2.11</small>
+                  <h2>Система</h2>
+                  <small>{SYSTEM_UI_VERSION}</small>
                 </div>
 
                 <div className="system-section-grid system-section-grid--root" role="tablist" aria-label="Разделы System">
@@ -327,7 +328,7 @@ export function DashboardShell() {
                       type="button"
                       role="tab"
                       aria-selected={false}
-                      className={`system-section-button${section.primary ? ' primary' : ''}`}
+                      className={`system-section-button system-section-button--${section.id}${section.primary ? ' primary' : ''}`}
                       onClick={() => openSystemSection(section.id)}
                     >
                       <span className="system-section-emoji">{section.emoji}</span>
@@ -338,19 +339,14 @@ export function DashboardShell() {
               </section>
             ) : (
               <section className="card system-detail-shell">
-                <div className="system-detail-toolbar">
-                  <button type="button" className="system-back-button" onClick={() => setActiveSystemSection(null)}>
-                    ← Все разделы
+                <div className="system-detail-toolbar system-detail-toolbar--single">
+                  <button type="button" className="system-back-button" onClick={() => setActiveSystemSection(null)} aria-label="Назад к разделам">
+                    ←
                   </button>
-                  <div className="system-detail-path">
-                    <span>Система</span>
-                    <b>{activeSystemMeta.emoji} {activeSystemMeta.shortTitle}</b>
+                  <div className="system-detail-title-row system-detail-title-row--minimal">
+                    <h2>{activeSystemMeta.shortTitle}</h2>
+                    <span>{SYSTEM_UI_VERSION}</span>
                   </div>
-                </div>
-
-                <div className="system-detail-title-row">
-                  <h2>{activeSystemMeta.emoji} {activeSystemMeta.shortTitle}</h2>
-                  <span>v2.11</span>
                 </div>
 
                 {activeSystemMeta.subsections.length > 1 ? (
@@ -365,7 +361,6 @@ export function DashboardShell() {
                         onClick={() => setActiveSystemSubsection(prev => ({ ...prev, [activeSystemMeta.id]: subsection.id }))}
                       >
                         <b>{subsection.label}</b>
-                        <small>{subsection.caption}</small>
                       </button>
                     ))}
                   </div>

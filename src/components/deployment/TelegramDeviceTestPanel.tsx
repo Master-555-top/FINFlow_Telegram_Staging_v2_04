@@ -32,9 +32,9 @@ type DeviceDiagnostics = {
 };
 
 const DEVICE_PANEL_VIEWS: { id: DevicePanelView; label: string; caption: string }[] = [
-  { id: 'status', label: 'Статус', caption: 'диагностика + запуск' },
-  { id: 'checks', label: 'Проверки', caption: 'device / API / cloud' },
-  { id: 'safety', label: 'Защита', caption: 'rules + rollback' }
+  { id: 'status', label: 'Статус', caption: '' },
+  { id: 'checks', label: 'Проверки', caption: '' },
+  { id: 'safety', label: 'Защита', caption: '' }
 ];
 
 export function TelegramDeviceTestPanel() {
@@ -111,8 +111,8 @@ export function TelegramDeviceTestPanel() {
     <section className="telegram-device-test-panel system-module-panel">
       <div className="deployment-head compact">
         <div>
-          <span>v2.11</span>
-          <b>Telegram test</b>
+          <span>v2.14</span>
+          <b>Test</b>
         </div>
       </div>
 
@@ -127,7 +127,6 @@ export function TelegramDeviceTestPanel() {
             onClick={() => setActiveView(view.id)}
           >
             <b>{view.label}</b>
-            <small>{view.caption}</small>
           </button>
         ))}
       </div>
@@ -136,31 +135,30 @@ export function TelegramDeviceTestPanel() {
         <div className="system-module-window">
           <div className="telegram-device-summary-grid">
             <div>
-              <span>Telegram ready</span>
-              <b>{runbook.readinessBefore}% → {runbook.readinessAfter}%</b>
-            </div>
-            <div>
-              <span>Режим</span>
-              <b>{diagnostics.insideTelegram ? 'Telegram Mini App' : 'Browser/local fallback'}</b>
+              <span>Mode</span>
+              <b>{diagnostics.insideTelegram ? 'Mini App' : 'Browser'}</b>
             </div>
             <div>
               <span>initData</span>
-              <b>{diagnostics.initDataPresent ? `${diagnostics.initDataBytes} bytes` : 'нет'}</b>
+              <b>{diagnostics.initDataPresent ? `${diagnostics.initDataBytes} b` : 'нет'}</b>
+            </div>
+            <div>
+              <span>Viewport</span>
+              <b>{diagnostics.viewportHeight ? `${diagnostics.viewportHeight}px` : '—'}</b>
             </div>
           </div>
 
-          <div className="telegram-device-diagnostics">
-            <b>Диагностика устройства</b>
+          <details className="system-compact-details telegram-device-diagnostics">
+            <summary>Device info</summary>
             <div className="telegram-device-diagnostics-grid">
-              <small>platform: <strong>{diagnostics.platform ?? 'unknown'}</strong></small>
-              <small>version: <strong>{diagnostics.version ?? 'unknown'}</strong></small>
-              <small>theme: <strong>{diagnostics.colorScheme ?? 'unknown'}</strong></small>
-              <small>viewport: <strong>{diagnostics.viewportHeight ?? 0}px / stable {diagnostics.viewportStableHeight ?? 0}px</strong></small>
-              <small>expanded: <strong>{String(Boolean(diagnostics.isExpanded))}</strong></small>
-              <small>user: <strong>{diagnostics.userDetected ? 'detected safely' : 'not exposed'}</strong></small>
+              <small>platform <strong>{diagnostics.platform ?? 'unknown'}</strong></small>
+              <small>version <strong>{diagnostics.version ?? 'unknown'}</strong></small>
+              <small>theme <strong>{diagnostics.colorScheme ?? 'unknown'}</strong></small>
+              <small>viewport <strong>{diagnostics.viewportHeight ?? 0}px</strong></small>
+              <small>expanded <strong>{String(Boolean(diagnostics.isExpanded))}</strong></small>
+              <small>user <strong>{diagnostics.userDetected ? 'safe' : 'hidden'}</strong></small>
             </div>
-            <p>Секреты и raw initData скрыты. Показываем только безопасные признаки.</p>
-          </div>
+          </details>
 
           <div className="telegram-device-actions">
             <button type="button" onClick={refreshDiagnostics}>обновить</button>

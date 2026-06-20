@@ -20,7 +20,7 @@ export function TelegramStagingDeployPanel() {
     <section className="telegram-staging-panel system-module-panel">
       <div className="deployment-head compact">
         <div>
-          <span>v2.11</span>
+          <span>v2.14</span>
           <b>Launch</b>
         </div>
       </div>
@@ -36,7 +36,6 @@ export function TelegramStagingDeployPanel() {
             onClick={() => setActiveView(view.id)}
           >
             <b>{view.label}</b>
-            <small>{view.caption}</small>
           </button>
         ))}
       </div>

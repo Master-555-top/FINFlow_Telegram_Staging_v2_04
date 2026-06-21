@@ -1655,3 +1655,61 @@ body {
     padding-right: 6px;
   }
 }
+
+
+/* v2.30 — Sleep Overview start card cleanup from Telegram screenshots */
+.sleep-v230 .sleep-live-start-v230 {
+  gap: 16px;
+  padding: 22px 18px 18px;
+}
+
+.sleep-v230 .sleep-live-start-v230 .sleep-live-copy {
+  gap: 0;
+}
+
+.sleep-v230 .sleep-live-start-v230 .sleep-live-copy span {
+  color: rgba(224,219,245,.76);
+  font-size: 12px;
+  letter-spacing: .10em;
+}
+
+.sleep-v230 .sleep-live-time-field {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.045);
+  border-radius: 20px;
+  padding: 12px 14px;
+}
+
+.sleep-v230 .sleep-live-time-field span {
+  color: rgba(224,219,245,.70);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.sleep-v230 .sleep-live-time-field input[type='time'] {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: rgba(255,255,255,.96);
+  font: inherit;
+  font-size: 28px;
+  font-weight: 950;
+  letter-spacing: .01em;
+  text-align: center;
+}
+
+.sleep-v230 .sleep-live-time-field input[type='time']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: .72;
+}
+
+.sleep-v230 .sleep-live-start-v230 .sleep-primary-action {
+  min-height: 54px;
+  border-radius: 20px;
+  font-size: 16px;
+}

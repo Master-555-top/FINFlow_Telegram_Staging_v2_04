@@ -56,8 +56,7 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
   const [form, setForm] = useState<SleepFormState>(() => buildDefaultForm());
   const [liveSession, setLiveSession] = useState<LiveSleepSession | null>(null);
   const [liveNow, setLiveNow] = useState(() => new Date());
-  const [liveShiftEndedAt, setLiveShiftEndedAt] = useState('04:00');
-  const [liveAfterShift, setLiveAfterShift] = useState(true);
+  const [liveSleptAt, setLiveSleptAt] = useState(() => getLocalTimeInput());
 
   useEffect(() => {
     try {
@@ -148,10 +147,8 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
   }
 
   function startLiveSleep() {
-    const session = createLiveSleepSession({
-      shiftWasClosed: liveAfterShift,
-      shiftEndedAt: liveAfterShift ? liveShiftEndedAt : undefined
-    }, new Date());
+    const sleepStart = buildLiveSleepStartDate(liveSleptAt, new Date());
+    const session = createLiveSleepSession({}, sleepStart);
     setLiveSession(session);
     setActiveView('overview');
   }
@@ -218,7 +215,7 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
   }
 
   function exportHistory() {
-    const payload = JSON.stringify({ version: 'sleep_v2_29', exportedAt: new Date().toISOString(), records }, null, 2);
+    const payload = JSON.stringify({ version: 'sleep_v2_30', exportedAt: new Date().toISOString(), records }, null, 2);
     const blob = new Blob([payload], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -235,7 +232,7 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
       : 'Сон';
 
   return (
-    <section className="sleep-screen premium-screen sleep-v2181 sleep-v229">
+    <section className="sleep-screen premium-screen sleep-v2181 sleep-v229 sleep-v230">
       <div className="premium-screen-head sleep-head compact">
         <h1>{title}</h1>
         <span>{SLEEP_UI_VERSION}</span>
@@ -273,10 +270,8 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
           liveNow={liveNow}
           wakeDecision={wakeDecision}
           morningPlanner={morningPlanner}
-          liveAfterShift={liveAfterShift}
-          setLiveAfterShift={setLiveAfterShift}
-          liveShiftEndedAt={liveShiftEndedAt}
-          setLiveShiftEndedAt={setLiveShiftEndedAt}
+          liveSleptAt={liveSleptAt}
+          setLiveSleptAt={setLiveSleptAt}
           startLiveSleep={startLiveSleep}
           finishLiveSleep={finishLiveSleep}
           cancelLiveSleep={cancelLiveSleep}
@@ -320,34 +315,24 @@ function SleepNowPanel(props: {
   liveNow: Date;
   wakeDecision: WakeDecision | null;
   morningPlanner: MorningPlannerSummary | null;
-  liveAfterShift: boolean;
-  setLiveAfterShift: (value: boolean) => void;
-  liveShiftEndedAt: string;
-  setLiveShiftEndedAt: (value: string) => void;
+  liveSleptAt: string;
+  setLiveSleptAt: (value: string) => void;
   startLiveSleep: () => void;
   finishLiveSleep: () => void;
   cancelLiveSleep: () => void;
 }) {
   if (!props.liveSession) {
     return (
-      <div className="sleep-live-start">
+      <div className="sleep-live-start sleep-live-start-v230">
         <div className="sleep-live-orb" aria-hidden="true">☾</div>
         <div className="sleep-live-copy">
           <span>Основной режим</span>
-          <b>Перед сном нажми «Лёг»</b>
-          <p>Утром FINFlow покажет, можно ли досыпать, где начинается пересып и как это влияет на рабочий день.</p>
         </div>
-        <div className="sleep-live-options">
-          <label className="sleep-toggle-row compact">
-            <input type="checkbox" checked={props.liveAfterShift} onChange={event => props.setLiveAfterShift(event.target.checked)} />
-            <span>после смены</span>
-          </label>
-          <label>
-            <span>смена закрыта</span>
-            <input type="time" value={props.liveShiftEndedAt} onChange={event => props.setLiveShiftEndedAt(event.target.value)} />
-          </label>
-        </div>
-        <button type="button" className="sleep-primary-action" onClick={props.startLiveSleep}>Лёг</button>
+        <label className="sleep-live-time-field">
+          <span>Во сколько лёг</span>
+          <input type="time" value={props.liveSleptAt} onChange={event => props.setLiveSleptAt(event.target.value)} />
+        </label>
+        <button type="button" className="sleep-primary-action" onClick={props.startLiveSleep}>Засыпаю</button>
       </div>
     );
   }
@@ -363,7 +348,7 @@ function SleepNowPanel(props: {
 
       <div className="sleep-live-grid">
         <div>
-          <span>лёг</span>
+          <span>уснул</span>
           <b>{props.liveSession.sleptAt}</b>
         </div>
         <div>
@@ -473,10 +458,8 @@ function SleepOverview(props: {
   liveNow: Date;
   wakeDecision: WakeDecision | null;
   morningPlanner: MorningPlannerSummary | null;
-  liveAfterShift: boolean;
-  setLiveAfterShift: (value: boolean) => void;
-  liveShiftEndedAt: string;
-  setLiveShiftEndedAt: (value: string) => void;
+  liveSleptAt: string;
+  setLiveSleptAt: (value: string) => void;
   startLiveSleep: () => void;
   finishLiveSleep: () => void;
   cancelLiveSleep: () => void;
@@ -490,10 +473,8 @@ function SleepOverview(props: {
         liveNow={props.liveNow}
         wakeDecision={props.wakeDecision}
         morningPlanner={props.morningPlanner}
-        liveAfterShift={props.liveAfterShift}
-        setLiveAfterShift={props.setLiveAfterShift}
-        liveShiftEndedAt={props.liveShiftEndedAt}
-        setLiveShiftEndedAt={props.setLiveShiftEndedAt}
+        liveSleptAt={props.liveSleptAt}
+        setLiveSleptAt={props.setLiveSleptAt}
         startLiveSleep={props.startLiveSleep}
         finishLiveSleep={props.finishLiveSleep}
         cancelLiveSleep={props.cancelLiveSleep}
@@ -819,6 +800,22 @@ function SleepStat(props: { icon: string; label: string; value: string; sub?: st
       {props.sub ? <small>{props.sub}</small> : null}
     </div>
   );
+}
+
+function buildLiveSleepStartDate(timeInput: string, now = new Date()) {
+  const [hours, minutes] = timeInput.split(':').map(Number);
+  if (![hours, minutes].every(Number.isFinite)) return now;
+
+  const start = new Date(now);
+  start.setHours(hours, minutes, 0, 0);
+
+  // If it is just after midnight and the user enters 23:xx, that start belongs
+  // to the previous calendar day. Keep the live timer human-correct.
+  if (start.getTime() - now.getTime() > 10 * 60 * 1000) {
+    start.setDate(start.getDate() - 1);
+  }
+
+  return start;
 }
 
 function buildSleepDayFallback() {

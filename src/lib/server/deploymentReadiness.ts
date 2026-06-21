@@ -121,7 +121,7 @@ function buildNextActions(input: {
   flags: DeploymentReadinessReport['flags'];
 }) {
   const actions: string[] = [];
-  if (!input.telegramReady) actions.push('Deploy v2.03 deploy-safe package, create Telegram bot/Mini App, then set TELEGRAM_BOT_TOKEN in hosting environment variables.');
+  if (!input.telegramReady) actions.push('Deploy the latest deploy-safe package, create Telegram bot/Mini App, then set TELEGRAM_BOT_TOKEN in hosting environment variables.');
   if (!input.supabaseReady) actions.push('Create private Supabase project, apply migration, set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   if (!input.flags.cloudSyncEnabled) actions.push('Enable FINFLOW_ENABLE_CLOUD_SYNC only after Telegram/Supabase are configured.');
   if (!input.flags.supabaseWritesEnabled) actions.push('Enable FINFLOW_ENABLE_SUPABASE_WRITES only after RLS/security review.');

@@ -10,7 +10,7 @@ export function EcosystemReadinessBoard() {
   return (
     <section className="ecosystem-readiness-board">
       <div className="ecosystem-readiness-head">
-        <span>v2.05 • Full audit / readiness board</span>
+        <span>v2.22 • Ecosystem readiness board</span>
         <b>Готовность FINFlow mini app</b>
         <p>Единый экран: что уже готово, что ещё нужно доделать, и где риск перед полноценным запуском.</p>
       </div>

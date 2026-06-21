@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import './globals.css';
+import './finflow-ui-overrides.css';
 
 export const metadata: Metadata = {
   title: 'FinFlow v3.0',

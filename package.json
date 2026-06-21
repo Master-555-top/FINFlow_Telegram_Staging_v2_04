@@ -1,6 +1,6 @@
 {
   "name": "finflow-v3-foundation",
-  "version": "0.2.17",
+  "version": "0.2.22",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run build"
+    "check": "npm run typecheck && npm run build",
+    "audit:moderate": "npm audit --audit-level=moderate",
+    "verify": "npm run typecheck && npm run build && npm audit --audit-level=moderate"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.108.2",

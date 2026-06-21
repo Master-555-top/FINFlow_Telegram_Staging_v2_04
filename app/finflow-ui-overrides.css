@@ -1,0 +1,1011 @@
+/* v2.18.1 — Sleep/System stabilization and calmer premium interaction */
+.sleep-v2181 {
+  padding-bottom: calc(112px + env(safe-area-inset-bottom));
+}
+
+.sleep-v2181 .sleep-head.compact {
+  margin-bottom: 10px;
+}
+
+.sleep-v2181 .sleep-segmented.v2181 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.sleep-v2181 .sleep-segmented.v2181 button {
+  min-height: 38px;
+  padding: 8px 5px;
+  border-radius: 15px;
+  font-size: 11px;
+  transition: border-color .16s ease, background-color .16s ease, transform .16s ease;
+}
+
+.sleep-v2181 button,
+.app-shell--system button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sleep-v2181 button:active,
+.app-shell--system button:active {
+  transform: translateY(1px) scale(.995);
+  filter: none;
+  opacity: .96;
+}
+
+.sleep-v2181 .sleep-primary-action,
+.sleep-v2181 .sleep-save-button {
+  background: linear-gradient(135deg, rgba(139, 91, 255, .92), rgba(42, 217, 255, .72));
+  box-shadow: 0 16px 34px rgba(105, 80, 255, .20);
+}
+
+.sleep-v2181 .sleep-live-status em,
+.sleep-v2181 .sleep-wake-card em,
+.sleep-v2181 .sleep-history-main em,
+.sleep-v2181 .sleep-selected-card em,
+.sleep-v2181 .wake-option em,
+.sleep-v2181 .sleep-week-day em {
+  border: 1px solid rgba(var(--sleep-tone, 139,91,255), .22);
+  background: rgba(var(--sleep-tone, 139,91,255), .16);
+  color: rgb(var(--sleep-tone, 139,91,255));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+
+.wake-options-card,
+.sleep-stats-panel,
+.sleep-stats-hero {
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(135, 92, 255, .18), transparent 36%),
+    rgba(18, 16, 44, .72);
+  box-shadow: 0 18px 44px rgba(0,0,0,.20);
+}
+
+.wake-options-card,
+.sleep-stats-panel {
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.wake-options-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.wake-option {
+  min-width: 0;
+  border: 1px solid rgba(var(--sleep-tone, 139,91,255), .26);
+  border-radius: 18px;
+  padding: 10px 8px;
+  display: grid;
+  gap: 5px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(var(--sleep-tone, 139,91,255), .14), transparent 42%),
+    rgba(255,255,255,.045);
+}
+
+.wake-option.blocked {
+  opacity: .66;
+}
+
+.wake-option span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.wake-option b {
+  color: var(--text);
+  font-size: 17px;
+  letter-spacing: -.04em;
+}
+
+.wake-option small,
+.wake-option p {
+  margin: 0;
+  color: rgba(224, 219, 245, .72);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.sleep-history-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 7px;
+  padding: 10px;
+  border-radius: 21px;
+  border: 1px solid rgba(var(--sleep-tone, 139,91,255), .24);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(var(--sleep-tone, 139,91,255), .13), transparent 36%),
+    rgba(18,16,44,.70);
+}
+
+.sleep-history-main {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 1fr 54px 54px;
+  gap: 8px;
+  align-items: center;
+}
+
+.sleep-history-main b {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.sleep-history-main span,
+.sleep-history-main strong,
+.sleep-history-main em {
+  min-width: 0;
+}
+
+.sleep-history-main small {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.sleep-history-main strong {
+  grid-column: 1 / 2;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.sleep-history-main em {
+  justify-self: start;
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.sleep-history-tools,
+.sleep-editor-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.sleep-history-tools button,
+.sleep-editor-actions button {
+  min-height: 34px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.055);
+  color: rgba(238,233,255,.88);
+  font-weight: 850;
+}
+
+.sleep-editor-actions .sleep-save-button {
+  min-height: 44px;
+}
+
+.sleep-stats-hero {
+  padding: 16px;
+}
+
+.sleep-stats-hero span,
+.sleep-week-day span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.sleep-stats-hero b {
+  display: block;
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 30px;
+  letter-spacing: -.06em;
+}
+
+.sleep-stats-hero p {
+  margin: 8px 0 0;
+  color: rgba(224,219,245,.78);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.sleep-week-strip {
+  display: grid;
+  gap: 8px;
+}
+
+.sleep-week-day {
+  border: 1px solid rgba(var(--sleep-tone, 139,91,255), .22);
+  border-radius: 17px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  background: rgba(var(--sleep-tone, 139,91,255), .08);
+}
+
+.sleep-week-day b {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.sleep-week-day em {
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+@media (max-width: 430px) {
+  .sleep-v2181 .sleep-segmented.v2181 {
+    overflow-x: auto;
+    display: flex;
+    scrollbar-width: none;
+  }
+
+  .sleep-v2181 .sleep-segmented.v2181 button {
+    min-width: 86px;
+  }
+
+  .wake-options-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sleep-history-main {
+    grid-template-columns: 1fr 50px 50px;
+  }
+}
+
+@media (max-width: 360px) {
+  .sleep-history-main {
+    grid-template-columns: 1fr 44px;
+  }
+
+  .sleep-history-main span:nth-of-type(2) {
+    display: none;
+  }
+}
+
+/* v2.19 — Sleep → Day → Work → earning potential bridge */
+.morning-planner-card {
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 26px;
+  padding: 15px;
+  display: grid;
+  gap: 12px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(64,216,255,.14), transparent 38%),
+    radial-gradient(circle at 100% 20%, rgba(140,92,255,.18), transparent 40%),
+    rgba(18,16,44,.76);
+  box-shadow: 0 20px 52px rgba(0,0,0,.22);
+}
+
+.morning-planner-card.safety-safe {
+  border-color: rgba(67,230,160,.22);
+}
+
+.morning-planner-card.safety-caution {
+  border-color: rgba(255,179,77,.24);
+}
+
+.morning-planner-card.safety-soft,
+.morning-planner-card.safety-blocked {
+  border-color: rgba(255,85,135,.26);
+}
+
+.morning-primary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.morning-primary-grid > div {
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 18px;
+  padding: 10px;
+  background: rgba(255,255,255,.045);
+}
+
+.morning-primary-grid span,
+.morning-plan-option span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+}
+
+.morning-primary-grid b {
+  display: block;
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 18px;
+  letter-spacing: -.04em;
+}
+
+.morning-planner-card p {
+  margin: 0;
+  color: rgba(224,219,245,.78);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.morning-plan-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.morning-plan-option {
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 16px;
+  padding: 9px 7px;
+  background: rgba(255,255,255,.04);
+}
+
+.morning-plan-option.safety-safe { background: rgba(67,230,160,.065); }
+.morning-plan-option.safety-caution { background: rgba(255,179,77,.07); }
+.morning-plan-option.safety-soft,
+.morning-plan-option.safety-blocked { background: rgba(255,85,135,.07); }
+
+.morning-plan-option b {
+  display: block;
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.morning-plan-option small {
+  display: block;
+  margin-top: 3px;
+  color: rgba(224,219,245,.66);
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.morning-task-strip {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.morning-task-strip span {
+  border-radius: 999px;
+  padding: 7px 9px;
+  font-size: 11px;
+  font-weight: 850;
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.morning-task-strip .fit {
+  color: rgba(210,255,234,.96);
+  background: rgba(67,230,160,.12);
+  border-color: rgba(67,230,160,.22);
+}
+
+.morning-task-strip .miss {
+  color: rgba(255,216,230,.96);
+  background: rgba(255,85,135,.12);
+  border-color: rgba(255,85,135,.22);
+}
+
+@media (max-width: 430px) {
+  .morning-plan-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .morning-primary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* v2.20 — unified Day cockpit from latest design archive */
+.day-cockpit-v220 {
+  position: relative;
+  min-height: calc(100vh - 112px);
+  padding: 22px 18px calc(132px + env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+
+.day-cockpit-v220::before,
+.day-cockpit-v220::after {
+  content: '';
+  position: fixed;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(10px);
+  opacity: .55;
+  z-index: -1;
+}
+
+.day-cockpit-v220::before {
+  width: 280px;
+  height: 280px;
+  left: -120px;
+  top: -70px;
+  background: radial-gradient(circle, rgba(140, 92, 255, .54), transparent 68%);
+}
+
+.day-cockpit-v220::after {
+  width: 340px;
+  height: 340px;
+  right: -150px;
+  bottom: 14%;
+  background: radial-gradient(circle, rgba(64, 216, 255, .26), rgba(151, 77, 255, .18) 42%, transparent 70%);
+}
+
+.day-cockpit-head {
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.day-cockpit-head h1 {
+  font-size: clamp(34px, 11vw, 48px);
+  letter-spacing: -.08em;
+  line-height: .92;
+}
+
+.day-cockpit-head small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(224, 219, 245, .68);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+.day-cockpit-segmented {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 14px;
+  background: rgba(255,255,255,.045);
+  border-color: rgba(188, 178, 255, .16);
+}
+
+.day-cockpit-segmented button {
+  min-height: 44px;
+  font-size: 13px;
+}
+
+.day-cockpit-hero {
+  --day-tone: 140, 92, 255;
+  position: relative;
+  min-height: 174px;
+  overflow: hidden;
+  border: 1px solid rgba(var(--day-tone), .34);
+  border-radius: 32px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 92px;
+  gap: 14px;
+  align-items: center;
+  background:
+    radial-gradient(circle at 86% 12%, rgba(var(--day-tone), .35), transparent 36%),
+    radial-gradient(circle at 10% 0%, rgba(64, 216, 255, .14), transparent 42%),
+    linear-gradient(150deg, rgba(18, 25, 66, .88), rgba(17, 10, 42, .74));
+  box-shadow: 0 24px 70px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+.day-cockpit-hero.tone-red { --day-tone: 255, 86, 120; }
+.day-cockpit-hero.tone-orange { --day-tone: 255, 159, 70; }
+.day-cockpit-hero.tone-green { --day-tone: 67, 230, 160; }
+.day-cockpit-hero.tone-cyan { --day-tone: 64, 216, 255; }
+.day-cockpit-hero.tone-yellow { --day-tone: 255, 207, 92; }
+.day-cockpit-hero.tone-blue { --day-tone: 92, 150, 255; }
+
+.day-cockpit-orb {
+  position: absolute;
+  width: 210px;
+  height: 210px;
+  right: -70px;
+  top: -66px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 38% 32%, rgba(255,255,255,.48), rgba(var(--day-tone), .34) 34%, rgba(var(--day-tone), .04) 68%, transparent 72%);
+  opacity: .78;
+}
+
+.day-cockpit-hero-copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.day-cockpit-hero-copy span,
+.day-card-title-row span,
+.day-decision-card span,
+.day-task-summary-card span,
+.day-metric-tile span,
+.day-finance-tile span,
+.morning-option-card span,
+.day-shift-bar span {
+  display: block;
+  color: rgba(224, 219, 245, .66);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.day-cockpit-hero-copy h2 {
+  margin: 6px 0 9px;
+  color: rgba(255,255,255,.98);
+  font-size: clamp(24px, 7.4vw, 34px);
+  line-height: 1.02;
+  letter-spacing: -.07em;
+  max-width: 16ch;
+}
+
+.day-cockpit-hero-copy p,
+.morning-bridge-card p,
+.day-decision-card p,
+.day-fund-card p,
+.day-task-summary-card p {
+  margin: 0;
+  color: rgba(230, 225, 255, .78);
+  font-size: 13px;
+  line-height: 1.42;
+}
+
+.day-cockpit-ring {
+  position: relative;
+  z-index: 1;
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(from 180deg, rgba(var(--day-tone), .92) var(--day-progress), rgba(255,255,255,.11) 0deg);
+  box-shadow: 0 0 30px rgba(var(--day-tone), .22);
+}
+
+.day-cockpit-ring::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: inherit;
+  background: rgba(7, 9, 30, .92);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.day-cockpit-ring b,
+.day-cockpit-ring small {
+  position: relative;
+  z-index: 1;
+  grid-area: 1 / 1;
+}
+
+.day-cockpit-ring b {
+  margin-top: -10px;
+  color: white;
+  font-size: 21px;
+  letter-spacing: -.05em;
+}
+
+.day-cockpit-ring small {
+  margin-top: 28px;
+  color: rgba(224,219,245,.62);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.day-quick-metrics {
+  margin: 12px 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.day-metric-tile,
+.day-finance-tile,
+.day-decision-card,
+.day-fund-card,
+.day-shift-card,
+.day-task-summary-card,
+.morning-bridge-card,
+.day-allocation-card {
+  border: 1px solid rgba(189, 178, 255, .13);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(139, 92, 255, .16), transparent 36%),
+    rgba(14, 16, 45, .72);
+  box-shadow: 0 18px 48px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.day-metric-tile {
+  min-width: 0;
+  min-height: 92px;
+  padding: 12px 10px;
+  border-color: rgba(var(--tile-tone, 140, 92, 255), .24);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(var(--tile-tone, 140, 92, 255), .19), transparent 48%),
+    rgba(14, 16, 45, .70);
+}
+
+.day-metric-tile.tone-red { --tile-tone: 255, 86, 120; }
+.day-metric-tile.tone-orange { --tile-tone: 255, 159, 70; }
+.day-metric-tile.tone-green { --tile-tone: 67, 230, 160; }
+.day-metric-tile.tone-cyan { --tile-tone: 64, 216, 255; }
+.day-metric-tile.tone-yellow { --tile-tone: 255, 207, 92; }
+.day-metric-tile.tone-blue { --tile-tone: 92, 150, 255; }
+
+.day-metric-tile b,
+.day-finance-tile b,
+.day-decision-card b,
+.day-task-summary-card b,
+.day-card-title-row b {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255,255,255,.97);
+  font-size: 20px;
+  line-height: 1.05;
+  letter-spacing: -.055em;
+}
+
+.day-metric-tile small,
+.day-finance-tile small,
+.day-shift-bar small {
+  display: block;
+  margin-top: 5px;
+  color: rgba(224,219,245,.65);
+  font-size: 11px;
+  font-weight: 760;
+}
+
+.morning-bridge-card,
+.day-decision-card,
+.day-fund-card,
+.day-shift-card,
+.day-task-summary-card,
+.day-allocation-card {
+  padding: 14px;
+}
+
+.day-card-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.day-card-title-row em {
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(180, 165, 255, .18);
+  background: rgba(255,255,255,.06);
+  color: rgba(238,233,255,.82);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+.morning-options-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.morning-option-card {
+  min-width: 0;
+  border-radius: 18px;
+  padding: 10px 8px;
+  border: 1px solid rgba(var(--safety-tone, 139, 92, 255), .24);
+  background: rgba(var(--safety-tone, 139, 92, 255), .08);
+}
+
+.morning-option-card.safety-safe { --safety-tone: 67, 230, 160; }
+.morning-option-card.safety-caution { --safety-tone: 255, 170, 74; }
+.morning-option-card.safety-soft { --safety-tone: 64, 216, 255; }
+.morning-option-card.safety-blocked { --safety-tone: 255, 86, 120; }
+
+.morning-option-card b {
+  display: block;
+  margin-top: 6px;
+  color: white;
+  font-size: 16px;
+  letter-spacing: -.05em;
+}
+
+.morning-option-card small {
+  display: block;
+  margin-top: 3px;
+  color: rgba(224,219,245,.64);
+  font-size: 10px;
+}
+
+.morning-option-card em {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(var(--safety-tone, 139, 92, 255), .16);
+  color: rgb(var(--safety-tone, 139, 92, 255));
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.day-view-stack {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.day-money-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.day-finance-tile {
+  min-width: 0;
+  padding: 13px;
+}
+
+.day-decision-card {
+  border-color: rgba(140, 92, 255, .26);
+}
+
+.day-decision-card.compact b {
+  font-size: 30px;
+}
+
+.day-shift-bars {
+  display: grid;
+  gap: 12px;
+}
+
+.day-shift-bar {
+  display: grid;
+  gap: 7px;
+}
+
+.day-shift-bar > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.day-shift-bar b {
+  color: white;
+  font-size: 13px;
+}
+
+.day-task-list {
+  display: grid;
+  gap: 8px;
+}
+
+.day-task-row {
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 19px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,.045);
+}
+
+.day-task-row.fits {
+  border-color: rgba(67, 230, 160, .22);
+  background: rgba(67, 230, 160, .07);
+}
+
+.day-task-row.miss {
+  border-color: rgba(255, 86, 120, .25);
+  background: rgba(255, 86, 120, .07);
+}
+
+.day-task-row b {
+  display: block;
+  color: white;
+  font-size: 15px;
+}
+
+.day-task-row span {
+  display: block;
+  margin-top: 3px;
+  color: rgba(224,219,245,.64);
+  font-size: 12px;
+}
+
+.day-task-row em {
+  border-radius: 999px;
+  padding: 7px 9px;
+  background: rgba(255,255,255,.07);
+  color: rgba(238,233,255,.82);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+@media (max-width: 430px) {
+  .day-cockpit-v220 {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .day-cockpit-hero {
+    grid-template-columns: minmax(0, 1fr) 78px;
+    padding: 17px;
+  }
+
+  .day-cockpit-ring {
+    width: 76px;
+    height: 76px;
+  }
+
+  .day-quick-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .morning-options-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 360px) {
+  .day-cockpit-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .day-cockpit-ring {
+    justify-self: start;
+  }
+}
+
+/* v2.21 — Telegram safe-area, bottom navigation hardening, unified touch model */
+:root {
+  --tg-viewport-height: 100vh;
+  --tg-viewport-stable-height: 100vh;
+  --tg-safe-top: 0px;
+  --tg-safe-right: 0px;
+  --tg-safe-bottom: 0px;
+  --tg-safe-left: 0px;
+  --tg-content-safe-top: 0px;
+  --tg-content-safe-right: 0px;
+  --tg-content-safe-bottom: 0px;
+  --tg-content-safe-left: 0px;
+  --finflow-safe-bottom: max(env(safe-area-inset-bottom), var(--tg-content-safe-bottom));
+  --finflow-safe-top: max(env(safe-area-inset-top), var(--tg-content-safe-top));
+  --finflow-bottom-nav-height: 76px;
+  --finflow-bottom-nav-gap: 12px;
+  --finflow-bottom-nav-space: calc(var(--finflow-bottom-nav-height) + var(--finflow-safe-bottom) + 28px);
+  --finflow-touch-min: 44px;
+}
+
+html,
+body {
+  min-height: var(--tg-viewport-height);
+  background: #050617;
+}
+
+.app-shell {
+  min-height: var(--tg-viewport-height);
+  padding-left: max(14px, var(--tg-content-safe-left));
+  padding-right: max(14px, var(--tg-content-safe-right));
+  padding-top: max(14px, calc(var(--finflow-safe-top) + 8px));
+  padding-bottom: var(--finflow-bottom-nav-space) !important;
+  scroll-padding-bottom: var(--finflow-bottom-nav-space);
+}
+
+.app-shell--day,
+.app-shell--sleep,
+.app-shell--system {
+  min-height: var(--tg-viewport-height);
+  padding-bottom: var(--finflow-bottom-nav-space) !important;
+}
+
+.day-cockpit-v220,
+.sleep-v2181,
+.premium-screen.system-premium-screen {
+  padding-bottom: var(--finflow-bottom-nav-space) !important;
+}
+
+.bottom-nav.premium-bottom-nav {
+  position: fixed;
+  left: max(12px, var(--tg-content-safe-left));
+  right: max(12px, var(--tg-content-safe-right));
+  bottom: calc(var(--finflow-safe-bottom) + var(--finflow-bottom-nav-gap));
+  width: auto;
+  max-width: 430px;
+  margin-inline: auto;
+  min-height: var(--finflow-bottom-nav-height);
+  z-index: 80;
+  backdrop-filter: blur(24px) saturate(1.35);
+  -webkit-backdrop-filter: blur(24px) saturate(1.35);
+}
+
+.premium-bottom-nav .nav-btn,
+.premium-segmented button,
+.day-cockpit-segmented button,
+.sleep-v2181 .sleep-segmented.v2181 button,
+.system-premium-tile,
+.system-premium-row,
+.sleep-primary-action,
+.sleep-save-button,
+.day-task-row,
+.morning-option-card {
+  min-height: var(--finflow-touch-min);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.premium-bottom-nav .nav-btn:active,
+.premium-segmented button:active,
+.day-cockpit-segmented button:active,
+.sleep-v2181 button:active,
+.system-premium-tile:active,
+.system-premium-row:active,
+.morning-option-card:active {
+  transform: translateY(1px) scale(.995);
+  filter: none;
+  opacity: .96;
+}
+
+.premium-bottom-nav .nav-btn.active {
+  background: radial-gradient(circle at 50% 0%, rgba(151, 112, 255, .62), rgba(83, 62, 198, .48));
+  box-shadow: 0 0 18px rgba(139,91,255,.22), inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+.day-cockpit-v220 {
+  overflow: visible;
+}
+
+.day-cockpit-hero,
+.morning-bridge-card,
+.day-decision-card,
+.day-fund-card,
+.day-shift-card,
+.day-task-summary-card,
+.day-allocation-card,
+.sleep-live-start,
+.sleep-live-status,
+.sleep-wake-card,
+.wake-options-card,
+.system-premium-tile,
+.system-premium-window {
+  backdrop-filter: blur(22px) saturate(1.24);
+  -webkit-backdrop-filter: blur(22px) saturate(1.24);
+}
+
+@media (max-width: 390px) {
+  :root {
+    --finflow-bottom-nav-height: 72px;
+    --finflow-bottom-nav-gap: 10px;
+  }
+
+  .bottom-nav.premium-bottom-nav {
+    padding: 6px;
+    border-radius: 23px;
+  }
+
+  .premium-bottom-nav .nav-btn {
+    font-size: 8.8px;
+    padding-inline: 0;
+  }
+
+  .premium-bottom-nav .nav-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+}

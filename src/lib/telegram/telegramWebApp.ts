@@ -1,4 +1,4 @@
-export const TELEGRAM_WEB_APP_BRIDGE_VERSION = 'telegram_web_app_bridge_v2_04' as const;
+export const TELEGRAM_WEB_APP_BRIDGE_VERSION = 'telegram_web_app_bridge_v2_22' as const;
 
 export type TelegramWebAppUser = {
   id: number;
@@ -23,6 +23,10 @@ export type TelegramWebApp = {
   isExpanded?: boolean;
   viewportHeight?: number;
   viewportStableHeight?: number;
+  safeAreaInset?: { top?: number; right?: number; bottom?: number; left?: number };
+  contentSafeAreaInset?: { top?: number; right?: number; bottom?: number; left?: number };
+  onEvent?: (eventType: string, eventHandler: (payload?: unknown) => void) => void;
+  offEvent?: (eventType: string, eventHandler: (payload?: unknown) => void) => void;
   ready: () => void;
   expand: () => void;
   close?: () => void;

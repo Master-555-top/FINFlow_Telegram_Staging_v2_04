@@ -54,7 +54,7 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
       previousPercent: 94,
       percent: 94,
       status: 'needs_real_test',
-      summary: 'Клиентский Telegram bridge, server verify и device-test панель готовы; v2.05 вынесла Telegram-тест в отдельный быстрый раздел System, чтобы его не искать в длинной ленте.',
+      summary: 'Клиентский Telegram bridge, server verify и device-test панель готовы; System panel keeps Telegram-тест в отдельный быстрый раздел System, чтобы его не искать в длинной ленте.',
       done: [
         'Telegram WebApp SDK подключён',
         'Telegram session pill добавлен',
@@ -66,7 +66,7 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
         'запустить на реальном телефоне через Telegram',
         'проверить initData/profileReady/cloud readiness',
         'пройти runtime checks в System → Telegram → TelegramDeviceTestPanel',
-        'deploy-safe package v2.05 собирается без private_vault и с .npmrc для Vercel install'
+        'latest deploy-safe package собирается без private_vault и с .npmrc для Vercel install'
       ]
     },
     {

@@ -50,6 +50,7 @@ export type SleepStats = {
 };
 
 export const FINFLOW_SLEEP_STORAGE_KEY = 'finflow_sleep_records_v2_16';
+export const FINFLOW_SLEEP_STORAGE_LEGACY_KEYS = ['finflow_sleep_records_v2_16'] as const;
 
 export const seedSleepRecords: SleepRecord[] = [
   makeSeed('2026-06-13', '2026-06-12', '2026-06-13', '05:10', '16:00'),
@@ -77,13 +78,21 @@ function makeSeed(id: string, fromDate: string, toDate: string, sleptAt: string,
 }
 
 export function calculateSleepMinutes(fromDate: string, sleptAt: string, toDate: string, wokeAt: string) {
-  const start = new Date(`${fromDate}T${sleptAt}:00`);
-  let end = new Date(`${toDate}T${wokeAt}:00`);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return 0;
-  if (end.getTime() <= start.getTime()) {
-    end = new Date(end.getTime() + 24 * 60 * 60 * 1000);
-  }
-  return Math.max(0, Math.round((end.getTime() - start.getTime()) / 60_000));
+  // Duration is derived from the clock times only. A single human sleep is always
+  // under 24h, so if wake-time is not after sleep-time we roll to the next day.
+  // The from/to dates are night LABELS (the owner logs early-morning sleep as
+  // "с <prev> на <curr>" while both clock times land on the same calendar day),
+  // so they must NOT inflate the duration. Using both dates previously added ~24h
+  // and made every night read as 30h+ / "Проспал". fromDate/toDate are kept in the
+  // signature for compatibility and labelling.
+  void fromDate;
+  void toDate;
+  const [sh, sm] = sleptAt.split(':').map(Number);
+  const [wh, wm] = wokeAt.split(':').map(Number);
+  if (![sh, sm, wh, wm].every(Number.isFinite)) return 0;
+  let diff = wh * 60 + wm - (sh * 60 + sm);
+  if (diff <= 0) diff += 24 * 60;
+  return diff;
 }
 
 export function createSleepRecord(input: {
@@ -94,9 +103,9 @@ export function createSleepRecord(input: {
   shiftEndedAt?: string;
   shiftWasClosed?: boolean;
   note?: string;
-}): SleepRecord {
+}, existing?: SleepRecord | null): SleepRecord {
   const now = new Date().toISOString();
-  const id = input.toDate || now.slice(0, 10);
+  const id = existing?.id ?? makeSleepRecordId(input.fromDate, input.toDate, input.sleptAt);
   return {
     id,
     fromDate: input.fromDate,
@@ -107,9 +116,14 @@ export function createSleepRecord(input: {
     shiftEndedAt: input.shiftEndedAt || undefined,
     shiftWasClosed: input.shiftWasClosed ?? false,
     note: input.note?.trim() || undefined,
-    createdAtIso: now,
+    createdAtIso: existing?.createdAtIso ?? now,
     updatedAtIso: now
   };
+}
+
+export function makeSleepRecordId(fromDate: string, toDate: string, sleptAt: string) {
+  const safeTime = sleptAt.replace(':', '');
+  return `sleep-${fromDate}-${toDate}-${safeTime}`;
 }
 
 export function analyzeSleepRecords(records: SleepRecord[]) {
@@ -314,9 +328,11 @@ export function getYesterdayDateInput() {
   return date.toISOString().slice(0, 10);
 }
 
-// v2.17 — Live Sleep Session / Wake Decision Flow
+// v2.18.1 — Live Sleep Session / Wake Decision Flow.
+// Storage keys intentionally stay v2_17 to preserve local history after the sync.
 export const FINFLOW_SLEEP_LIVE_SESSION_KEY = 'finflow_sleep_live_session_v2_17';
 export const FINFLOW_SLEEP_STORAGE_KEY_V2_17 = 'finflow_sleep_records_v2_17';
+export const FINFLOW_SLEEP_CURRENT_STORAGE_KEY = FINFLOW_SLEEP_STORAGE_KEY_V2_17;
 
 export type LiveSleepSession = {
   id: string;
@@ -331,6 +347,22 @@ export type LiveSleepSession = {
   updatedAtIso: string;
 };
 
+export type WakeDecisionOption = {
+  id: 'now' | 'plus30' | 'plus60' | 'plus90';
+  label: string;
+  extraMinutes: number;
+  projectedMinutes: number;
+  status: SleepStatus;
+  canChoose: boolean;
+  headline: string;
+  sleepAdvice: string;
+  workAdvice: string;
+  dayWindowAdvice: string;
+  workHoursEstimate: number;
+  activeDayHours: number;
+  projectedStartTime: string;
+};
+
 export type WakeDecision = {
   minutesAsleep: number;
   status: SleepStatus;
@@ -341,6 +373,7 @@ export type WakeDecision = {
   sleepAdvice: string;
   workAdvice: string;
   dayWindowAdvice: string;
+  options: WakeDecisionOption[];
 };
 
 export function getLocalDateInput(date = new Date()) {
@@ -385,7 +418,7 @@ export function finishLiveSleepSession(session: LiveSleepSession, now = new Date
   const minutes = getLiveSleepMinutes(session, now);
   const iso = now.toISOString();
   return {
-    id: toDate || iso,
+    id: `sleep-${session.sleptAtIso}`,
     fromDate: session.fromDate,
     toDate,
     sleptAt: session.sleptAt,
@@ -409,53 +442,24 @@ export function buildWakeDecision(input: {
   if (!input.session) return null;
   const now = input.now ?? new Date();
   const minutesAsleep = getLiveSleepMinutes(input.session, now);
-  const analyses = analyzeSleepRecords(input.records);
-  const last3 = sortSleepRecords(input.records).slice(-3);
-  const debtDays = last3.filter(record => record.minutes < 300).length;
-  const debtStreak = countDebtStreak(sortSleepRecords(input.records));
-  const recoveryAllowed = debtDays >= 2 || debtStreak >= 2;
+  const recoveryAllowed = isRecoveryWindowAllowed(input.records);
   const status = getSleepStatus(minutesAsleep, recoveryAllowed);
 
   const lowerNormal = 360;
   const upperNormal = 480;
-  const recoveryLimit = recoveryAllowed ? 600 : 480;
   const hardLimit = 600;
-  const targetMinutes = minutesAsleep < lowerNormal ? lowerNormal : Math.min(upperNormal, recoveryLimit);
+  const targetMinutes = minutesAsleep < lowerNormal ? lowerNormal : recoveryAllowed ? Math.min(540, hardLimit) : upperNormal;
   const targetMoreMinutes = Math.max(0, targetMinutes - minutesAsleep);
   const maxMoreMinutes = Math.max(0, hardLimit - minutesAsleep);
   const canSleepMore = minutesAsleep < hardLimit && (minutesAsleep < lowerNormal || (recoveryAllowed && minutesAsleep < 540));
-
-  const remainingTodayAfterOneHour = getRemainingDayHours(now, 60);
-  const workHoursEstimate = Math.max(0, Math.min(10, remainingTodayAfterOneHour - 2));
-  const startTime = addMinutesToClock(getLocalTimeInput(now), 60);
-
-  let wakeHeadline = 'Проверь режим';
-  let sleepAdvice = 'Смотри по состоянию, но не уходи за 10 часов.';
-  if (minutesAsleep >= hardLimit) {
-    wakeHeadline = 'Вставать сейчас';
-    sleepAdvice = 'Ты уже за 10 часов. Это пересып и сбой режима, дальше спать нельзя.';
-  } else if (minutesAsleep >= lowerNormal && minutesAsleep <= upperNormal) {
-    wakeHeadline = 'Норма — лучше вставать';
-    sleepAdvice = 'Сон уже в зелёной зоне 6–8 часов. Если нет сильной разбитости, лучше вставать.';
-  } else if (minutesAsleep < lowerNormal) {
-    wakeHeadline = 'Можно досыпать до нормы';
-    sleepAdvice = `До нижней нормы осталось примерно ${formatSleepMinutes(targetMoreMinutes)}.`;
-  } else if (recoveryAllowed && minutesAsleep < hardLimit) {
-    wakeHeadline = 'Восстановление допустимо';
-    sleepAdvice = `После недосыпа можно ещё до ${formatSleepMinutes(maxMoreMinutes)}, но не заходи за 10 часов.`;
-  } else {
-    wakeHeadline = 'Лучше вставать';
-    sleepAdvice = 'Сон уже длинный. Без серии недосыпов дальше спать рискованно для режима.';
-  }
-
-  let workAdvice = status.recommendation;
-  if (status.id === 'normal') workAdvice = 'Можно ставить обычный рабочий день. Начни спокойно, без хаоса.';
-  if (status.id === 'critical_short' || status.id === 'low') workAdvice = 'Сильную смену не ставь. Лучше короткий безопасный блок и восстановление.';
-  if (status.id === 'overslept') workAdvice = 'День сбит. Цель лучше сделать мягкой: еда, душ, короткая смена, режим на ночь.';
-  if (status.id === 'recovery') workAdvice = 'Это восстановление. Можно средний день, но не максимальный перегруз.';
-
-  const workPrefix = input.taxiShiftHours ? `Уже в смене ${input.taxiShiftHours.toFixed(1)}ч. ` : '';
-  const dayWindowAdvice = `${workPrefix}Если встать сейчас и начать около ${startTime}, останется примерно ${remainingTodayAfterOneHour.toFixed(1)}ч активного дня; реалистично под работу около ${workHoursEstimate.toFixed(1)}ч с едой/сборами/делами.`;
+  const options = buildWakeDecisionOptions({
+    minutesAsleep,
+    records: input.records,
+    now,
+    taxiShiftHours: input.taxiShiftHours,
+    taxiActiveHours: input.taxiActiveHours
+  });
+  const primary = options[0];
 
   return {
     minutesAsleep,
@@ -463,14 +467,112 @@ export function buildWakeDecision(input: {
     canSleepMore,
     maxMoreMinutes,
     targetMoreMinutes,
-    wakeHeadline,
+    wakeHeadline: primary.headline,
+    sleepAdvice: primary.sleepAdvice,
+    workAdvice: primary.workAdvice,
+    dayWindowAdvice: primary.dayWindowAdvice,
+    options
+  };
+}
+
+export function buildWakeDecisionOptions(input: {
+  minutesAsleep: number;
+  records: SleepRecord[];
+  now?: Date;
+  taxiShiftHours?: number;
+  taxiActiveHours?: number;
+}): WakeDecisionOption[] {
+  const now = input.now ?? new Date();
+  const recoveryAllowed = isRecoveryWindowAllowed(input.records);
+  return [
+    buildWakeDecisionOption({ id: 'now', label: 'Сейчас', extraMinutes: 0, minutesAsleep: input.minutesAsleep, recoveryAllowed, now, taxiShiftHours: input.taxiShiftHours, taxiActiveHours: input.taxiActiveHours }),
+    buildWakeDecisionOption({ id: 'plus30', label: '+30м', extraMinutes: 30, minutesAsleep: input.minutesAsleep, recoveryAllowed, now, taxiShiftHours: input.taxiShiftHours, taxiActiveHours: input.taxiActiveHours }),
+    buildWakeDecisionOption({ id: 'plus60', label: '+60м', extraMinutes: 60, minutesAsleep: input.minutesAsleep, recoveryAllowed, now, taxiShiftHours: input.taxiShiftHours, taxiActiveHours: input.taxiActiveHours }),
+    buildWakeDecisionOption({ id: 'plus90', label: '+90м', extraMinutes: 90, minutesAsleep: input.minutesAsleep, recoveryAllowed, now, taxiShiftHours: input.taxiShiftHours, taxiActiveHours: input.taxiActiveHours })
+  ];
+}
+
+function buildWakeDecisionOption(input: {
+  id: WakeDecisionOption['id'];
+  label: string;
+  extraMinutes: number;
+  minutesAsleep: number;
+  recoveryAllowed: boolean;
+  now: Date;
+  taxiShiftHours?: number;
+  taxiActiveHours?: number;
+}): WakeDecisionOption {
+  const projectedMinutes = input.minutesAsleep + input.extraMinutes;
+  const status = getSleepStatus(projectedMinutes, input.recoveryAllowed);
+  const wakeTime = addMinutesToClock(getLocalTimeInput(input.now), input.extraMinutes);
+  const startTime = addMinutesToClock(wakeTime, 60);
+  const activeDayHours = getRemainingDayHours(input.now, input.extraMinutes + 60);
+  const workHoursEstimate = Math.max(0, Math.min(10, activeDayHours - 2));
+  const canChoose = projectedMinutes <= 600 && !(projectedMinutes > 480 && !input.recoveryAllowed && input.extraMinutes > 0);
+
+  let headline = 'Можно рассмотреть';
+  if (input.extraMinutes === 0) headline = 'Встать сейчас';
+  if (status.id === 'normal') headline = input.extraMinutes === 0 ? 'Норма — вставать' : 'Ещё будет норма';
+  if (status.id === 'recovery') headline = 'Восстановление допустимо';
+  if (status.id === 'long') headline = 'Риск длинного сна';
+  if (status.id === 'overslept') headline = 'Нельзя: пересып';
+  if (status.id === 'critical_short') headline = 'Недосып критичный';
+  if (status.id === 'low') headline = 'Можно досыпать';
+
+  const sleepAdvice = buildSleepOptionAdvice(projectedMinutes, input.recoveryAllowed, input.extraMinutes);
+  const workAdvice = buildWorkAdvice(status, workHoursEstimate);
+  const shiftPrefix = input.taxiShiftHours ? `Смена уже ${input.taxiShiftHours.toFixed(1)}ч. ` : '';
+  const dayWindowAdvice = `${shiftPrefix}Если встать в ${wakeTime} и начать около ${startTime}, останется примерно ${activeDayHours.toFixed(1)}ч активного дня; под работу реалистично около ${workHoursEstimate.toFixed(1)}ч с едой/сборами/делами.`;
+
+  return {
+    id: input.id,
+    label: input.label,
+    extraMinutes: input.extraMinutes,
+    projectedMinutes,
+    status,
+    canChoose,
+    headline,
     sleepAdvice,
     workAdvice,
-    dayWindowAdvice
+    dayWindowAdvice,
+    workHoursEstimate,
+    activeDayHours,
+    projectedStartTime: startTime
   };
+}
+
+function buildSleepOptionAdvice(projectedMinutes: number, recoveryAllowed: boolean, extraMinutes: number) {
+  if (projectedMinutes > 600) return 'Будет больше 10 часов — это пересып и сбой режима. Вставать.';
+  if (projectedMinutes < 240) return 'Меньше 4 часов — опасный недосып. Досып допустим, если нет срочных обязательств.';
+  if (projectedMinutes < 360) return 'До нормы ещё не дотягивает. Можно добрать сон, но не уходить в бесконтрольное “ещё чуть-чуть”.';
+  if (projectedMinutes <= 480) return extraMinutes === 0 ? 'Ты уже в зелёной зоне 6–8 часов. Лучший момент закрепить подъём.' : 'После этого сон останется в норме 6–8 часов.';
+  if (projectedMinutes <= 600 && recoveryAllowed) return 'Это восстановление после недосыпа. Допустимо, но максимум до 10 часов.';
+  return 'Без накопленного недосыпа это уже длинный сон. Лучше вставать и стабилизировать режим.';
+}
+
+function buildWorkAdvice(status: SleepStatus, workHoursEstimate: number) {
+  if (status.id === 'overslept') return 'День сбит: мягкая цель, еда, душ, короткая смена и контроль следующего сна.';
+  if (status.id === 'critical_short') return 'Сильную смену не ставить. Лучше безопасность, восстановление и короткий блок.';
+  if (status.id === 'low') return 'Рабочий день лучше лёгкий/средний, без ночного добивания.';
+  if (status.id === 'recovery') return 'Можно средний день, но не максимальный перегруз сразу после восстановления.';
+  if (status.id === 'normal' && workHoursEstimate >= 6) return 'Можно обычный рабочий день и нормальный план дохода.';
+  if (status.id === 'normal') return 'Сон нормальный, но времени в дне мало — ставь компактный план.';
+  return 'Лучше мягкий план и контроль режима, без максимальной цели.';
+}
+
+export function isRecoveryWindowAllowed(records: SleepRecord[]) {
+  const sorted = sortSleepRecords(records);
+  const last3 = sorted.slice(-3);
+  const debtDays = last3.filter(record => record.minutes < 300).length;
+  const debtStreak = countDebtStreak(sorted);
+  const averagePrevious3 = last3.length > 0
+    ? Math.round(last3.reduce((sum, item) => sum + item.minutes, 0) / last3.length)
+    : 0;
+  return debtDays >= 2 || debtStreak >= 2 || (last3.length >= 3 && averagePrevious3 < 330);
 }
 
 function getRemainingDayHours(now: Date, afterMinutes: number) {
   const current = now.getHours() * 60 + now.getMinutes() + afterMinutes;
   return Math.max(0, (24 * 60 - current) / 60);
 }
+

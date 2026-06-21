@@ -1,3 +1,4 @@
+import { APP_FOUNDATION_VERSION } from '@/lib/appVersion';
 export type FinFlowMode = 'normal' | 'recovery' | 'emergency';
 
 export type MoneyBucket = {
@@ -67,7 +68,7 @@ const driveeEstimatedFullDay = Math.round(expectedGrossByEvening * driveeRate);
 const availableAfterDrivee = expectedGrossByEvening - driveeEstimatedFullDay;
 
 export const dayCoreMock: DayCoreSnapshot = {
-  version: 'v3.0 Foundation v2.02',
+  version: APP_FOUNDATION_VERSION,
   statusLabel: 'Day Core mock • живой план дня',
   mode: 'recovery',
   goals: {

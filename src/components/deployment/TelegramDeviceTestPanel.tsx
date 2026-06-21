@@ -1,11 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { buildTelegramDeviceTestRunbook } from '@/lib/deployment/telegramDeviceTestModel';
+import { useState } from 'react';
 import { getTelegramWebApp } from '@/lib/telegram/telegramWebApp';
 
 type RuntimeCheckStatus = 'idle' | 'running' | 'passed' | 'failed' | 'expected_safe_fail' | 'skipped';
-type DevicePanelView = 'status' | 'checks' | 'safety';
 
 type RuntimeCheckResult = {
   id: string;
@@ -21,8 +19,6 @@ type DeviceDiagnostics = {
   initDataPresent: boolean;
   initDataBytes: number;
   userDetected: boolean;
-  userId?: number;
-  username?: string;
   platform?: string;
   version?: string;
   colorScheme?: string;
@@ -31,18 +27,21 @@ type DeviceDiagnostics = {
   isExpanded?: boolean;
 };
 
-const DEVICE_PANEL_VIEWS: { id: DevicePanelView; label: string; caption: string }[] = [
-  { id: 'status', label: 'Статус', caption: '' },
-  { id: 'checks', label: 'Проверки', caption: '' },
-  { id: 'safety', label: 'Защита', caption: '' }
+const IDLE_RESULTS: RuntimeCheckResult[] = [
+  { id: 'device_bridge', title: 'Telegram bridge', status: 'idle', detail: 'Нажми проверить.' },
+  { id: 'verify_api', title: 'Verify', status: 'idle', detail: 'POST /api/telegram/verify.' },
+  { id: 'deployment_readiness', title: 'Deploy', status: 'idle', detail: 'GET /api/deployment/readiness.' },
+  { id: 'supabase_readiness', title: 'Supabase', status: 'idle', detail: 'Optional endpoint.' },
+  { id: 'cloud_read_dry_run', title: 'Cloud read', status: 'idle', detail: 'GET dry-run без записи.' }
 ];
 
 export function TelegramDeviceTestPanel() {
-  const runbook = useMemo(() => buildTelegramDeviceTestRunbook(), []);
-  const [activeView, setActiveView] = useState<DevicePanelView>('status');
   const [diagnostics, setDiagnostics] = useState<DeviceDiagnostics>(() => collectDiagnostics());
   const [results, setResults] = useState<RuntimeCheckResult[]>([]);
   const [running, setRunning] = useState(false);
+
+  const visibleResults = results.length ? results : IDLE_RESULTS;
+  const okCount = results.filter(result => result.status === 'passed' || result.status === 'expected_safe_fail').length;
 
   function refreshDiagnostics() {
     const webApp = getTelegramWebApp();
@@ -57,7 +56,6 @@ export function TelegramDeviceTestPanel() {
 
   async function runSafeDeviceChecks() {
     setRunning(true);
-    setActiveView('status');
     const nextResults: RuntimeCheckResult[] = [];
     const webApp = getTelegramWebApp();
     const initData = webApp?.initData ?? '';
@@ -67,190 +65,76 @@ export function TelegramDeviceTestPanel() {
       id: 'device_bridge',
       title: 'Telegram bridge',
       status: initData ? 'passed' : 'expected_safe_fail',
-      detail: initData
-        ? 'Telegram WebApp bridge и initData есть.'
-        : 'initData нет. Это нормально для обычного браузера; открой Mini App в Telegram.'
+      detail: initData ? 'Telegram WebApp bridge и initData есть.' : 'initData нет. Открой Mini App в Telegram.'
     });
     setResults([...nextResults]);
 
     if (initData) {
       nextResults.push(await postVerify(initData));
-      setResults([...nextResults]);
     } else {
-      nextResults.push({
-        id: 'verify_api',
-        title: '/api/telegram/verify',
-        status: 'skipped',
-        detail: 'Пропущено: нет real Telegram initData. Не подставляем fake initData, чтобы не создавать ложный успех.'
-      });
-      setResults([...nextResults]);
+      nextResults.push({ id: 'verify_api', title: 'Verify', status: 'skipped', detail: 'Нет real Telegram initData.' });
     }
-
-    nextResults.push(await getJsonCheck('/api/deployment/readiness', 'deployment_readiness', '/api/deployment/readiness'));
     setResults([...nextResults]);
 
-    nextResults.push(await getJsonCheck('/api/supabase/readiness', 'supabase_readiness', '/api/supabase/readiness'));
+    nextResults.push(await getJsonCheck('/api/deployment/readiness', 'deployment_readiness', 'Deploy'));
+    setResults([...nextResults]);
+
+    nextResults.push(await getJsonCheck('/api/supabase/readiness', 'supabase_readiness', 'Supabase'));
     setResults([...nextResults]);
 
     if (initData) {
       nextResults.push(await cloudReadDryRun(initData, today));
     } else {
-      nextResults.push({
-        id: 'cloud_read_dry_run',
-        title: 'Cloud read dry-run',
-        status: 'skipped',
-        detail: 'Пропущено: cloud dry-run требует real Telegram initData header. PUT/write не запускается.'
-      });
+      nextResults.push({ id: 'cloud_read_dry_run', title: 'Cloud read', status: 'skipped', detail: 'Cloud dry-run требует real Telegram initData. PUT/write не запускается.' });
     }
 
     setResults(nextResults);
+    setDiagnostics(collectDiagnostics());
     setRunning(false);
   }
 
   return (
-    <section className="telegram-device-test-panel system-module-panel">
-      <div className="deployment-head compact">
+    <section className="telegram-device-compact">
+      <div className="device-hero-card">
         <div>
-          <span>v2.14</span>
-          <b>Test</b>
+          <span>режим</span>
+          <b>{diagnostics.insideTelegram ? 'Telegram Mini App' : 'Browser'}</b>
         </div>
+        <i>{diagnostics.initDataPresent ? `${diagnostics.initDataBytes} bytes` : 'no initData'}</i>
       </div>
 
-      <div className="system-inner-tabs" role="tablist" aria-label="Telegram test center">
-        {DEVICE_PANEL_VIEWS.map(view => (
-          <button
-            key={view.id}
-            type="button"
-            role="tab"
-            aria-selected={activeView === view.id}
-            className={`system-inner-tab${activeView === view.id ? ' active' : ''}`}
-            onClick={() => setActiveView(view.id)}
-          >
-            <b>{view.label}</b>
-          </button>
+      <div className="device-mini-grid">
+        <div><span>viewport</span><b>{diagnostics.viewportHeight ? `${diagnostics.viewportHeight}px` : '—'}</b></div>
+        <div><span>expanded</span><b>{String(Boolean(diagnostics.isExpanded))}</b></div>
+        <div><span>user</span><b>{diagnostics.userDetected ? 'safe' : 'hidden'}</b></div>
+      </div>
+
+      <div className="telegram-device-actions premium-actions">
+        <button type="button" onClick={refreshDiagnostics}>обновить</button>
+        <button type="button" onClick={runSafeDeviceChecks} disabled={running}>{running ? 'проверяю…' : 'проверить'}</button>
+      </div>
+
+      <div className="premium-result-list">
+        <div className="premium-result-head">
+          <b>Результат</b>
+          <span>{results.length ? `${okCount}/${results.length} ok` : 'готово к тесту'}</span>
+        </div>
+        {visibleResults.map(result => (
+          <article className={`premium-result-row ${result.status}`} key={result.id}>
+            <span>{runtimeLabel(result.status)}</span>
+            <div>
+              <b>{compactRuntimeTitle(result)}</b>
+              <small>{result.httpStatus ? `HTTP ${result.httpStatus}` : result.status === 'idle' ? 'ожидает' : ''}</small>
+            </div>
+            <details>
+              <summary>детали</summary>
+              <p>{result.detail}</p>
+            </details>
+          </article>
         ))}
       </div>
-
-      {activeView === 'status' && (
-        <div className="system-module-window">
-          <div className="telegram-device-summary-grid">
-            <div>
-              <span>Mode</span>
-              <b>{diagnostics.insideTelegram ? 'Mini App' : 'Browser'}</b>
-            </div>
-            <div>
-              <span>initData</span>
-              <b>{diagnostics.initDataPresent ? `${diagnostics.initDataBytes} b` : 'нет'}</b>
-            </div>
-            <div>
-              <span>Viewport</span>
-              <b>{diagnostics.viewportHeight ? `${diagnostics.viewportHeight}px` : '—'}</b>
-            </div>
-          </div>
-
-          <details className="system-compact-details telegram-device-diagnostics">
-            <summary>Device info</summary>
-            <div className="telegram-device-diagnostics-grid">
-              <small>platform <strong>{diagnostics.platform ?? 'unknown'}</strong></small>
-              <small>version <strong>{diagnostics.version ?? 'unknown'}</strong></small>
-              <small>theme <strong>{diagnostics.colorScheme ?? 'unknown'}</strong></small>
-              <small>viewport <strong>{diagnostics.viewportHeight ?? 0}px</strong></small>
-              <small>expanded <strong>{String(Boolean(diagnostics.isExpanded))}</strong></small>
-              <small>user <strong>{diagnostics.userDetected ? 'safe' : 'hidden'}</strong></small>
-            </div>
-          </details>
-
-          <div className="telegram-device-actions">
-            <button type="button" onClick={refreshDiagnostics}>обновить</button>
-            <button type="button" onClick={runSafeDeviceChecks} disabled={running}>
-              {running ? 'проверяю…' : 'проверить'}
-            </button>
-          </div>
-
-          {results.length ? (
-            <div className="telegram-device-results compact-list">
-              <div className="runtime-results-head">
-                <b>Результат</b>
-                <span>{results.filter(result => result.status === 'passed' || result.status === 'expected_safe_fail').length}/{results.length} ok</span>
-              </div>
-              {results.map(result => (
-                <article className={`telegram-device-result ${result.status}`} key={result.id}>
-                  <div className="runtime-result-main">
-                    <span>{runtimeLabel(result.status)}</span>
-                    <strong title={result.title}>{compactRuntimeTitle(result)}</strong>
-                    {result.httpStatus ? <small>HTTP {result.httpStatus}</small> : null}
-                  </div>
-                  <details className="runtime-result-details">
-                    <summary>детали</summary>
-                    <p>{result.detail}</p>
-                  </details>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <div className="system-empty-hint">
-              Нажми «проверить». Cloud write выключен.
-            </div>
-          )}
-        </div>
-      )}
-
-      {activeView === 'checks' && (
-        <div className="system-module-window">
-          <ChecklistBlock title="Device" items={runbook.deviceChecks} />
-          <ChecklistBlock title="API" items={runbook.apiChecks} />
-          <ChecklistBlock title="Cloud dry-run" items={runbook.cloudDryRunChecks} />
-        </div>
-      )}
-
-      {activeView === 'safety' && (
-        <div className="system-module-window">
-          <div className="telegram-device-safe-rules">
-            <b>Safety rules</b>
-            {runbook.safeModeRules.map(rule => <p key={rule}>🛡 {rule}</p>)}
-          </div>
-
-          <div className="telegram-staging-next">
-            <b>Rollback</b>
-            {runbook.rollbackPlan.map(item => <p key={item}>↩ {item}</p>)}
-            
-          </div>
-        </div>
-      )}
     </section>
   );
-}
-
-function ChecklistBlock(props: { title: string; items: ReturnType<typeof buildTelegramDeviceTestRunbook>['deviceChecks'] }) {
-  return (
-    <div className="telegram-device-checklist compact-checklist">
-      <div className="compact-checklist-head">
-        <b>{props.title}</b>
-        <span>{props.items.length} шаг.</span>
-      </div>
-      {props.items.map(item => (
-        <article className={`telegram-device-item ${item.status}`} key={item.id}>
-          <div className="compact-check-row">
-            <span>{compactItemStatus(item.status)}</span>
-            <strong>{item.title}</strong>
-          </div>
-          <details className="runtime-result-details">
-            <summary>подробнее</summary>
-            <p>{item.detail}</p>
-            <small>Успех: {item.successCriteria}</small>
-          </details>
-        </article>
-      ))}
-    </div>
-  );
-}
-
-function compactItemStatus(status: string) {
-  if (status === 'ready') return 'ok';
-  if (status === 'blocked') return 'block';
-  if (status === 'test_required') return 'test';
-  if (status === 'manual_required') return 'manual';
-  return status.replace('_', ' ');
 }
 
 function collectDiagnostics(): DeviceDiagnostics {
@@ -262,8 +146,6 @@ function collectDiagnostics(): DeviceDiagnostics {
     initDataPresent: Boolean(webApp?.initData),
     initDataBytes: webApp?.initData ? new Blob([webApp.initData]).size : 0,
     userDetected: Boolean(user?.id),
-    userId: user?.id,
-    username: user?.username,
     platform: webApp?.platform,
     version: webApp?.version,
     colorScheme: webApp?.colorScheme,
@@ -284,21 +166,15 @@ async function postVerify(initData: string): Promise<RuntimeCheckResult> {
     if (response.ok && data?.ok) {
       return {
         id: 'verify_api',
-        title: '/api/telegram/verify',
+        title: 'Verify',
         status: 'passed',
         httpStatus: response.status,
         detail: `OK · mode=${data.mode ?? 'unknown'} · profile=${Boolean(data.profileReady)}`
       };
     }
-    return {
-      id: 'verify_api',
-      title: '/api/telegram/verify',
-      status: 'failed',
-      httpStatus: response.status,
-      detail: data?.reason ?? data?.error ?? 'verify failed without secret exposure'
-    };
+    return { id: 'verify_api', title: 'Verify', status: 'failed', httpStatus: response.status, detail: data?.reason ?? data?.error ?? 'verify failed without secret exposure' };
   } catch {
-    return { id: 'verify_api', title: '/api/telegram/verify', status: 'failed', detail: 'network error during verify check' };
+    return { id: 'verify_api', title: 'Verify', status: 'failed', detail: 'network error during verify check' };
   }
 }
 
@@ -317,7 +193,7 @@ async function getJsonCheck(url: string, id: string, title: string): Promise<Run
       detail: ok
         ? 'OK · endpoint доступен, raw secret values не показаны.'
         : optionalSupabaseOff
-          ? 'Supabase сейчас не подключён / route не активен в текущем deploy. Для локального Telegram-теста это не блокер.'
+          ? 'Supabase route optional на текущем этапе. Не блокер для Telegram UI.'
           : secretLeak
             ? 'Возможная утечка raw secret value. Нужно остановиться и проверить endpoint.'
             : 'Endpoint ответил, но формат требует проверки.'
@@ -342,42 +218,25 @@ async function cloudReadDryRun(initData: string, localDate: string): Promise<Run
     });
     const data = await response.json().catch(() => null);
     if (response.ok) {
-      return {
-        id: 'cloud_read_dry_run',
-        title: 'Cloud read dry-run',
-        status: 'passed',
-        httpStatus: response.status,
-        detail: `GET OK · record=${data?.record ? 'есть' : 'нет'} · без записи.`
-      };
+      return { id: 'cloud_read_dry_run', title: 'Cloud read', status: 'passed', httpStatus: response.status, detail: `GET OK · record=${data?.record ? 'есть' : 'нет'} · без записи.` };
     }
     const reason = data?.reason ?? data?.error ?? 'safe_fail';
-    return {
-      id: 'cloud_read_dry_run',
-      title: 'Cloud read dry-run',
-      status: reason === 'FINFLOW_ENABLE_CLOUD_SYNC_not_true' ? 'expected_safe_fail' : 'failed',
-      httpStatus: response.status,
-      detail: `Без записи · reason=${reason}`
-    };
+    return { id: 'cloud_read_dry_run', title: 'Cloud read', status: reason === 'FINFLOW_ENABLE_CLOUD_SYNC_not_true' ? 'expected_safe_fail' : 'failed', httpStatus: response.status, detail: `Без записи · reason=${reason}` };
   } catch {
-    return { id: 'cloud_read_dry_run', title: 'Cloud read dry-run', status: 'failed', detail: 'network error during cloud dry-run' };
+    return { id: 'cloud_read_dry_run', title: 'Cloud read', status: 'failed', detail: 'network error during cloud dry-run' };
   }
 }
 
-
 function compactRuntimeTitle(result: RuntimeCheckResult) {
-  if (result.id === 'device_bridge') return 'Telegram';
-  if (result.id === 'verify_api') return 'Verify';
-  if (result.id === 'deployment_readiness') return 'Deploy';
-  if (result.id === 'supabase_readiness') return 'Supabase';
-  if (result.id === 'cloud_read_dry_run') return 'Cloud read';
+  if (result.id === 'device_bridge') return 'Telegram bridge';
   return result.title;
 }
 
 function runtimeLabel(status: RuntimeCheckStatus) {
   if (status === 'passed') return 'ok';
   if (status === 'expected_safe_fail') return 'safe';
-  if (status === 'skipped') return 'skipped';
-  if (status === 'running') return 'running';
+  if (status === 'skipped') return 'skip';
+  if (status === 'running') return 'run';
   if (status === 'failed') return 'fail';
-  return 'idle';
+  return 'wait';
 }

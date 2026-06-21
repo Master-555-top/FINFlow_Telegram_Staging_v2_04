@@ -4,24 +4,16 @@ import { useEffect, useMemo, useState } from 'react';
 import { DayCoreDashboard } from '@/components/day-core/DayCoreDashboard';
 import { NetCalculationPanel } from '@/components/day-core/NetCalculationPanel';
 import { DailyQuickInputPanel } from '@/components/day-core/DailyQuickInputPanel';
-import { DevErrorLogPanel } from '@/components/dev/DevErrorLogPanel';
 import { LiveTimeWidget, TimeOfDayPill } from '@/components/live/LiveTimeWidget';
 import { TelegramSessionPill } from '@/components/telegram/TelegramSessionPill';
-import { SystemCheckGuidePanel } from '@/components/dashboard/SystemCheckGuidePanel';
-import { EcosystemReadinessBoard } from '@/components/project/EcosystemReadinessBoard';
-import { ImportReviewQueuePanel } from '@/components/import-review/ImportReviewQueuePanel';
-import { PrivateDeploymentPanel } from '@/components/deployment/PrivateDeploymentPanel';
-import { TelegramSupabaseVerificationChecklistPanel } from '@/components/deployment/TelegramSupabaseVerificationChecklistPanel';
-import { TelegramStagingDeployPanel } from '@/components/deployment/TelegramStagingDeployPanel';
 import { TelegramDeviceTestPanel } from '@/components/deployment/TelegramDeviceTestPanel';
-import { DeploymentAcceptanceTestRunnerPanel } from '@/components/deployment/DeploymentAcceptanceTestRunnerPanel';
-import { ManualCloudTestWizardPanel } from '@/components/deployment/ManualCloudTestWizardPanel';
-import { LocalBackupRestorePanel as BrowserLocalStorageBackupPanel } from '@/components/backup/LocalBackupRestorePanel';
+import { SleepDashboard } from '@/components/sleep/SleepDashboard';
+import { ImportReviewQueuePanel } from '@/components/import-review/ImportReviewQueuePanel';
 import { dayCoreMock } from '@/lib/day-core/dayCoreModel';
 import { dayCoreInputMock } from '@/lib/day-core/dayCoreInputModel';
 import { createDailyLiveStateOriginId, readDailyLiveStateSnapshot, subscribeDailyLiveState } from '@/lib/day-core/dailyLiveStatePersistence';
 
-type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'ai' | 'system';
+type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'sleep' | 'ai' | 'system';
 type SystemSectionId = 'telegram' | 'overview' | 'cloud' | 'backup' | 'qa' | 'dev';
 type SystemSubsectionId =
   | 'telegram_device'
@@ -35,20 +27,19 @@ type SystemSubsectionId =
   | 'deploy_readiness'
   | 'deploy_acceptance'
   | 'dev_logs';
+type IconName = 'day' | 'money' | 'work' | 'funds' | 'sleep' | 'ai' | 'system' | 'telegram' | 'audit' | 'cloud' | 'backup' | 'qa' | 'dev' | 'check' | 'sync' | 'warn' | 'log';
 
 type SystemSubsectionMeta = {
   id: SystemSubsectionId;
   label: string;
-  caption: string;
 };
 
 type SystemSectionMeta = {
   id: SystemSectionId;
-  emoji: string;
+  icon: IconName;
   title: string;
   shortTitle: string;
-  description: string;
-  status: string;
+  accent: 'cyan' | 'violet' | 'blue' | 'magenta' | 'green' | 'amber';
   primary?: boolean;
   subsections: SystemSubsectionMeta[];
 };
@@ -60,40 +51,48 @@ type TabCommandMeta = {
   chips: string[];
 };
 
-const SYSTEM_UI_VERSION = 'v2.14';
+type SystemRow = {
+  icon: IconName;
+  title: string;
+  meta: string;
+  tone?: 'ok' | 'safe' | 'warn' | 'info';
+};
 
-const NAV_TABS: { id: NavTabId; emoji: string; label: string }[] = [
-  { id: 'day', emoji: '🌌', label: 'День' },
-  { id: 'money', emoji: '💰', label: 'Деньги' },
-  { id: 'work', emoji: '🚕', label: 'Работа' },
-  { id: 'funds', emoji: '🏦', label: 'Фонды' },
-  { id: 'ai', emoji: '🧠', label: 'AI' },
-  { id: 'system', emoji: '⚙️', label: 'Система' }
+const SYSTEM_UI_VERSION = 'v2.15';
+
+const NAV_TABS: { id: NavTabId; icon: IconName; label: string }[] = [
+  { id: 'day', icon: 'day', label: 'День' },
+  { id: 'money', icon: 'money', label: 'Деньги' },
+  { id: 'work', icon: 'work', label: 'Работа' },
+  { id: 'funds', icon: 'funds', label: 'Фонды' },
+  { id: 'sleep', icon: 'sleep', label: 'Сон' },
+  { id: 'ai', icon: 'ai', label: 'AI' },
+  { id: 'system', icon: 'system', label: 'Система' }
 ];
 
 const TAB_COMMANDS: Partial<Record<NavTabId, TabCommandMeta>> = {
   money: {
     eyebrow: 'Money OS',
     title: 'Деньги под контролем',
-    description: 'Баланс, записи, шаблоны и review собраны как финансовый cockpit — быстро понять, что свободно, что нельзя трогать и что требует решения.',
+    description: 'Баланс, записи, шаблоны и review собраны как финансовый cockpit.',
     chips: ['баланс', 'review', 'шаблоны']
   },
   work: {
     eyebrow: 'Taxi Work',
     title: 'Рабочий режим',
-    description: 'Заказы, смена, бензин, пробег и машина — без смешивания с dev-панелями и системными проверками.',
+    description: 'Заказы, смена, бензин, пробег и машина — отдельно от dev-панелей.',
     chips: ['заказы', 'топливо', 'машина']
   },
   funds: {
     eyebrow: 'Funds System',
     title: 'Фонды и обязательства',
-    description: 'Цели, ремонт, подушка и временные покупки должны жить как понятные финансовые контейнеры, а не как разрозненные заметки.',
+    description: 'Цели, ремонт, подушка и временные покупки как понятные контейнеры.',
     chips: ['подушка', 'ремонт', 'обязательства']
   },
   ai: {
     eyebrow: 'AI Partner',
     title: 'Локальный помощник',
-    description: 'AI должен помогать принять решение по дню, деньгам, работе и рискам, сохраняя контекст всей экосистемы FINFlow.',
+    description: 'Контекст дня, денег, работы и рисков — в одном советнике.',
     chips: ['совет', 'контекст', 'план']
   }
 };
@@ -101,74 +100,68 @@ const TAB_COMMANDS: Partial<Record<NavTabId, TabCommandMeta>> = {
 const SYSTEM_SECTIONS: SystemSectionMeta[] = [
   {
     id: 'telegram',
-    emoji: '📱',
+    icon: 'telegram',
     title: 'Telegram',
     shortTitle: 'Telegram',
-    description: 'Mini App test.',
-    status: 'ok',
+    accent: 'cyan',
     primary: true,
     subsections: [
-      { id: 'telegram_device', label: 'Тест', caption: '' },
-      { id: 'telegram_launch', label: 'Старт', caption: '' },
-      { id: 'telegram_checklist', label: 'Чек', caption: '' }
+      { id: 'telegram_device', label: 'Чек' },
+      { id: 'telegram_launch', label: 'Старт' },
+      { id: 'telegram_checklist', label: 'Защита' }
     ]
   },
   {
     id: 'overview',
-    emoji: '📊',
+    icon: 'audit',
     title: 'Аудит',
     shortTitle: 'Аудит',
-    description: 'Готовность и риски.',
-    status: 'info',
+    accent: 'violet',
     subsections: [
-      { id: 'overview_readiness', label: 'Статус', caption: '' }
+      { id: 'overview_readiness', label: 'Статус' }
     ]
   },
   {
     id: 'cloud',
-    emoji: '☁️',
+    icon: 'cloud',
     title: 'Cloud',
     shortTitle: 'Cloud',
-    description: 'Cloud flags and sync.',
-    status: 'off',
+    accent: 'blue',
     subsections: [
-      { id: 'cloud_center', label: 'Sync', caption: '' },
-      { id: 'cloud_wizard', label: 'Wizard', caption: '' }
+      { id: 'cloud_center', label: 'Sync' },
+      { id: 'cloud_wizard', label: 'Wizard' }
     ]
   },
   {
     id: 'backup',
-    emoji: '🧯',
+    icon: 'backup',
     title: 'Backup',
     shortTitle: 'Backup',
-    description: 'Local safety.',
-    status: 'safe',
+    accent: 'magenta',
     subsections: [
-      { id: 'backup_local', label: 'Backup', caption: '' }
+      { id: 'backup_local', label: 'Backup' }
     ]
   },
   {
     id: 'qa',
-    emoji: '✅',
+    icon: 'qa',
     title: 'QA',
     shortTitle: 'QA',
-    description: 'Post-deploy route.',
-    status: 'qa',
+    accent: 'green',
     subsections: [
-      { id: 'qa_guide', label: 'План', caption: '' },
-      { id: 'deploy_readiness', label: 'Статус', caption: '' },
-      { id: 'deploy_acceptance', label: 'Runner', caption: '' }
+      { id: 'qa_guide', label: 'План' },
+      { id: 'deploy_readiness', label: 'Статус' },
+      { id: 'deploy_acceptance', label: 'Runner' }
     ]
   },
   {
     id: 'dev',
-    emoji: '🛠️',
+    icon: 'dev',
     title: 'Dev',
     shortTitle: 'Dev',
-    description: 'Logs.',
-    status: 'dev',
+    accent: 'blue',
     subsections: [
-      { id: 'dev_logs', label: 'Логи', caption: '' }
+      { id: 'dev_logs', label: 'Логи' }
     ]
   }
 ];
@@ -180,6 +173,60 @@ const DEFAULT_SYSTEM_SUBSECTIONS: Record<SystemSectionId, SystemSubsectionId> = 
   backup: 'backup_local',
   qa: 'qa_guide',
   dev: 'dev_logs'
+};
+
+const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device'>, SystemRow[]> = {
+  telegram_launch: [
+    { icon: 'telegram', title: 'Mini App URL', meta: 'BotFather → стабильный домен', tone: 'ok' },
+    { icon: 'sync', title: 'Vercel', meta: 'Deploy-safe пакет', tone: 'ok' },
+    { icon: 'check', title: 'Env', meta: 'TELEGRAM_BOT_TOKEN server-only', tone: 'safe' }
+  ],
+  telegram_checklist: [
+    { icon: 'check', title: 'Raw initData скрыт', meta: 'без hash в UI', tone: 'ok' },
+    { icon: 'check', title: 'Cloud write off', meta: 'PUT/save не запускается', tone: 'safe' },
+    { icon: 'warn', title: 'Секреты', meta: 'только Vercel env', tone: 'safe' }
+  ],
+  overview_readiness: [
+    { icon: 'audit', title: 'Day Core', meta: '96%', tone: 'ok' },
+    { icon: 'telegram', title: 'Telegram', meta: '96%', tone: 'ok' },
+    { icon: 'cloud', title: 'Cloud', meta: '82% · writes off', tone: 'safe' },
+    { icon: 'system', title: 'Ecosystem', meta: '88%', tone: 'info' }
+  ],
+  cloud_center: [
+    { icon: 'sync', title: 'Cloud sync', meta: 'выключено', tone: 'safe' },
+    { icon: 'telegram', title: 'Telegram context', meta: 'найден', tone: 'ok' },
+    { icon: 'warn', title: 'Writes', meta: 'заблокировано', tone: 'safe' }
+  ],
+  cloud_wizard: [
+    { icon: 'backup', title: 'Local backup', meta: 'сначала сохранить', tone: 'safe' },
+    { icon: 'cloud', title: 'Cloud preview', meta: 'после Supabase', tone: 'info' },
+    { icon: 'check', title: 'Manual apply', meta: 'только после подтверждения', tone: 'safe' }
+  ],
+  backup_local: [
+    { icon: 'backup', title: 'Создать', meta: 'локальный бэкап', tone: 'ok' },
+    { icon: 'sync', title: 'Восстановить', meta: 'preview first', tone: 'info' },
+    { icon: 'log', title: 'История', meta: 'точки отката', tone: 'info' }
+  ],
+  qa_guide: [
+    { icon: 'check', title: 'System screen', meta: 'без горизонтального скролла', tone: 'ok' },
+    { icon: 'telegram', title: 'Telegram check', meta: 'verify HTTP 200', tone: 'ok' },
+    { icon: 'cloud', title: 'Cloud dry-run', meta: 'safe fail допустим', tone: 'safe' }
+  ],
+  deploy_readiness: [
+    { icon: 'check', title: 'Deploy', meta: 'HTTP 200', tone: 'ok' },
+    { icon: 'telegram', title: 'Telegram', meta: 'ready', tone: 'ok' },
+    { icon: 'cloud', title: 'Supabase', meta: 'optional', tone: 'safe' }
+  ],
+  deploy_acceptance: [
+    { icon: 'check', title: 'Manual QA', meta: 'запустить после deploy', tone: 'info' },
+    { icon: 'system', title: 'UI pass', meta: 'кнопки и отступы', tone: 'info' },
+    { icon: 'warn', title: 'No secrets', meta: 'скрины без токенов', tone: 'safe' }
+  ],
+  dev_logs: [
+    { icon: 'warn', title: 'Ошибки', meta: 'dev log', tone: 'info' },
+    { icon: 'dev', title: 'Инструменты', meta: 'служебные утилиты', tone: 'info' },
+    { icon: 'log', title: 'О приложении', meta: SYSTEM_UI_VERSION, tone: 'info' }
+  ]
 };
 
 function TabCommandCard(props: { meta: TabCommandMeta }) {
@@ -234,38 +281,16 @@ export function DashboardShell() {
   }
 
   function renderSystemSubsectionContent(subsectionId: SystemSubsectionId) {
-    switch (subsectionId) {
-      case 'telegram_device':
-        return <TelegramDeviceTestPanel />;
-      case 'telegram_launch':
-        return <TelegramStagingDeployPanel />;
-      case 'telegram_checklist':
-        return <TelegramSupabaseVerificationChecklistPanel />;
-      case 'overview_readiness':
-        return <EcosystemReadinessBoard />;
-      case 'cloud_center':
-        return <DailyQuickInputPanel view="system" onDayInputChange={setLiveDayInput} />;
-      case 'cloud_wizard':
-        return <ManualCloudTestWizardPanel />;
-      case 'backup_local':
-        return <BrowserLocalStorageBackupPanel />;
-      case 'qa_guide':
-        return <SystemCheckGuidePanel />;
-      case 'deploy_readiness':
-        return <PrivateDeploymentPanel />;
-      case 'deploy_acceptance':
-        return <DeploymentAcceptanceTestRunnerPanel />;
-      case 'dev_logs':
-        return <DevErrorLogPanel />;
-      default:
-        return null;
-    }
+    if (subsectionId === 'telegram_device') return <TelegramDeviceTestPanel />;
+    return <SystemRows rows={SYSTEM_ROWS[subsectionId]} />;
   }
+
+  const shouldShowDailyChrome = activeTab !== 'system' && activeTab !== 'sleep';
 
   return (
     <>
       <main className={`app-shell app-shell--${activeTab}`}>
-        {activeTab !== 'system' && (
+        {shouldShowDailyChrome && (
           <header className="topbar">
             <div className="logo">
               <div className="logo-title">FinFlow</div>
@@ -278,16 +303,16 @@ export function DashboardShell() {
           </header>
         )}
 
-        {activeTab !== 'system' && <LiveTimeWidget />}
+        {shouldShowDailyChrome && <LiveTimeWidget />}
 
-        {activeTab !== 'system' && (
+        {shouldShowDailyChrome && (
           <div className="daily-live-state-banner">
             <b>Live-state:</b> День / Деньги / Работа / Фонды / AI читают общий локальный state.
             <span>{dailyLiveStateSyncedAt ? `Последняя синхронизация: ${new Date(dailyLiveStateSyncedAt).toLocaleTimeString('ru-RU')}` : 'Ожидаю первый ввод дня.'}</span>
           </div>
         )}
 
-        {activeTab !== 'day' && activeTab !== 'system' && TAB_COMMANDS[activeTab] ? (
+        {activeTab !== 'day' && activeTab !== 'system' && activeTab !== 'sleep' && TAB_COMMANDS[activeTab] ? (
           <TabCommandCard meta={TAB_COMMANDS[activeTab] as TabCommandMeta} />
         ) : null}
 
@@ -307,75 +332,72 @@ export function DashboardShell() {
         )}
 
         {activeTab === 'work' && <DailyQuickInputPanel view="work" onDayInputChange={setLiveDayInput} />}
-
         {activeTab === 'funds' && <DailyQuickInputPanel view="funds" onDayInputChange={setLiveDayInput} />}
-
+        {activeTab === 'sleep' && <SleepDashboard />}
         {activeTab === 'ai' && <DailyQuickInputPanel view="ai" onDayInputChange={setLiveDayInput} />}
 
         {activeTab === 'system' && (
-          <>
+          <section className="premium-screen system-premium-screen">
             {!activeSystemMeta ? (
-              <section className="card system-root-card system-root-card--minimal">
-                <div className="system-mini-head">
-                  <h2>Система</h2>
-                  <small>{SYSTEM_UI_VERSION}</small>
+              <>
+                <div className="premium-screen-head">
+                  <h1>Система</h1>
+                  <span>{SYSTEM_UI_VERSION}</span>
                 </div>
-
-                <div className="system-section-grid system-section-grid--root" role="tablist" aria-label="Разделы System">
+                <div className="system-premium-grid" role="tablist" aria-label="Разделы System">
                   {SYSTEM_SECTIONS.map(section => (
                     <button
                       key={section.id}
                       type="button"
                       role="tab"
                       aria-selected={false}
-                      className={`system-section-button system-section-button--${section.id}${section.primary ? ' primary' : ''}`}
+                      className={`system-premium-tile tone-${section.accent}${section.primary ? ' primary' : ''}`}
                       onClick={() => openSystemSection(section.id)}
                     >
-                      <span className="system-section-emoji">{section.emoji}</span>
+                      <AppIcon name={section.icon} />
                       <b>{section.shortTitle}</b>
+                      <i />
                     </button>
                   ))}
                 </div>
-              </section>
+              </>
             ) : (
-              <section className="card system-detail-shell">
-                <div className="system-detail-toolbar system-detail-toolbar--single">
-                  <button type="button" className="system-back-button" onClick={() => setActiveSystemSection(null)} aria-label="Назад к разделам">
+              <>
+                <div className="premium-screen-head detail">
+                  <button type="button" className="premium-back-button" onClick={() => setActiveSystemSection(null)} aria-label="Назад к разделам">
                     ←
                   </button>
-                  <div className="system-detail-title-row system-detail-title-row--minimal">
-                    <h2>{activeSystemMeta.shortTitle}</h2>
-                    <span>{SYSTEM_UI_VERSION}</span>
-                  </div>
+                  <h1>{activeSystemMeta.shortTitle}</h1>
+                  <span>{SYSTEM_UI_VERSION}</span>
                 </div>
 
                 {activeSystemMeta.subsections.length > 1 ? (
-                  <div className="system-subsection-grid" role="tablist" aria-label={`${activeSystemMeta.shortTitle} окна`}>
+                  <div className="premium-segmented" role="tablist" aria-label={`${activeSystemMeta.shortTitle} окна`}>
                     {activeSystemMeta.subsections.map(subsection => (
                       <button
                         key={subsection.id}
                         type="button"
                         role="tab"
                         aria-selected={currentSystemSubsection === subsection.id}
-                        className={`system-subsection-button${currentSystemSubsection === subsection.id ? ' active' : ''}`}
+                        className={currentSystemSubsection === subsection.id ? 'active' : ''}
                         onClick={() => setActiveSystemSubsection(prev => ({ ...prev, [activeSystemMeta.id]: subsection.id }))}
                       >
-                        <b>{subsection.label}</b>
+                        {subsection.label}
                       </button>
                     ))}
                   </div>
                 ) : null}
 
-                <div className="system-content-window">
+                <div className="system-premium-window">
                   {currentSystemSubsection ? renderSystemSubsectionContent(currentSystemSubsection) : null}
                 </div>
-              </section>
+              </>
             )}
-          </>
+          </section>
         )}
       </main>
 
-      <nav className="bottom-nav" aria-label="Главная навигация">
+      <nav className="bottom-nav premium-bottom-nav" aria-label="Главная навигация">
         {NAV_TABS.map(tab => (
           <button
             key={tab.id}
@@ -384,10 +406,70 @@ export function DashboardShell() {
             onClick={() => setActiveTab(tab.id)}
             aria-current={activeTab === tab.id ? 'page' : undefined}
           >
-            <span className="nav-emoji">{tab.emoji}</span>{tab.label}
+            <AppIcon name={tab.icon} />
+            <span>{tab.label}</span>
           </button>
         ))}
       </nav>
     </>
   );
+}
+
+function SystemRows(props: { rows: SystemRow[] }) {
+  return (
+    <div className="system-premium-list">
+      {props.rows.map(row => (
+        <article className={`system-premium-row ${row.tone ?? 'info'}`} key={`${row.title}-${row.meta}`}>
+          <span className="row-icon"><AppIcon name={row.icon} /></span>
+          <div>
+            <b>{row.title}</b>
+            <small>{row.meta}</small>
+          </div>
+          <em>›</em>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function AppIcon(props: { name: IconName }) {
+  const stroke = 'currentColor';
+  const common = { fill: 'none', stroke, strokeWidth: 2.1, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+  switch (props.name) {
+    case 'telegram':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M21 4 3.8 10.9c-.8.3-.7 1.4.1 1.6l4.2 1.2 1.6 5.1c.2.7 1.1.9 1.6.3l2.3-2.8 4.3 3.2c.7.5 1.6.1 1.8-.7L22 5.2c.2-.8-.3-1.5-1-1.2Z"/><path {...common} d="m8.2 13.5 8.9-5.6-6.5 7.8"/></svg>;
+    case 'audit':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M5 20V9"/><path {...common} d="M12 20V4"/><path {...common} d="M19 20v-7"/><path {...common} d="M3 20h18"/></svg>;
+    case 'cloud':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M7 18h10.5a4.5 4.5 0 0 0 .5-9 6.5 6.5 0 0 0-12-2.2A5.5 5.5 0 0 0 7 18Z"/></svg>;
+    case 'backup':
+      return <svg viewBox="0 0 24 24"><ellipse {...common} cx="12" cy="6" rx="7" ry="3"/><path {...common} d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6"/><path {...common} d="M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/><path {...common} d="M15 11.5h4.5V7"/><path {...common} d="m19.5 11.5-4.8-4.8"/></svg>;
+    case 'qa':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M12 3 5 6v5c0 4.5 2.9 8.4 7 10 4.1-1.6 7-5.5 7-10V6l-7-3Z"/><path {...common} d="m8.5 12 2.2 2.2 4.8-5"/></svg>;
+    case 'dev':
+      return <svg viewBox="0 0 24 24"><path {...common} d="m8 8-4 4 4 4"/><path {...common} d="m16 8 4 4-4 4"/><path {...common} d="m14 5-4 14"/></svg>;
+    case 'sleep':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M20 15.2A7.8 7.8 0 0 1 8.8 4 8.4 8.4 0 1 0 20 15.2Z"/></svg>;
+    case 'day':
+      return <svg viewBox="0 0 24 24"><circle {...common} cx="12" cy="12" r="4"/><path {...common} d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>;
+    case 'money':
+      return <svg viewBox="0 0 24 24"><rect {...common} x="3" y="6" width="18" height="13" rx="3"/><path {...common} d="M3 10h18"/><path {...common} d="M7 15h4"/></svg>;
+    case 'work':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M9 6V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1"/><rect {...common} x="4" y="6" width="16" height="14" rx="3"/><path {...common} d="M4 12h16"/></svg>;
+    case 'funds':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M4 19h16"/><path {...common} d="M6 17V9M10 17V9M14 17V9M18 17V9"/><path {...common} d="M3 9h18L12 4 3 9Z"/></svg>;
+    case 'ai':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M12 3v18M3 12h18"/><path {...common} d="M7 7h10v10H7z"/><path {...common} d="M5 5h2M17 5h2M5 19h2M17 19h2"/></svg>;
+    case 'sync':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M20 7v5h-5"/><path {...common} d="M4 17v-5h5"/><path {...common} d="M18 9A7 7 0 0 0 6.5 6.5"/><path {...common} d="M6 15a7 7 0 0 0 11.5 2.5"/></svg>;
+    case 'warn':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M12 3 2.5 20h19L12 3Z"/><path {...common} d="M12 9v5M12 17h.01"/></svg>;
+    case 'log':
+      return <svg viewBox="0 0 24 24"><path {...common} d="M7 4h10a2 2 0 0 1 2 2v14l-3-2-3 2-3-2-3 2V6a2 2 0 0 1 2-2Z"/><path {...common} d="M9 9h6M9 13h5"/></svg>;
+    case 'check':
+      return <svg viewBox="0 0 24 24"><path {...common} d="m5 12 4 4L19 6"/></svg>;
+    case 'system':
+    default:
+      return <svg viewBox="0 0 24 24"><path {...common} d="M12 3 5 7v10l7 4 7-4V7l-7-4Z"/><path {...common} d="m8.5 9.5 3.5-2 3.5 2v5L12 16.5l-3.5-2v-5Z"/></svg>;
+  }
 }

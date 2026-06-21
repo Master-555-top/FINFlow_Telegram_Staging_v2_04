@@ -34,7 +34,7 @@ import {
   type WakeDecision
 } from '@/lib/sleep/sleepModel';
 
-type SleepView = 'overview' | 'now' | 'history' | 'editor' | 'stats';
+type SleepView = 'overview' | 'history' | 'editor';
 
 type SleepFormState = {
   fromDate: string;
@@ -49,7 +49,7 @@ type SleepFormState = {
 const SLEEP_UI_VERSION = APP_UI_VERSION;
 
 export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
-  const [activeView, setActiveView] = useState<SleepView>('now');
+  const [activeView, setActiveView] = useState<SleepView>('overview');
   const [records, setRecords] = useState<SleepRecord[]>(seedSleepRecords);
   const [selectedId, setSelectedId] = useState(seedSleepRecords[seedSleepRecords.length - 1]?.id ?? '');
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -153,7 +153,7 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
       shiftEndedAt: liveAfterShift ? liveShiftEndedAt : undefined
     }, new Date());
     setLiveSession(session);
-    setActiveView('now');
+    setActiveView('overview');
   }
 
   function finishLiveSleep() {
@@ -218,7 +218,7 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
   }
 
   function exportHistory() {
-    const payload = JSON.stringify({ version: 'sleep_v2_18_1', exportedAt: new Date().toISOString(), records }, null, 2);
+    const payload = JSON.stringify({ version: 'sleep_v2_29', exportedAt: new Date().toISOString(), records }, null, 2);
     const blob = new Blob([payload], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -232,14 +232,10 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
     ? 'История сна'
     : activeView === 'editor'
       ? editingId ? 'Правка сна' : 'Редактор сна'
-      : activeView === 'stats'
-        ? 'Статистика сна'
-        : activeView === 'now'
-          ? 'Сейчас'
-          : 'Сон';
+      : 'Сон';
 
   return (
-    <section className="sleep-screen premium-screen sleep-v2181">
+    <section className="sleep-screen premium-screen sleep-v2181 sleep-v229">
       <div className="premium-screen-head sleep-head compact">
         <h1>{title}</h1>
         <span>{SLEEP_UI_VERSION}</span>
@@ -248,10 +244,8 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
       <div className="premium-segmented sleep-segmented compact v2181" role="tablist" aria-label="Sleep tabs">
         {[
           ['overview', 'Обзор'],
-          ['now', 'Сейчас'],
           ['history', 'История'],
-          ['editor', 'Редактор'],
-          ['stats', 'Статистика']
+          ['editor', 'Редактор']
         ].map(([id, label]) => (
           <button
             key={id}
@@ -275,12 +269,6 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
           setSelectedId={setSelectedId}
           taxiShiftHours={taxiShiftHours}
           taxiActiveHours={taxiActiveHours}
-          onAdd={() => setActiveView('now')}
-        />
-      ) : null}
-
-      {activeView === 'now' ? (
-        <SleepNowPanel
           liveSession={liveSession}
           liveNow={liveNow}
           wakeDecision={wakeDecision}
@@ -323,9 +311,6 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
         />
       ) : null}
 
-      {activeView === 'stats' ? (
-        <SleepStatsPanel stats={stats} analyses={analyses} />
-      ) : null}
     </section>
   );
 }
@@ -484,12 +469,36 @@ function SleepOverview(props: {
   setSelectedId: (id: string) => void;
   taxiShiftHours: number;
   taxiActiveHours: number;
-  onAdd: () => void;
+  liveSession: LiveSleepSession | null;
+  liveNow: Date;
+  wakeDecision: WakeDecision | null;
+  morningPlanner: MorningPlannerSummary | null;
+  liveAfterShift: boolean;
+  setLiveAfterShift: (value: boolean) => void;
+  liveShiftEndedAt: string;
+  setLiveShiftEndedAt: (value: string) => void;
+  startLiveSleep: () => void;
+  finishLiveSleep: () => void;
+  cancelLiveSleep: () => void;
 }) {
   const last = props.stats.lastAnalysis;
   const lastStatus = last?.status;
   return (
     <>
+      <SleepNowPanel
+        liveSession={props.liveSession}
+        liveNow={props.liveNow}
+        wakeDecision={props.wakeDecision}
+        morningPlanner={props.morningPlanner}
+        liveAfterShift={props.liveAfterShift}
+        setLiveAfterShift={props.setLiveAfterShift}
+        liveShiftEndedAt={props.liveShiftEndedAt}
+        setLiveShiftEndedAt={props.setLiveShiftEndedAt}
+        startLiveSleep={props.startLiveSleep}
+        finishLiveSleep={props.finishLiveSleep}
+        cancelLiveSleep={props.cancelLiveSleep}
+      />
+
       <div className={`sleep-hero-status tone-${lastStatus?.tone ?? 'blue'}`}>
         <div className="sleep-hero-icon" aria-hidden="true">☾</div>
         <div>
@@ -497,7 +506,7 @@ function SleepOverview(props: {
           <b>{lastStatus?.label ?? 'Добавь сон'}</b>
           <p>{props.stats.recommendation}</p>
         </div>
-        <button type="button" onClick={props.onAdd}>+</button>
+        <span className="sleep-overview-inline-badge">live</span>
       </div>
 
       <div className="sleep-stat-grid adaptive">
@@ -522,6 +531,8 @@ function SleepOverview(props: {
       <SleepChart analyses={props.analyses} selectedId={props.selectedId} setSelectedId={props.setSelectedId} />
 
       {props.selectedAnalysis ? <SelectedSleepCard analysis={props.selectedAnalysis} /> : null}
+
+      <SleepStatsPanel stats={props.stats} analyses={props.analyses} />
     </>
   );
 }

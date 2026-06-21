@@ -1713,3 +1713,143 @@ body {
   border-radius: 20px;
   font-size: 16px;
 }
+
+/* v2.31 — Sleep Overview section-scoped cleanup from Telegram screenshots.
+   Keep the existing visual language; remove duplicate cards and sync stats/chart to Mon-Sun week. */
+.sleep-v231 .sleep-mode-signal {
+  grid-template-columns: 58px minmax(0, 1fr);
+  min-height: 104px;
+}
+
+.sleep-v231 .sleep-mode-signal p {
+  max-width: 100%;
+  font-size: 12.5px;
+  line-height: 1.32;
+}
+
+.sleep-v231 .sleep-week-stat-grid .sleep-stat-card {
+  position: relative;
+  min-height: 92px;
+  padding: 11px 9px;
+}
+
+.sleep-v231 .sleep-week-stat-grid .sleep-stat-card i {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+}
+
+.sleep-v231 .sleep-week-stat-grid .sleep-stat-card b {
+  font-size: 20px;
+}
+
+.sleep-v231 .sleep-week-chart-card {
+  padding: 15px 12px 13px;
+}
+
+.sleep-v231 .sleep-week-chart {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  height: 198px;
+  padding: 2px 2px 0;
+}
+
+.sleep-v231 .sleep-week-bar {
+  grid-template-rows: 24px 1fr 38px;
+  gap: 5px;
+  min-width: 0;
+}
+
+.sleep-v231 .sleep-week-bar span {
+  color: rgba(229,228,250,.72);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.sleep-v231 .sleep-week-bar small {
+  display: grid;
+  gap: 2px;
+  color: rgba(229,228,250,.60);
+  font-size: 10.5px;
+  line-height: 1.05;
+  text-transform: lowercase;
+}
+
+.sleep-v231 .sleep-week-bar small em {
+  color: rgba(255,255,255,.86);
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.sleep-v231 .sleep-week-bar.empty {
+  opacity: .52;
+}
+
+.sleep-v231 .sleep-week-bar.empty .sleep-bar-track {
+  background: rgba(255,255,255,.035);
+}
+
+.sleep-v231 .sleep-week-bar.empty .sleep-bar-track i {
+  box-shadow: none;
+}
+
+.sleep-v231 .sleep-mode-panel-v231 {
+  gap: 10px;
+}
+
+.sleep-v231 .sleep-mode-hero-v231 {
+  padding: 15px;
+}
+
+.sleep-v231 .sleep-mode-hero-v231 b {
+  font-size: 24px;
+}
+
+.sleep-v231 .sleep-mode-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.sleep-v231 .sleep-mode-mini-grid div {
+  min-height: 66px;
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 17px;
+  background: rgba(255,255,255,.045);
+}
+
+.sleep-v231 .sleep-mode-mini-grid span {
+  display: block;
+  color: rgba(224,219,245,.62);
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.sleep-v231 .sleep-mode-mini-grid b {
+  display: block;
+  margin-top: 7px;
+  color: white;
+  font-size: 14px;
+  line-height: 1.05;
+  letter-spacing: -.03em;
+}
+
+@media (max-width: 430px) {
+  .sleep-v231 .sleep-week-chart {
+    gap: 6px;
+  }
+
+  .sleep-v231 .sleep-week-bar small {
+    font-size: 9.5px;
+  }
+
+  .sleep-v231 .sleep-mode-mini-grid {
+    grid-template-columns: 1fr;
+  }
+}

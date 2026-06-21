@@ -48,6 +48,24 @@ type SleepFormState = {
 
 const SLEEP_UI_VERSION = APP_UI_VERSION;
 
+type SleepWeekDay = {
+  iso: string;
+  weekday: string;
+  dateLabel: string;
+  analysis: SleepRecordAnalysis | null;
+};
+
+type SleepPeriodSummary = {
+  days: number;
+  averageMinutes: number;
+  maxMinutes: number;
+  normalDays: number;
+  debtDays: number;
+  oversleptDays: number;
+  recoveryDays: number;
+  lastAnalysis: SleepRecordAnalysis | null;
+};
+
 export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
   const [activeView, setActiveView] = useState<SleepView>('overview');
   const [records, setRecords] = useState<SleepRecord[]>(seedSleepRecords);
@@ -215,7 +233,7 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
   }
 
   function exportHistory() {
-    const payload = JSON.stringify({ version: 'sleep_v2_30', exportedAt: new Date().toISOString(), records }, null, 2);
+    const payload = JSON.stringify({ version: 'sleep_v2_31', exportedAt: new Date().toISOString(), records }, null, 2);
     const blob = new Blob([payload], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -232,7 +250,7 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
       : 'Сон';
 
   return (
-    <section className="sleep-screen premium-screen sleep-v2181 sleep-v229 sleep-v230">
+    <section className="sleep-screen premium-screen sleep-v2181 sleep-v229 sleep-v230 sleep-v231">
       <div className="premium-screen-head sleep-head compact">
         <h1>{title}</h1>
         <span>{SLEEP_UI_VERSION}</span>
@@ -464,6 +482,8 @@ function SleepOverview(props: {
   finishLiveSleep: () => void;
   cancelLiveSleep: () => void;
 }) {
+  const weekDays = useMemo(() => buildSleepWeekDays(props.analyses), [props.analyses]);
+  const weekSummary = useMemo(() => buildSleepPeriodSummary(weekDays), [weekDays]);
   const last = props.stats.lastAnalysis;
   const lastStatus = last?.status;
   return (
@@ -480,66 +500,57 @@ function SleepOverview(props: {
         cancelLiveSleep={props.cancelLiveSleep}
       />
 
-      <div className={`sleep-hero-status tone-${lastStatus?.tone ?? 'blue'}`}>
+      <div className={`sleep-hero-status sleep-mode-signal tone-${lastStatus?.tone ?? 'blue'}`}>
         <div className="sleep-hero-icon" aria-hidden="true">☾</div>
         <div>
-          <span>{lastStatus?.workLabel ?? 'Режим'}</span>
+          <span>Последний сон</span>
           <b>{lastStatus?.label ?? 'Добавь сон'}</b>
-          <p>{props.stats.recommendation}</p>
-        </div>
-        <span className="sleep-overview-inline-badge">live</span>
-      </div>
-
-      <div className="sleep-stat-grid adaptive">
-        <SleepStat icon="◴" label="Среднее" value={formatSleepMinutes(props.stats.averageMinutes)} />
-        <SleepStat icon="✓" label="Норма" value={`${props.stats.normalDays}/${props.stats.days}`} sub="6–8ч" tone="green" />
-        <SleepStat icon="!" label="Недосып" value={`${props.stats.debtDays}`} sub="<5ч" tone="orange" />
-        <SleepStat icon="×" label="Проспал" value={`${props.stats.oversleptDays}`} sub=">10ч" tone="red" />
-      </div>
-
-      <div className="sleep-adaptive-card">
-        <div>
-          <span>Работа</span>
-          <b>{lastStatus?.workLabel ?? 'Нужен сон'}</b>
-          <p>{buildTaxiAdaptiveText(props.taxiShiftHours, props.taxiActiveHours, props.selectedAnalysis)}</p>
-        </div>
-        <div className="sleep-work-mini">
-          <span>смена</span>
-          <b>{props.taxiShiftHours ? `${props.taxiShiftHours.toFixed(1)}ч` : '—'}</b>
+          <p>{last ? `${formatSleepMinutes(last.record.minutes)} · ${makeSleepNightLabel(last.record)} · ${buildShortModeAdvice(last)}` : 'После первой записи здесь будет короткий итог без лишнего текста.'}</p>
         </div>
       </div>
 
-      <SleepChart analyses={props.analyses} selectedId={props.selectedId} setSelectedId={props.setSelectedId} />
+      <div className="sleep-stat-grid adaptive sleep-week-stat-grid" aria-label="Краткая статистика сна за текущую неделю">
+        <SleepStat icon="◴" label="Среднее" value={weekSummary.days ? formatSleepMinutes(weekSummary.averageMinutes) : '—'} sub="ПН–ВС" />
+        <SleepStat icon="✓" label="Норма" value={`${weekSummary.normalDays}/7`} sub="6–8ч" tone="green" />
+        <SleepStat icon="!" label="Недосып" value={`${weekSummary.debtDays}`} sub="<5ч" tone="orange" />
+        <SleepStat icon="×" label="Проспал" value={`${weekSummary.oversleptDays}`} sub=">10ч" tone="red" />
+      </div>
 
-      {props.selectedAnalysis ? <SelectedSleepCard analysis={props.selectedAnalysis} /> : null}
+      <SleepChart weekDays={weekDays} selectedId={props.selectedId} setSelectedId={props.setSelectedId} />
 
-      <SleepStatsPanel stats={props.stats} analyses={props.analyses} />
+      <SleepModePanel
+        weekSummary={weekSummary}
+        lastAnalysis={last}
+        taxiShiftHours={props.taxiShiftHours}
+        taxiActiveHours={props.taxiActiveHours}
+      />
     </>
   );
 }
 
-function SleepChart(props: { analyses: SleepRecordAnalysis[]; selectedId: string; setSelectedId: (id: string) => void }) {
+function SleepChart(props: { weekDays: SleepWeekDay[]; selectedId: string; setSelectedId: (id: string) => void }) {
   return (
-    <div className="sleep-chart-card compact">
-      <div className="sleep-card-title-row">
-        <b>Последние дни</b>
-        <span>{props.analyses.length} записей</span>
-      </div>
-      <div className="sleep-chart" aria-label="Sleep duration chart">
-        {props.analyses.slice(-8).map(analysis => (
-          <button
-            className={`sleep-bar-wrap tone-${analysis.status.tone}${analysis.record.id === props.selectedId ? ' active' : ''}`}
-            key={analysis.record.id}
-            type="button"
-            onClick={() => props.setSelectedId(analysis.record.id)}
-          >
-            <span>{Math.round(analysis.record.minutes / 60)}ч</span>
-            <div className="sleep-bar-track">
-              <i style={{ height: `${Math.max(12, Math.min(100, (analysis.record.minutes / 720) * 100))}%` }} />
-            </div>
-            <small>{formatDateShort(analysis.record.toDate)}</small>
-          </button>
-        ))}
+    <div className="sleep-chart-card compact sleep-week-chart-card">
+      <div className="sleep-chart sleep-week-chart" aria-label="Сон за текущую неделю с понедельника по воскресенье">
+        {props.weekDays.map(day => {
+          const analysis = day.analysis;
+          const height = analysis ? `${Math.max(12, Math.min(100, (analysis.record.minutes / 720) * 100))}%` : '0%';
+          return (
+            <button
+              className={`sleep-bar-wrap sleep-week-bar tone-${analysis?.status.tone ?? 'blue'}${analysis?.record.id === props.selectedId ? ' active' : ''}${analysis ? '' : ' empty'}`}
+              key={day.iso}
+              type="button"
+              onClick={() => { if (analysis) props.setSelectedId(analysis.record.id); }}
+              disabled={!analysis}
+            >
+              <span>{analysis ? `${Math.round(analysis.record.minutes / 60)}ч` : '—'}</span>
+              <div className="sleep-bar-track">
+                <i style={{ height }} />
+              </div>
+              <small><em>{day.weekday}</em>{day.dateLabel}</small>
+            </button>
+          );
+        })}
         <div className="sleep-target-line" />
       </div>
     </div>
@@ -737,56 +748,35 @@ function SleepHistory(props: {
   );
 }
 
-function SleepStatsPanel(props: { stats: ReturnType<typeof buildSleepStats>; analyses: SleepRecordAnalysis[] }) {
-  const last7 = props.analyses.slice(-7);
-  const normalPct = props.stats.days ? Math.round((props.stats.normalDays / props.stats.days) * 100) : 0;
-  const recoveryAllowed = isRecoveryWindowAllowed(props.analyses.map(item => item.record));
+function SleepModePanel(props: {
+  weekSummary: SleepPeriodSummary;
+  lastAnalysis: SleepRecordAnalysis | null;
+  taxiShiftHours: number;
+  taxiActiveHours: number;
+}) {
+  const normalPct = Math.round((props.weekSummary.normalDays / 7) * 100);
+  const workLabel = props.lastAnalysis?.status.workLabel ?? 'Нужен сон';
   return (
-    <div className="sleep-stats-panel">
-      <div className="sleep-stats-hero">
+    <div className="sleep-stats-panel sleep-mode-panel-v231">
+      <div className="sleep-stats-hero sleep-mode-hero-v231">
         <span>Режим</span>
-        <b>{normalPct}% нормы</b>
-        <p>{props.stats.recommendation}</p>
+        <b>{normalPct}% недели в норме</b>
+        <p>{buildModePanelAdvice(props.weekSummary, props.lastAnalysis, props.taxiShiftHours, props.taxiActiveHours)}</p>
       </div>
-      <div className="sleep-stat-grid adaptive">
-        <SleepStat icon="◴" label="Среднее" value={formatSleepMinutes(props.stats.averageMinutes)} />
-        <SleepStat icon="▲" label="Макс" value={formatSleepMinutes(props.stats.maxMinutes)} tone={props.stats.maxMinutes > 600 ? 'red' : 'blue'} />
-        <SleepStat icon="×" label="Проспал" value={`${props.stats.oversleptDays}`} sub="10ч+" tone="red" />
-        <SleepStat icon="↗" label="Восст." value={`${props.stats.recoveryDays}`} sub={recoveryAllowed ? 'окно есть' : 'нет'} tone="cyan" />
-      </div>
-      <div className="sleep-week-strip">
-        {last7.map(analysis => (
-          <div className={`sleep-week-day tone-${analysis.status.tone}`} key={analysis.record.id}>
-            <span>{formatDateShort(analysis.record.toDate)}</span>
-            <b>{formatSleepMinutes(analysis.record.minutes)}</b>
-            <em>{analysis.status.shortLabel}</em>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SelectedSleepCard(props: { analysis: SleepRecordAnalysis }) {
-  const { record, status } = props.analysis;
-  return (
-    <div className={`sleep-selected-card tone-${status.tone}`}>
-      <div className="sleep-card-title-row">
-        <b>{makeSleepNightLabel(record)}</b>
-        <em>{status.shortLabel}</em>
-      </div>
-      <div className="sleep-selected-grid">
-        <span><small>уснул</small>{record.sleptAt}</span>
-        <span><small>встал</small>{record.wokeAt}</span>
-        <span><small>сон</small>{formatSleepMinutes(record.minutes)}</span>
-      </div>
-      <p>{props.analysis.shiftAdaptiveNote}</p>
-      {props.analysis.suggestedNextSleepAt && props.analysis.suggestedWakeAt ? (
-        <div className="sleep-plan-mini">
-          <span>лечь {props.analysis.suggestedNextSleepAt}</span>
-          <span>встать {props.analysis.suggestedWakeAt}</span>
+      <div className="sleep-mode-mini-grid">
+        <div>
+          <span>Цель</span>
+          <b>6–8ч</b>
         </div>
-      ) : null}
+        <div>
+          <span>Неделя</span>
+          <b>{props.weekSummary.days}/7</b>
+        </div>
+        <div>
+          <span>Работа</span>
+          <b>{workLabel}</b>
+        </div>
+      </div>
     </div>
   );
 }
@@ -800,6 +790,96 @@ function SleepStat(props: { icon: string; label: string; value: string; sub?: st
       {props.sub ? <small>{props.sub}</small> : null}
     </div>
   );
+}
+
+function buildSleepWeekDays(analyses: SleepRecordAnalysis[], anchorIso = getTodayDateInput()): SleepWeekDay[] {
+  const anchor = parseIsoDateAtNoon(anchorIso);
+  const monday = new Date(anchor);
+  const dayIndex = (monday.getDay() + 6) % 7;
+  monday.setDate(monday.getDate() - dayIndex);
+
+  const byDate = new Map<string, SleepRecordAnalysis>();
+  analyses.forEach(analysis => {
+    const current = byDate.get(analysis.record.toDate);
+    if (!current || `${analysis.record.toDate}T${analysis.record.wokeAt}` > `${current.record.toDate}T${current.record.wokeAt}`) {
+      byDate.set(analysis.record.toDate, analysis);
+    }
+  });
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + index);
+    const iso = toIsoDate(date);
+    return {
+      iso,
+      weekday: WEEKDAY_SHORT[index],
+      dateLabel: formatSleepChartDate(iso),
+      analysis: byDate.get(iso) ?? null
+    };
+  });
+}
+
+function buildSleepPeriodSummary(days: SleepWeekDay[]): SleepPeriodSummary {
+  const analyses = days.map(day => day.analysis).filter((analysis): analysis is SleepRecordAnalysis => Boolean(analysis));
+  const total = analyses.reduce((sum, analysis) => sum + analysis.record.minutes, 0);
+  return {
+    days: analyses.length,
+    averageMinutes: analyses.length ? Math.round(total / analyses.length) : 0,
+    maxMinutes: analyses.length ? Math.max(...analyses.map(analysis => analysis.record.minutes)) : 0,
+    normalDays: analyses.filter(analysis => analysis.status.id === 'normal').length,
+    debtDays: analyses.filter(analysis => analysis.record.minutes < 300).length,
+    oversleptDays: analyses.filter(analysis => analysis.status.id === 'overslept').length,
+    recoveryDays: analyses.filter(analysis => analysis.status.id === 'recovery').length,
+    lastAnalysis: analyses[analyses.length - 1] ?? null
+  };
+}
+
+function buildShortModeAdvice(analysis: SleepRecordAnalysis) {
+  switch (analysis.status.id) {
+    case 'normal':
+      return 'можно планировать обычный день';
+    case 'critical_short':
+      return 'только безопасный день';
+    case 'low':
+      return 'лучше облегчить смену';
+    case 'recovery':
+      return 'восстановление после недосыпа';
+    case 'long':
+      return 'следующий сон лучше раньше';
+    case 'overslept':
+      return 'день может быть сбит';
+    default:
+      return analysis.status.shortLabel;
+  }
+}
+
+function buildModePanelAdvice(summary: SleepPeriodSummary, last: SleepRecordAnalysis | null, taxiShiftHours: number, taxiActiveHours: number) {
+  if (!last) return 'Добавь сон — FINFlow начнёт связывать режим с планом дня и работой.';
+  if (summary.days === 0) return 'На этой неделе пока нет записей сна.';
+  const work = taxiShiftHours ? `Смена ${taxiShiftHours.toFixed(1)}ч, активная ${taxiActiveHours.toFixed(1)}ч. ` : '';
+  if (summary.oversleptDays > 0) return `${work}Есть пересып >10ч: цель — мягкий день и следующий сон раньше, без дублирующих предупреждений.`;
+  if (summary.debtDays >= 2) return `${work}На неделе накопился недосып: лучше не добивать ночь и вернуть 6–8ч.`;
+  if (summary.normalDays >= 4) return `${work}Режим близко к норме: можно держать обычный рабочий план.`;
+  if (last.status.id === 'long' || last.status.id === 'recovery') return `${work}Сон длиннее нормы: это не отдельная тревога, а сигнал удержать следующий сон раньше.`;
+  return `${work}${buildShortModeAdvice(last)}.`;
+}
+
+const WEEKDAY_SHORT = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'] as const;
+
+function parseIsoDateAtNoon(iso: string) {
+  const parsed = new Date(`${iso}T12:00:00`);
+  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+}
+
+function toIsoDate(date: Date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function formatSleepChartDate(iso: string) {
+  return formatDateShort(iso).toLocaleLowerCase('ru-RU');
 }
 
 function buildLiveSleepStartDate(timeInput: string, now = new Date()) {

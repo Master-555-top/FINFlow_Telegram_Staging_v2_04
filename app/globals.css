@@ -7483,3 +7483,616 @@ body {
   .sleep-history-row { grid-template-columns: 1fr 48px 48px; }
   .sleep-history-row strong, .sleep-history-row em { grid-column: auto; justify-self: start; }
 }
+
+/* v2.16 — Adaptive Sleep system: no-score B+D logic, persistent history, work-aware recommendations */
+.sleep-v216 {
+  gap: 14px;
+}
+
+.sleep-head h1 {
+  font-size: clamp(34px, 9vw, 44px);
+}
+
+.sleep-segmented {
+  margin-bottom: 6px;
+}
+
+.sleep-hero-status {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 42px;
+  gap: 14px;
+  align-items: center;
+  min-height: 118px;
+  padding: 16px;
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.11);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(121,88,255,.20), transparent 45%),
+    linear-gradient(135deg, rgba(27,34,84,.82), rgba(19,20,55,.80));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 22px 48px rgba(0,0,0,.24);
+}
+
+.sleep-hero-status .sleep-hero-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(123,86,255,.95), rgba(63,50,168,.78));
+  color: white;
+  font-size: 34px;
+  box-shadow: 0 0 28px rgba(139,91,255,.34);
+}
+
+.sleep-hero-status span,
+.sleep-preview-card span,
+.sleep-selected-card small,
+.sleep-adaptive-card span,
+.sleep-work-mini span {
+  display: block;
+  color: rgba(218,218,246,.64);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.sleep-hero-status b {
+  display: block;
+  margin-top: 4px;
+  color: white;
+  font-size: 22px;
+  font-weight: 950;
+  letter-spacing: -.04em;
+}
+
+.sleep-hero-status p {
+  margin: 6px 0 0;
+  color: rgba(226,224,248,.78);
+  font-size: 13px;
+  line-height: 1.36;
+}
+
+.sleep-hero-status button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 50%;
+  color: white;
+  background: linear-gradient(145deg, rgba(139,91,255,.95), rgba(72,52,180,.88));
+  font-size: 26px;
+  font-weight: 750;
+  box-shadow: 0 0 28px rgba(139,91,255,.28), inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+.tone-red { --sleep-tone: 255, 72, 118; }
+.tone-orange { --sleep-tone: 255, 166, 77; }
+.tone-green { --sleep-tone: 68, 230, 150; }
+.tone-cyan { --sleep-tone: 64, 216, 255; }
+.tone-blue { --sleep-tone: 92, 145, 255; }
+.tone-yellow { --sleep-tone: 255, 207, 89; }
+
+.sleep-hero-status,
+.sleep-selected-card,
+.sleep-preview-card,
+.sleep-history-row,
+.sleep-stat-card {
+  border-color: rgba(var(--sleep-tone, 139,91,255), .28);
+}
+
+.sleep-stat-grid.adaptive {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.sleep-stat-card.tone-red i { background: rgba(255,72,118,.22); color: #ff8cac; }
+.sleep-stat-card.tone-orange i { background: rgba(255,166,77,.20); color: #ffc37a; }
+.sleep-stat-card.tone-green i { background: rgba(68,230,150,.20); color: #7df2b6; }
+.sleep-stat-card.tone-cyan i { background: rgba(64,216,255,.18); color: #8feeff; }
+.sleep-stat-card.tone-blue i { background: rgba(92,145,255,.22); color: #91bbff; }
+.sleep-stat-card.tone-yellow i { background: rgba(255,207,89,.18); color: #ffe18a; }
+
+.sleep-adaptive-card,
+.sleep-selected-card,
+.sleep-add-panel,
+.sleep-shift-card,
+.sleep-preview-card {
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(26,34,82,.76), rgba(20,20,58,.72));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 18px 42px rgba(0,0,0,.20);
+}
+
+.sleep-adaptive-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 82px;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+}
+
+.sleep-adaptive-card b,
+.sleep-work-mini b {
+  display: block;
+  margin-top: 4px;
+  color: white;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.sleep-adaptive-card p {
+  margin: 6px 0 0;
+  color: rgba(226,224,248,.76);
+  font-size: 12.5px;
+  line-height: 1.32;
+}
+
+.sleep-work-mini {
+  min-height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.045);
+  text-align: center;
+}
+
+.sleep-card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sleep-card-title-row b {
+  font-size: 18px;
+  color: white;
+}
+
+.sleep-card-title-row span,
+.sleep-card-title-row em {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.055);
+  color: rgba(232,232,255,.74);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 850;
+}
+
+.sleep-chart-card.compact {
+  padding: 14px;
+}
+
+.sleep-chart .sleep-bar-wrap {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.sleep-bar-wrap.active small {
+  color: white;
+}
+
+.sleep-bar-wrap.active .sleep-bar-track {
+  outline: 1px solid rgba(255,255,255,.22);
+  box-shadow: 0 0 18px rgba(139,91,255,.25);
+}
+
+.sleep-bar-wrap.tone-red .sleep-bar-track i { background: linear-gradient(180deg, #ff7d9e, #ff3c72); }
+.sleep-bar-wrap.tone-orange .sleep-bar-track i { background: linear-gradient(180deg, #ffd17d, #ff9d3c); }
+.sleep-bar-wrap.tone-green .sleep-bar-track i { background: linear-gradient(180deg, #8fffc5, #35d987); }
+.sleep-bar-wrap.tone-cyan .sleep-bar-track i { background: linear-gradient(180deg, #9cf3ff, #42cfff); }
+.sleep-bar-wrap.tone-blue .sleep-bar-track i { background: linear-gradient(180deg, #a6c7ff, #5f91ff); }
+.sleep-bar-wrap.tone-yellow .sleep-bar-track i { background: linear-gradient(180deg, #ffeaa0, #ffc445); }
+
+.sleep-selected-card {
+  padding: 15px;
+  border-color: rgba(var(--sleep-tone, 139,91,255), .34);
+}
+
+.sleep-selected-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.sleep-selected-grid span {
+  min-height: 58px;
+  padding: 10px;
+  border-radius: 17px;
+  background: rgba(255,255,255,.045);
+  color: white;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.sleep-selected-card p {
+  margin: 13px 0 0;
+  color: rgba(226,224,248,.76);
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.sleep-plan-mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+.sleep-plan-mini span {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(var(--sleep-tone, 139,91,255), .14);
+  color: white;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.sleep-add-panel {
+  display: grid;
+  gap: 13px;
+  padding: 14px;
+}
+
+.sleep-preview-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-color: rgba(var(--sleep-tone, 139,91,255), .34);
+}
+
+.sleep-preview-card b {
+  color: white;
+  font-size: 24px;
+  font-weight: 950;
+}
+
+.sleep-preview-card em {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(var(--sleep-tone, 139,91,255), .18);
+  color: white;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.sleep-preset-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.sleep-preset-row button,
+.sleep-history-actions button {
+  min-height: 42px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 17px;
+  background: rgba(255,255,255,.055);
+  color: rgba(240,240,255,.88);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.sleep-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.sleep-form-grid label,
+.sleep-shift-card label,
+.sleep-note-field {
+  display: grid;
+  gap: 7px;
+}
+
+.sleep-form-grid span,
+.sleep-shift-card label > span,
+.sleep-note-field span {
+  color: rgba(220,218,246,.72);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.sleep-form-grid input,
+.sleep-shift-card input[type='time'],
+.sleep-note-field textarea {
+  min-width: 0;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 16px;
+  background: rgba(5,8,24,.52);
+  color: white;
+  font: inherit;
+  font-size: 14px;
+  color-scheme: dark;
+}
+
+.sleep-shift-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 130px;
+  gap: 12px;
+  padding: 13px;
+}
+
+.sleep-toggle-row {
+  align-content: center;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+}
+
+.sleep-toggle-row input {
+  width: 18px;
+  height: 18px;
+  accent-color: #8b5bff;
+}
+
+.sleep-note-field textarea {
+  padding-top: 12px;
+  min-height: 76px;
+  resize: vertical;
+}
+
+.sleep-save-button {
+  min-height: 54px;
+  border: 1px solid rgba(170,142,255,.35);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(139,91,255,.95), rgba(86,58,204,.92));
+  color: white;
+  font-size: 15px;
+  font-weight: 950;
+  box-shadow: 0 0 28px rgba(139,91,255,.25), inset 0 1px 0 rgba(255,255,255,.20);
+}
+
+.sleep-save-button:disabled {
+  opacity: .45;
+}
+
+.sleep-history-list.adaptive {
+  gap: 10px;
+}
+
+.sleep-history-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+
+.sleep-history-row.adaptive,
+.sleep-history-row {
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  border-color: rgba(var(--sleep-tone, 139,91,255), .26);
+}
+
+.sleep-history-row.active {
+  box-shadow: 0 0 0 1px rgba(255,255,255,.10), 0 0 24px rgba(var(--sleep-tone, 139,91,255), .18);
+}
+
+.sleep-history-row em {
+  background: rgba(var(--sleep-tone, 139,91,255), .16);
+  color: white;
+}
+
+@media (max-width: 390px) {
+  .sleep-stat-grid.adaptive { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sleep-hero-status { grid-template-columns: 52px minmax(0, 1fr) 38px; padding: 14px; }
+  .sleep-hero-status .sleep-hero-icon { width: 52px; height: 52px; }
+  .sleep-form-grid, .sleep-shift-card { grid-template-columns: 1fr; }
+  .sleep-history-row { grid-template-columns: 1fr 52px 52px; }
+  .sleep-history-row strong, .sleep-history-row em { grid-column: auto; }
+}
+
+/* v2.17 — Live Sleep Session / Wake Decision Flow */
+.sleep-v217 .sleep-head.compact {
+  margin-bottom: 10px;
+}
+
+.sleep-v217 .sleep-segmented.compact {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.sleep-live-start,
+.sleep-live-active {
+  display: grid;
+  gap: 12px;
+}
+
+.sleep-live-start {
+  border: 1px solid rgba(160, 116, 255, .24);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(147, 89, 255, .22), transparent 34%),
+    rgba(18, 16, 44, .78);
+  border-radius: 28px;
+  padding: 18px;
+  box-shadow: 0 22px 60px rgba(0,0,0,.24);
+}
+
+.sleep-live-orb {
+  width: 86px;
+  height: 86px;
+  display: grid;
+  place-items: center;
+  margin: 6px auto 0;
+  border-radius: 30px;
+  color: #f2edff;
+  font-size: 42px;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.32), transparent 34%),
+    linear-gradient(135deg, rgba(148, 100, 255, .95), rgba(42, 217, 255, .55));
+  box-shadow: 0 18px 42px rgba(125, 82, 255, .30), inset 0 0 0 1px rgba(255,255,255,.25);
+}
+
+.sleep-live-copy {
+  text-align: center;
+  display: grid;
+  gap: 6px;
+}
+
+.sleep-live-copy span,
+.sleep-live-options label > span,
+.sleep-live-grid span,
+.sleep-live-status span,
+.sleep-wake-card span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.sleep-live-copy b {
+  color: var(--text);
+  font-size: 23px;
+  letter-spacing: -.04em;
+}
+
+.sleep-live-copy p,
+.sleep-wake-card p {
+  margin: 0;
+  color: rgba(224, 219, 245, .78);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.sleep-live-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.sleep-live-options label,
+.sleep-live-grid > div {
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.045);
+  border-radius: 18px;
+  padding: 10px;
+}
+
+.sleep-live-options input[type='time'] {
+  width: 100%;
+  margin-top: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 850;
+}
+
+.sleep-toggle-row.compact {
+  align-items: center;
+}
+
+.sleep-primary-action,
+.sleep-live-actions button,
+.sleep-live-options button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 18px;
+  font-weight: 900;
+  color: white;
+  background: linear-gradient(135deg, rgba(139, 91, 255, .95), rgba(42, 217, 255, .78));
+  box-shadow: 0 18px 38px rgba(105, 80, 255, .25);
+}
+
+.sleep-live-status,
+.sleep-wake-card {
+  border: 1px solid rgba(var(--sleep-tone, 139,91,255), .34);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(var(--sleep-tone, 139,91,255), .18), transparent 36%),
+    rgba(18, 16, 44, .78);
+  border-radius: 26px;
+  padding: 16px;
+}
+
+.sleep-live-status {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.sleep-live-status b {
+  display: block;
+  margin-top: 4px;
+  font-size: 38px;
+  letter-spacing: -.06em;
+  line-height: 1;
+}
+
+.sleep-live-status em,
+.sleep-wake-card em {
+  justify-self: end;
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 900;
+  color: rgb(var(--sleep-tone, 139,91,255));
+  background: rgba(var(--sleep-tone, 139,91,255), .14);
+}
+
+.sleep-live-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.sleep-live-grid b {
+  display: block;
+  margin-top: 5px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.sleep-wake-card {
+  display: grid;
+  gap: 8px;
+}
+
+.sleep-wake-card b {
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.sleep-live-actions {
+  display: grid;
+  grid-template-columns: 1fr .75fr;
+  gap: 8px;
+}
+
+.sleep-live-actions button:last-child {
+  color: rgba(235,230,255,.86);
+  background: rgba(255,255,255,.07);
+  box-shadow: none;
+  border: 1px solid rgba(255,255,255,.11);
+}
+
+@media (max-width: 430px) {
+  .sleep-v217 .sleep-segmented.compact button {
+    padding-left: 6px;
+    padding-right: 6px;
+    font-size: 12px;
+  }
+
+  .sleep-live-options,
+  .sleep-live-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sleep-live-status b {
+    font-size: 34px;
+  }
+}

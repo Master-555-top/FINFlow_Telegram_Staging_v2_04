@@ -58,7 +58,7 @@ type SystemRow = {
   tone?: 'ok' | 'safe' | 'warn' | 'info';
 };
 
-const SYSTEM_UI_VERSION = 'v2.15';
+const SYSTEM_UI_VERSION = 'v2.17';
 
 const NAV_TABS: { id: NavTabId; icon: IconName; label: string }[] = [
   { id: 'day', icon: 'day', label: 'День' },
@@ -333,7 +333,7 @@ export function DashboardShell() {
 
         {activeTab === 'work' && <DailyQuickInputPanel view="work" onDayInputChange={setLiveDayInput} />}
         {activeTab === 'funds' && <DailyQuickInputPanel view="funds" onDayInputChange={setLiveDayInput} />}
-        {activeTab === 'sleep' && <SleepDashboard />}
+        {activeTab === 'sleep' && <SleepDashboard dayInput={liveDayInput} />}
         {activeTab === 'ai' && <DailyQuickInputPanel view="ai" onDayInputChange={setLiveDayInput} />}
 
         {activeTab === 'system' && (

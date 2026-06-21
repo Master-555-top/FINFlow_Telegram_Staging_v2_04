@@ -65,7 +65,7 @@ export type FinflowResetBackup = {
   values: { key: string; value: string | null }[];
 };
 
-export const FINFLOW_LAST_RESET_BACKUP_KEY = 'finflow.lastResetBackup.v2_27';
+export const FINFLOW_LAST_RESET_BACKUP_KEY = 'finflow.lastResetBackup.v2_28';
 
 export function buildFinflowDataPreview(scope: FinflowDataScope, storage: Storage | undefined = getBrowserLocalStorage()): FinflowDataPreview {
   const timeline = buildFinflowHistoryTimeline(scope, storage);
@@ -172,7 +172,7 @@ export function buildFinflowStorageExport(format: 'summary' | 'text' | 'json' | 
 
   if (format === 'json') {
     return JSON.stringify({
-      version: 'finflow_storage_export_v2_27',
+      version: 'finflow_storage_export_v2_28',
       exportedAtIso: new Date().toISOString(),
       scope,
       timeline: preview.timeline,
@@ -181,7 +181,7 @@ export function buildFinflowStorageExport(format: 'summary' | 'text' | 'json' | 
   }
 
   const lines = [
-    `FINFlow data export v2.27`,
+    `FINFlow data export v2.28`,
     `Scope: ${scope.section} / ${scope.period} / ${scope.anchorDateIso}`,
     `Blocks: ${values.length}`,
     `Exact timeline entries: ${preview.timeline.length}`,

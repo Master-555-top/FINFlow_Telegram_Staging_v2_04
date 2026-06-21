@@ -9,7 +9,7 @@ const sectionOptions: { id: FinflowDataSection; label: string }[] = [
   { id: 'day', label: 'День' },
   { id: 'records', label: 'Доходы/расходы' },
   { id: 'sleep', label: 'Сон' },
-  { id: 'history', label: 'История' },
+  { id: 'history', label: 'Архив дня' },
   { id: 'fuel', label: 'Топливо' },
   { id: 'tasks', label: 'Задачи' },
   { id: 'funds', label: 'Фонды' },
@@ -44,9 +44,9 @@ export function DataStoragePanel() {
   return (
     <div className="system-data-panel">
       <div className="system-data-hero">
-        <span>Единая витрина</span>
+        <span>Витрина данных</span>
         <b>Хранилище данных</b>
-        <p>Данные строятся из актуального local-state по единому History Engine: период, раздел, экспорт и сброс смотрят на одну структуру.</p>
+        <p>Данные строятся из актуального local-state по единому section-scoped History Engine: период, раздел, экспорт и сброс смотрят на одну структуру.</p>
       </div>
 
       <div className="system-data-controls">
@@ -80,7 +80,7 @@ export function DataStoragePanel() {
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">
           <b>Блоки данных</b>
-          <span>{filledItems.length} блоков · {preview.exactCount} точных записей</span>
+          <span>{filledItems.length} блоков · {preview.exactCount} записей периода</span>
         </div>
         {filledItems.map(item => (
           <article key={item.key}>
@@ -102,7 +102,7 @@ export function DataStoragePanel() {
             <em>{entry.summary}</em>
           </article>
         )) : (
-          <p>Для выбранного периода пока нет точных записей.</p>
+          <p>Для выбранного периода пока нет записей периода.</p>
         )}
       </div>
 

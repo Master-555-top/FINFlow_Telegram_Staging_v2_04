@@ -9,7 +9,7 @@ const SECTION_OPTIONS: { id: FinflowDataSection; label: string }[] = [
   { id: 'day', label: 'День' },
   { id: 'records', label: 'Доходы/расходы' },
   { id: 'sleep', label: 'Сон' },
-  { id: 'history', label: 'История' },
+  { id: 'history', label: 'Архив дня' },
   { id: 'fuel', label: 'Топливо' },
   { id: 'tasks', label: 'Задачи' },
   { id: 'funds', label: 'Фонды' },
@@ -54,7 +54,7 @@ export function DataResetPanel() {
       <div className="system-data-hero warn">
         <span>Безопасный MVP</span>
         <b>Сброс данных</b>
-        <p>Сначала выбираешь область и период, видишь предпросмотр, вводишь RESET и только потом подтверждаешь. Для года/месяца/недели/дня History Engine удаляет записи внутри поддерживаемых блоков, а не весь localStorage.</p>
+        <p>Сначала выбираешь область и период, видишь предпросмотр, вводишь RESET и только потом подтверждаешь. Для года/месяца/недели/дня section-scoped History Engine удаляет записи внутри поддерживаемых блоков, а не весь localStorage.</p>
       </div>
 
       <div className="system-data-controls">
@@ -79,7 +79,7 @@ export function DataResetPanel() {
       <div className="system-data-preview">
         <div className="system-data-preview-head">
           <b>Будет затронуто</b>
-          <span>{resetItems.length} блоков · {preview.totalCount} записей · точных {preview.exactCount}</span>
+          <span>{resetItems.length} блоков · {preview.totalCount} записей · период {preview.exactCount}</span>
         </div>
         {preview.items.map(item => (
           <article className={item.willReset ? 'danger' : ''} key={item.key}>

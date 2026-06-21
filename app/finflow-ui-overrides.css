@@ -1425,3 +1425,181 @@ body {
     grid-template-columns: 68px minmax(0, 1fr);
   }
 }
+
+/* v2.28 — section-scoped history, no global History screen */
+.section-history-panel {
+  margin-top: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 28px;
+  padding: 14px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(139, 91, 255, .16), transparent 38%),
+    rgba(18, 16, 44, .74);
+  box-shadow: 0 18px 46px rgba(0,0,0,.20);
+  display: grid;
+  gap: 12px;
+}
+
+.section-history-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.section-history-head span,
+.section-history-controls span,
+.section-history-entry span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.section-history-head b {
+  display: block;
+  color: var(--text);
+  font-size: 23px;
+  letter-spacing: -.05em;
+  margin-top: 3px;
+}
+
+.section-history-head p {
+  margin: 6px 0 0;
+  color: rgba(224,219,245,.76);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.section-history-head em {
+  min-width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(139,91,255,.18);
+  color: #efeaff;
+  font-style: normal;
+  font-weight: 950;
+  border: 1px solid rgba(255,255,255,.10);
+}
+
+.section-history-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.section-history-controls label {
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 16px;
+  padding: 9px 10px;
+  background: rgba(255,255,255,.045);
+  display: grid;
+  gap: 5px;
+}
+
+.section-history-controls select,
+.section-history-controls input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 850;
+  min-width: 0;
+}
+
+.section-history-path {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.section-history-path span {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 8px 11px;
+  background: rgba(255,255,255,.06);
+  color: rgba(239,234,255,.90);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.section-history-path i {
+  color: rgba(239,234,255,.38);
+  font-style: normal;
+}
+
+.section-history-days {
+  display: grid;
+  gap: 10px;
+}
+
+.section-history-days article,
+.section-history-empty {
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 20px;
+  padding: 11px;
+  background: rgba(255,255,255,.04);
+  display: grid;
+  gap: 8px;
+}
+
+.section-history-day-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.section-history-day-title b,
+.section-history-empty b {
+  color: var(--text);
+  font-size: 15px;
+}
+
+.section-history-day-title span,
+.section-history-empty span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.section-history-entry {
+  display: grid;
+  grid-template-columns: 74px minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: 8px;
+  align-items: center;
+  border-radius: 14px;
+  padding: 8px;
+  background: rgba(255,255,255,.045);
+}
+
+.section-history-entry b {
+  color: rgba(246,243,255,.95);
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.section-history-entry em {
+  color: rgba(224,219,245,.72);
+  font-style: normal;
+  font-size: 11px;
+  line-height: 1.25;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 390px) {
+  .section-history-controls,
+  .section-history-entry {
+    grid-template-columns: 1fr;
+  }
+}

@@ -17,6 +17,7 @@ import { AppIcon, type IconName } from '@/components/ui/AppIcon';
 import { useTelegramViewportCss } from '@/lib/telegram/useTelegramViewportCss';
 import { DataResetPanel } from '@/components/system/DataResetPanel';
 import { DataStoragePanel } from '@/components/system/DataStoragePanel';
+import { SectionHistoryPanel } from '@/components/history/SectionHistoryPanel';
 
 type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'sleep' | 'ai' | 'system';
 type SystemSectionId = 'telegram' | 'overview' | 'data' | 'cloud' | 'backup' | 'qa' | 'dev';
@@ -347,14 +348,30 @@ export function DashboardShell() {
           <>
             <NetCalculationPanel dayInput={liveDayInput} />
             <DailyQuickInputPanel view="money" onDayInputChange={setLiveDayInput} />
+            <SectionHistoryPanel title="Деньги" subtitle="Только денежные записи этого раздела: доходы, расходы, банк-review и шаблоны." sections={['records', 'bank', 'templates']} />
             <ImportReviewQueuePanel />
           </>
         )}
 
-        {activeTab === 'work' && <DailyQuickInputPanel view="work" onDayInputChange={setLiveDayInput} />}
-        {activeTab === 'funds' && <DailyQuickInputPanel view="funds" onDayInputChange={setLiveDayInput} />}
+        {activeTab === 'work' && (
+          <>
+            <DailyQuickInputPanel view="work" onDayInputChange={setLiveDayInput} />
+            <SectionHistoryPanel title="Работа" subtitle="История смен, заказов, топлива и пробега без общей вкладки истории." sections={['records', 'fuel']} />
+          </>
+        )}
+        {activeTab === 'funds' && (
+          <>
+            <DailyQuickInputPanel view="funds" onDayInputChange={setLiveDayInput} />
+            <SectionHistoryPanel title="Фонды" subtitle="История фондов и обязательств берётся из live-state Дня, не из отдельной копии." sections={['funds']} />
+          </>
+        )}
         {activeTab === 'sleep' && <SleepDashboard dayInput={liveDayInput} />}
-        {activeTab === 'ai' && <DailyQuickInputPanel view="ai" onDayInputChange={setLiveDayInput} />}
+        {activeTab === 'ai' && (
+          <>
+            <DailyQuickInputPanel view="ai" onDayInputChange={setLiveDayInput} />
+            <SectionHistoryPanel title="AI контекст" subtitle="AI не имеет отдельной базы: история берётся из дневных данных, задач, сна и работы." sections={['day', 'sleep', 'records']} />
+          </>
+        )}
 
         {activeTab === 'system' && (
           <section className="premium-screen system-premium-screen">

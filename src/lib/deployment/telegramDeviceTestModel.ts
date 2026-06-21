@@ -1,4 +1,4 @@
-export const TELEGRAM_DEVICE_TEST_VERSION = 'telegram_device_test_v2_26' as const;
+export const TELEGRAM_DEVICE_TEST_VERSION = 'telegram_device_test_v2_27' as const;
 
 export type TelegramDeviceTestCheckStatus = 'ready' | 'manual_required' | 'test_required' | 'blocked' | 'passed' | 'failed' | 'expected_safe_fail';
 
@@ -12,7 +12,7 @@ export type TelegramDeviceTestCheck = {
 
 export type TelegramDeviceTestRunbook = {
   version: typeof TELEGRAM_DEVICE_TEST_VERSION;
-  packageVersion: 'v2.26';
+  packageVersion: 'v2.27';
   readinessBefore: number;
   readinessAfter: number;
   goal: string;
@@ -27,7 +27,7 @@ export type TelegramDeviceTestRunbook = {
 export function buildTelegramDeviceTestRunbook(): TelegramDeviceTestRunbook {
   return {
     version: TELEGRAM_DEVICE_TEST_VERSION,
-    packageVersion: 'v2.26',
+    packageVersion: 'v2.27',
     readinessBefore: 92,
     readinessAfter: 94,
     goal: 'Провести первый реальный Telegram Mini App device-test сценарий: initData, viewport, readiness API и cloud dry-run без опасных записей в Supabase.',

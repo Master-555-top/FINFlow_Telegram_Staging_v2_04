@@ -54,7 +54,7 @@ export function DataResetPanel() {
       <div className="system-data-hero warn">
         <span>Безопасный MVP</span>
         <b>Сброс данных</b>
-        <p>Это не опасная кнопка “удалить всё”: сначала выбираешь область, видишь предпросмотр, вводишь RESET и только потом подтверждаешь.</p>
+        <p>Сначала выбираешь область и период, видишь предпросмотр, вводишь RESET и только потом подтверждаешь. Для года/месяца/недели/дня History Engine удаляет записи внутри поддерживаемых блоков, а не весь localStorage.</p>
       </div>
 
       <div className="system-data-controls">
@@ -79,12 +79,12 @@ export function DataResetPanel() {
       <div className="system-data-preview">
         <div className="system-data-preview-head">
           <b>Будет затронуто</b>
-          <span>{resetItems.length} блоков · ~{preview.totalCount} записей</span>
+          <span>{resetItems.length} блоков · {preview.totalCount} записей · точных {preview.exactCount}</span>
         </div>
         {preview.items.map(item => (
           <article className={item.willReset ? 'danger' : ''} key={item.key}>
             <b>{item.label}</b>
-            <span>{item.willReset ? 'попадает в сброс' : 'не трогаем'} · {item.count} · {item.bytes}b</span>
+            <span>{item.willReset ? (period === 'all' ? 'полный блок' : 'точный период') : 'не трогаем'} · {item.scopedCount || item.count} · {item.bytes}b</span>
           </article>
         ))}
       </div>

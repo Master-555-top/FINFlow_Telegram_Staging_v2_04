@@ -1292,3 +1292,136 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* v2.27 — unified History Engine UI and safer Telegram dock */
+:root {
+  --finflow-bottom-nav-height: 76px;
+  --finflow-bottom-nav-space: calc(var(--finflow-bottom-nav-height) + var(--finflow-safe-bottom) + 42px);
+}
+
+.app-shell,
+.premium-screen,
+.day-cockpit-screen,
+.sleep-screen {
+  scroll-padding-bottom: var(--finflow-bottom-nav-space);
+}
+
+.bottom-nav.premium-bottom-nav {
+  position: fixed;
+  left: max(12px, var(--tg-content-safe-left)) !important;
+  right: max(12px, var(--tg-content-safe-right)) !important;
+  bottom: calc(var(--finflow-safe-bottom) + 12px) !important;
+  width: min(calc(100vw - max(24px, calc(var(--tg-content-safe-left) + var(--tg-content-safe-right) + 24px))), 430px) !important;
+  max-width: calc(100vw - 24px);
+  margin-inline: auto;
+  transform: translateZ(0) !important;
+  grid-template-columns: repeat(7, minmax(48px, 1fr));
+  contain: layout paint;
+}
+
+.premium-bottom-nav .nav-btn {
+  touch-action: manipulation;
+  min-height: 58px;
+}
+
+.premium-bottom-nav .nav-btn.active {
+  box-shadow:
+    0 12px 30px rgba(117, 82, 255, .28),
+    inset 0 0 0 1px rgba(255,255,255,.14);
+}
+
+.system-data-timeline {
+  border: 1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(42,217,255,.13), transparent 38%),
+    rgba(18, 16, 44, .72);
+  border-radius: 22px;
+  padding: 10px;
+  display: grid;
+  gap: 7px;
+}
+
+.system-data-timeline p {
+  margin: 0;
+  color: rgba(224,219,245,.72);
+  font-size: 12px;
+}
+
+.data-timeline-row {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 4px 10px;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.045);
+  border-radius: 15px;
+  padding: 9px 10px;
+}
+
+.data-timeline-row span {
+  grid-row: span 2;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.data-timeline-row b {
+  color: var(--text);
+  font-size: 12px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data-timeline-row em {
+  color: rgba(224,219,245,.70);
+  font-size: 11px;
+  font-style: normal;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data-timeline-row.data-sleep {
+  border-color: rgba(139,91,255,.22);
+}
+
+.data-timeline-row.data-record {
+  border-color: rgba(42,217,255,.20);
+}
+
+.data-timeline-row.data-fuel {
+  border-color: rgba(255,183,77,.22);
+}
+
+.system-data-preview.compact article span {
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  .bottom-nav.premium-bottom-nav {
+    left: 8px !important;
+    right: 8px !important;
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px);
+    padding: 6px;
+    gap: 3px;
+  }
+
+  .premium-bottom-nav .nav-btn {
+    min-width: 0;
+    min-height: 56px;
+  }
+
+  .premium-bottom-nav .nav-btn span {
+    font-size: 7.5px;
+    letter-spacing: -.01em;
+  }
+
+  .data-timeline-row {
+    grid-template-columns: 68px minmax(0, 1fr);
+  }
+}

@@ -11,6 +11,8 @@ const sectionOptions: { id: FinflowDataSection; label: string }[] = [
   { id: 'sleep', label: 'Сон' },
   { id: 'history', label: 'История' },
   { id: 'fuel', label: 'Топливо' },
+  { id: 'tasks', label: 'Задачи' },
+  { id: 'funds', label: 'Фонды' },
   { id: 'bank', label: 'Bank review' }
 ];
 
@@ -22,6 +24,8 @@ export function DataStoragePanel() {
   const [exportText, setExportText] = useState('');
   const scope = useMemo(() => ({ section, period, anchorDateIso }), [section, period, anchorDateIso]);
   const preview = useMemo(() => buildFinflowDataPreview(scope), [scope, exportText]);
+  const filledItems = preview.items.filter(item => item.bytes > 0);
+  const timelinePreview = preview.timeline.slice(0, 12);
 
   function buildExport() {
     setExportText(buildFinflowStorageExport(format, scope));
@@ -40,10 +44,11 @@ export function DataStoragePanel() {
   return (
     <div className="system-data-panel">
       <div className="system-data-hero">
-        <span>Витрина данных</span>
+        <span>Единая витрина</span>
         <b>Хранилище данных</b>
-        <p>Это не отдельная база, а сжатый экспортный слой из актуального local-state: меняешь запись — витрина перестраивается.</p>
+        <p>Данные строятся из актуального local-state по единому History Engine: период, раздел, экспорт и сброс смотрят на одну структуру.</p>
       </div>
+
       <div className="system-data-controls">
         <label>
           <span>Область</span>
@@ -71,18 +76,36 @@ export function DataStoragePanel() {
           </select>
         </label>
       </div>
+
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">
-          <b>Сейчас накоплено</b>
-          <span>{preview.items.filter(item => item.bytes > 0).length} блоков · ~{preview.items.reduce((sum, item) => sum + item.count, 0)} записей</span>
+          <b>Блоки данных</b>
+          <span>{filledItems.length} блоков · {preview.exactCount} точных записей</span>
         </div>
-        {preview.items.filter(item => item.bytes > 0).map(item => (
+        {filledItems.map(item => (
           <article key={item.key}>
             <b>{item.label}</b>
-            <span>{item.count} · {item.bytes}b</span>
+            <span>{item.scopedCount || item.count} · {item.bytes}b</span>
           </article>
         ))}
       </div>
+
+      <div className="system-data-timeline">
+        <div className="system-data-preview-head">
+          <b>Таймлайн периода</b>
+          <span>{preview.timeline.length} записей</span>
+        </div>
+        {timelinePreview.length ? timelinePreview.map(entry => (
+          <article key={entry.id} className={`data-timeline-row data-${entry.category}`}>
+            <span>{entry.dateIso}</span>
+            <b>{entry.title}</b>
+            <em>{entry.summary}</em>
+          </article>
+        )) : (
+          <p>Для выбранного периода пока нет точных записей.</p>
+        )}
+      </div>
+
       <div className="system-data-actions">
         <button type="button" onClick={buildExport}>собрать формат</button>
         <button type="button" onClick={copyExport}>копировать</button>

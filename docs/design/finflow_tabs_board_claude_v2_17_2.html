@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>FinFlow — Unified tabs board</title>
+<style>
+  :root{
+    --ink:#04071b; --ink-2:#091438;
+    --panel:rgba(18,26,63,.82); --panel-2:rgba(25,28,72,.66);
+    --line:rgba(185,198,255,.16); --line-bright:rgba(158,134,255,.34);
+    --text:rgba(255,255,255,.96); --soft:rgba(216,218,246,.66); --faint:rgba(216,218,246,.42);
+    --violet:#8c5cff; --violet-2:#6d4bff; --blue:#6288ff; --cyan:#40d8ff; --magenta:#df5cff;
+    --green:#43e6a0; --amber:#ffb34d;
+    --font:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{ font-family:var(--font); color:var(--text);
+    background:radial-gradient(60% 40% at 50% 0%, #141a3a, #070a1c 60%), #05060f;
+    padding:34px 28px 40px; }
+  .board-title{ font-size:26px; font-weight:900; letter-spacing:-.5px; margin-bottom:4px; }
+  .board-title b{ color:var(--violet); }
+  .board-sub{ color:var(--soft); font-size:13px; margin-bottom:26px; }
+  .row{ display:flex; gap:22px; align-items:flex-start; flex-wrap:nowrap; }
+
+  .phone{ width:360px; flex:0 0 auto; border-radius:40px; padding:16px 14px 14px;
+    background:
+      radial-gradient(54% 28% at 14% 1%, rgba(223,92,255,.26), transparent 60%),
+      radial-gradient(40% 22% at 92% 2%, rgba(64,216,255,.18), transparent 60%),
+      radial-gradient(92% 56% at 50% 98%, rgba(124,58,237,.40), transparent 62%),
+      radial-gradient(58% 40% at 50% 80%, rgba(140,92,255,.30), transparent 66%),
+      linear-gradient(180deg,var(--ink),var(--ink-2));
+    border:1px solid rgba(255,255,255,.10); box-shadow:0 30px 80px rgba(0,0,0,.5); }
+  .label{ text-align:center; color:var(--soft); font-size:12px; font-weight:700; margin:14px 0 0; letter-spacing:.04em; }
+
+  .head{ display:flex; align-items:center; justify-content:space-between; margin:6px 4px 16px; }
+  .head h1{ font-size:26px; font-weight:900; letter-spacing:-.8px; }
+  .vbadge{ font-size:11px; font-weight:700; color:var(--soft); border:1px solid var(--line-bright);
+    background:var(--panel); border-radius:999px; padding:6px 11px; }
+  .grid{ display:grid; gap:12px; }
+
+  .hero{ position:relative; border-radius:26px; padding:20px;
+    background:linear-gradient(160deg, rgba(140,92,255,.22), rgba(98,136,255,.10)), var(--panel);
+    border:1px solid var(--line-bright); box-shadow:0 20px 56px rgba(0,0,0,.34); overflow:hidden; }
+  .hero .glow{ position:absolute; right:-50px; top:-46px; width:170px; height:170px; border-radius:50%;
+    background:radial-gradient(circle, rgba(140,92,255,.5), transparent 70%); filter:blur(6px); }
+  .k{ position:relative; font-size:10.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); margin-bottom:10px; }
+  .hero-num{ position:relative; font-size:44px; font-weight:900; letter-spacing:-2px; line-height:.92; }
+  .hero-num .c{ font-size:25px; opacity:.82; }
+  .hero-sub{ position:relative; margin-top:11px; font-size:12.5px; color:var(--soft); line-height:1.4; }
+
+  .ring{ --p:50; width:84px; height:84px; flex:0 0 auto; border-radius:50%;
+    background:radial-gradient(closest-side, rgba(9,14,40,.92) 75%, transparent 76%),
+      conic-gradient(var(--cyan) calc(var(--p)*1%), rgba(255,255,255,.10) 0);
+    display:grid; place-items:center; box-shadow:0 0 28px rgba(64,216,255,.26); }
+  .ring b{ font-size:19px; font-weight:900; } .ring span{ display:block; font-size:9.5px; color:var(--faint); text-align:center; }
+  .hrow{ position:relative; display:flex; align-items:center; gap:14px; }
+
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+  .stat{ background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:11px 10px; }
+  .stat .l{ font-size:10px; color:var(--faint); margin-bottom:4px; }
+  .stat .v{ font-size:15px; font-weight:850; letter-spacing:-.3px; }
+  .stat .v.g{ color:var(--green); } .stat .v.c{ color:var(--cyan); } .stat .v.a{ color:var(--amber); } .stat .v.m{ color:var(--magenta); }
+
+  .decision{ position:relative; border-radius:24px; padding:17px;
+    background:linear-gradient(140deg, rgba(140,92,255,.28), rgba(223,92,255,.13)), var(--panel);
+    border:1px solid var(--line-bright); box-shadow:0 18px 48px rgba(124,58,237,.28); overflow:hidden; }
+  .decision .glow{ position:absolute; right:-36px; bottom:-50px; width:160px; height:160px; border-radius:50%;
+    background:radial-gradient(circle, rgba(223,92,255,.5), transparent 70%); filter:blur(8px); }
+  .decision .tag{ font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#ffd0f3; margin-bottom:8px; }
+  .decision h3{ font-size:16.5px; font-weight:850; letter-spacing:-.3px; margin-bottom:6px; line-height:1.22; }
+  .decision p{ font-size:12.5px; color:rgba(255,255,255,.78); line-height:1.45; }
+
+  .srow{ display:flex; align-items:center; justify-content:space-between;
+    background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:13px 15px; }
+  .srow .l{ color:var(--soft); font-size:13px; } .srow .v{ font-weight:800; font-size:14px; } .srow .chev{ color:var(--faint); font-size:16px; }
+
+  .progress{ height:8px; border-radius:99px; background:rgba(255,255,255,.10); overflow:hidden; margin-top:4px; }
+  .progress i{ display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--magenta),var(--violet),var(--cyan)); }
+
+  .addbar{ display:flex; align-items:center; gap:10px; background:var(--panel-2);
+    border:1px dashed var(--line-bright); border-radius:18px; padding:14px 16px; color:#c9b8ff; font-weight:700; font-size:13.5px; }
+
+  .ai-bubble{ background:var(--panel); border:1px solid var(--line); border-radius:18px 18px 18px 6px; padding:14px 16px; font-size:13px; color:var(--text); line-height:1.5; }
+  .ai-input{ display:flex; align-items:center; justify-content:space-between; background:var(--panel-2);
+    border:1px solid var(--line-bright); border-radius:18px; padding:13px 16px; color:var(--faint); font-size:13px; }
+  .ai-input .send{ width:30px;height:30px;border-radius:50%; background:linear-gradient(135deg,var(--violet),var(--violet-2)); display:grid;place-items:center; color:#fff; }
+
+  .nav{ display:flex; justify-content:space-around; margin-top:14px; padding:9px 4px;
+    background:rgba(9,14,40,.8); border:1px solid var(--line); border-radius:20px; }
+  .nav a{ display:grid; justify-items:center; gap:3px; font-size:9px; color:var(--faint); }
+  .nav a .e{ font-size:15px; filter:grayscale(.3) opacity(.8); } .nav a.active{ color:#fff; } .nav a.active .e{ filter:none; }
+</style>
+
+<div class="board-title"><b>FinFlow</b> — единый интерфейс · оставшиеся вкладки</div>
+<div class="board-sub">deep purple / cosmic · один экран — одна идея · версия сверху · детали внутри</div>
+
+<div class="row">
+
+  <!-- ДЕНЬГИ -->
+  <div>
+  <div class="phone"><div class="grid">
+    <div class="head"><h1>Деньги</h1><span class="vbadge">v2.17</span></div>
+    <div class="hero"><div class="glow"></div>
+      <div class="k">Сегодня заработано грязными</div>
+      <div class="hero-num">4 000<span class="c"> ₽</span></div>
+      <div class="hero-sub">Чистыми ≈ 2 800 ₽ после бензина · свободно после плана 0 ₽</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="l">Заказы</div><div class="v">4 000 ₽</div></div>
+      <div class="stat"><div class="l">Бензин</div><div class="v a">−1 200 ₽</div></div>
+      <div class="stat"><div class="l">Расходы</div><div class="v m">−0 ₽</div></div>
+    </div>
+    <div class="addbar"><span style="font-size:18px">＋</span> Записать: заказ · бензин · расход · доход</div>
+    <div class="srow"><span class="l">Прочие доходы</span><span class="v">0 ₽</span></div>
+    <div class="nav">
+      <a class="active"><span class="e">💰</span>Деньги</a><a><span class="e">☀️</span>День</a>
+      <a><span class="e">🚕</span>Работа</a><a><span class="e">📊</span>Фонды</a><a><span class="e">🌙</span>Сон</a><a><span class="e">⚙️</span>Сис</a>
+    </div>
+  </div></div>
+  <div class="label">Деньги — записи дня</div>
+  </div>
+
+  <!-- РАБОТА -->
+  <div>
+  <div class="phone"><div class="grid">
+    <div class="head"><h1>Работа</h1><span class="vbadge">v2.17</span></div>
+    <div class="hero"><div class="glow"></div>
+      <div class="k">Осталось грязными по плану</div>
+      <div class="hrow">
+        <div><div class="hero-num">10 400<span class="c"> ₽</span></div></div>
+        <div class="ring"><div><b>28%</b><span>смена</span></div></div>
+      </div>
+      <div class="hero-sub">Оборот 4 000 ₽ · 1 заказ · активных часов 2.5</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="l">Прогноз</div><div class="v c">8.4–10.4k</div></div>
+      <div class="stat"><div class="l">Часы смены</div><div class="v">5.0ч</div></div>
+      <div class="stat"><div class="l">Бензин план</div><div class="v a">1 800 ₽</div></div>
+    </div>
+    <div class="addbar"><span style="font-size:18px">＋</span> Добавить заказ</div>
+    <div class="srow"><span class="l">Пробег · замена масла</span><span class="v">280 041 км</span></div>
+    <div class="srow"><span class="l">Плановая замена</span><span class="v">287 041 км</span></div>
+    <div class="nav">
+      <a class="active"><span class="e">🚕</span>Работа</a><a><span class="e">☀️</span>День</a>
+      <a><span class="e">💰</span>Деньги</a><a><span class="e">📊</span>Фонды</a><a><span class="e">🌙</span>Сон</a><a><span class="e">⚙️</span>Сис</a>
+    </div>
+  </div></div>
+  <div class="label">Работа — смена и топливо</div>
+  </div>
+
+  <!-- ФОНДЫ -->
+  <div>
+  <div class="phone"><div class="grid">
+    <div class="head"><h1>Фонды</h1><span class="vbadge">v2.17</span></div>
+    <div class="hero"><div class="glow"></div>
+      <div class="k">Накоплено в ремонтный фонд</div>
+      <div class="hero-num">12 500<span class="c"> ₽</span></div>
+      <div class="hero-sub">Цель 50 000 ₽ · осталось 37 500 ₽</div>
+      <div class="progress" style="margin-top:14px"><i style="width:25%"></i></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="l">Сегодня в план</div><div class="v g">+800 ₽</div></div>
+      <div class="stat"><div class="l">Распределено</div><div class="v">3 200 ₽</div></div>
+      <div class="stat"><div class="l">Дефицит</div><div class="v a">0 ₽</div></div>
+    </div>
+    <div class="decision"><div class="glow"></div>
+      <div class="tag">Обязательства</div>
+      <h3>6-е — платёж по машине · 15-е — банкротство</h3>
+      <p>Откладывай по плану — обязательные платежи закрыты, ремонт копится без срыва дня.</p>
+    </div>
+    <div class="srow"><span class="l">Подушка / здоровье</span><span class="v">›</span></div>
+    <div class="nav">
+      <a class="active"><span class="e">📊</span>Фонды</a><a><span class="e">☀️</span>День</a>
+      <a><span class="e">💰</span>Деньги</a><a><span class="e">🚕</span>Работа</a><a><span class="e">🌙</span>Сон</a><a><span class="e">⚙️</span>Сис</a>
+    </div>
+  </div></div>
+  <div class="label">Фонды — цель ремонта 50k</div>
+  </div>
+
+  <!-- AI -->
+  <div>
+  <div class="phone"><div class="grid">
+    <div class="head"><h1>AI</h1><span class="vbadge">v2.17</span></div>
+    <div class="hero"><div class="glow"></div>
+      <div class="k">Совет на сейчас</div>
+      <h3 style="position:relative;font-size:21px;font-weight:850;letter-spacing:-.4px;line-height:1.2;margin-bottom:8px">Добей ≈ 3 000 ₽ и закрывай день</h3>
+      <div class="hero-sub">Сон 5ч → лёгкая смена. План закрыт без выгорания, фонды и платежи не трогаются.</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="l">Режим дня</div><div class="v c">Recovery</div></div>
+      <div class="stat"><div class="l">Сон</div><div class="v a">5ч</div></div>
+      <div class="stat"><div class="l">До цели</div><div class="v">3 000 ₽</div></div>
+    </div>
+    <div class="ai-bubble">Спроси: «сколько добить?», «можно ли купить X?», «когда лечь?» — отвечу с учётом дня, сна и фондов.</div>
+    <div class="ai-input"><span>Спросить FinFlow…</span><span class="send">→</span></div>
+    <div class="nav">
+      <a class="active"><span class="e">✨</span>AI</a><a><span class="e">☀️</span>День</a>
+      <a><span class="e">💰</span>Деньги</a><a><span class="e">🚕</span>Работа</a><a><span class="e">📊</span>Фонды</a><a><span class="e">⚙️</span>Сис</a>
+    </div>
+  </div></div>
+  <div class="label">AI — один совет + вопрос</div>
+  </div>
+
+</div>

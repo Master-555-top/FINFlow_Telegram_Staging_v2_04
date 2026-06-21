@@ -1853,3 +1853,392 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* v2.34 — Money Engine foundation. Keeps existing dark/glass visual baseline, no global redesign. */
+.money-engine-panel {
+  margin: 16px 0 18px;
+  padding: 18px;
+  border: 1px solid rgba(145, 125, 255, .24);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(126, 87, 255, .18), transparent 35%),
+    linear-gradient(135deg, rgba(19, 19, 54, .92), rgba(13, 16, 43, .92));
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .26);
+}
+
+.money-engine-panel .card-description {
+  max-width: 720px;
+}
+
+.money-engine-hero {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: 12px;
+  align-items: stretch;
+  margin: 14px 0;
+}
+
+.money-engine-hero > div,
+.money-engine-hero > p,
+.money-engine-metric,
+.money-source,
+.money-engine-block,
+.money-category,
+.money-obligation,
+.money-signal,
+.money-empty-line {
+  border: 1px solid rgba(175, 170, 230, .18);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .045);
+}
+
+.money-engine-hero > div {
+  padding: 16px;
+}
+
+.money-engine-hero span,
+.money-engine-head span,
+.money-source span,
+.money-source small,
+.money-category span,
+.money-obligation span,
+.money-signal span,
+.money-empty-line span {
+  color: rgba(239, 236, 255, .68);
+}
+
+.money-engine-hero b {
+  display: block;
+  margin: 4px 0 2px;
+  font-size: clamp(28px, 7vw, 44px);
+  letter-spacing: -.05em;
+  color: #fff;
+}
+
+.money-engine-hero small {
+  color: rgba(239, 236, 255, .56);
+  font-weight: 700;
+}
+
+.money-engine-hero > p {
+  margin: 0;
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(239, 236, 255, .78);
+}
+
+.money-engine-metrics,
+.money-engine-sources {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.money-engine-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.money-engine-sources {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.money-engine-metric,
+.money-source {
+  padding: 12px;
+  min-width: 0;
+}
+
+.money-engine-metric span,
+.money-source span,
+.money-source small {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.money-engine-metric b,
+.money-source b {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: -.035em;
+}
+
+.metric-green { border-color: rgba(87, 235, 164, .28); }
+.metric-amber { border-color: rgba(255, 196, 92, .28); }
+.metric-red { border-color: rgba(255, 88, 131, .28); }
+
+.money-engine-block {
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.money-engine-block.compact {
+  padding-bottom: 10px;
+}
+
+.money-engine-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.money-engine-head b {
+  color: #fff;
+  font-size: 15px;
+}
+
+.money-engine-head span {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.money-category,
+.money-obligation,
+.money-signal,
+.money-empty-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 12px;
+  margin-top: 8px;
+}
+
+.money-category b,
+.money-obligation b,
+.money-signal b {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+}
+
+.money-category span,
+.money-obligation span,
+.money-signal span {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.money-category strong,
+.money-obligation strong {
+  color: #fff;
+  white-space: nowrap;
+  font-size: 15px;
+}
+
+.money-direction-income { border-color: rgba(87, 235, 164, .25); }
+.money-direction-work_cost { border-color: rgba(255, 196, 92, .25); }
+.money-direction-personal_expense { border-color: rgba(255, 88, 131, .22); }
+.obligation-due_soon { border-color: rgba(255, 196, 92, .32); }
+.obligation-covered { border-color: rgba(87, 235, 164, .26); }
+.signal-green { border-color: rgba(87, 235, 164, .26); }
+.signal-amber { border-color: rgba(255, 196, 92, .28); }
+.signal-red { border-color: rgba(255, 88, 131, .30); }
+
+.money-template-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.money-template-row span {
+  border: 1px solid rgba(175, 170, 230, .18);
+  background: rgba(255, 255, 255, .05);
+  color: rgba(255, 255, 255, .76);
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.money-engine-green { border-color: rgba(87, 235, 164, .26); }
+.money-engine-amber { border-color: rgba(255, 196, 92, .24); }
+.money-engine-red { border-color: rgba(255, 88, 131, .24); }
+
+@media (max-width: 700px) {
+  .money-engine-panel { padding: 14px; }
+  .money-engine-hero { grid-template-columns: 1fr; }
+  .money-engine-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .money-engine-sources { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .money-engine-metric b,
+  .money-source b { font-size: 16px; }
+}
+
+/* v2.35 — Work / Taxi Engine foundation. Reuses locked dark/glass baseline, no global redesign. */
+.work-engine-panel {
+  margin: 16px 0 18px;
+  padding: 18px;
+  border: 1px solid rgba(79, 211, 255, .23);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(79, 211, 255, .12), transparent 34%),
+    linear-gradient(135deg, rgba(18, 21, 59, .92), rgba(11, 15, 42, .92));
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .25);
+}
+
+.work-engine-panel .card-description { max-width: 720px; }
+.work-engine-hero > div { border-color: rgba(79, 211, 255, .22); }
+.work-engine-sources .work-source { border-color: rgba(79, 211, 255, .18); }
+.work-bridge-line { justify-content: flex-start; }
+.work-engine-green { border-color: rgba(87, 235, 164, .26); }
+.work-engine-amber { border-color: rgba(255, 196, 92, .24); }
+.work-engine-red { border-color: rgba(255, 88, 131, .24); }
+
+@media (max-width: 700px) {
+  .work-engine-panel { padding: 14px; }
+}
+
+/* v2.36 Templates Engine — follows existing money/work card style, no global redesign */
+.templates-engine-panel.compact {
+  margin-top: 14px;
+}
+
+.templates-engine-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+}
+
+.templates-engine-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.templates-template-row span {
+  border-color: rgba(170, 120, 255, .24);
+  background: rgba(100, 72, 180, .14);
+}
+
+.templates-engine-groups {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.templates-group-card {
+  margin: 0;
+}
+
+.templates-group-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.templates-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .04);
+}
+
+.templates-line b,
+.templates-line span,
+.templates-line em {
+  display: block;
+}
+
+.templates-line b {
+  color: rgba(255, 255, 255, .92);
+  font-size: 14px;
+}
+
+.templates-line span {
+  margin-top: 3px;
+  color: rgba(225, 220, 255, .62);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.templates-line em {
+  color: rgba(255, 255, 255, .72);
+  font-size: 12px;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.templates-line.readiness-ready_local {
+  border-color: rgba(87, 235, 164, .16);
+}
+
+.templates-line.readiness-needs_confirmation {
+  border-color: rgba(255, 196, 92, .16);
+}
+
+.templates-line.readiness-planned {
+  border-color: rgba(130, 150, 255, .14);
+}
+
+@media (max-width: 560px) {
+  .templates-engine-hero {
+    grid-template-columns: 1fr;
+  }
+  .templates-engine-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .templates-line {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* v2.40 — Cloud Sync Queue + Conflict Review UI. Keeps existing compact System visual baseline. */
+.system-data-preview article.watch {
+  border-color: rgba(245, 158, 11, .34);
+  background: rgba(245, 158, 11, .08);
+}
+
+.cloud-sync-queue-panel .system-data-preview article {
+  align-items: flex-start;
+}
+
+.cloud-sync-queue-panel .system-data-preview article p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.35;
+  grid-column: 1 / -1;
+}
+
+.cloud-conflict-card {
+  display: grid !important;
+  grid-template-columns: 1fr auto;
+}
+
+.cloud-conflict-card small {
+  grid-column: 1 / -1;
+  color: rgba(255,255,255,.74);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.cloud-conflict-actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 6px;
+}
+
+.cloud-conflict-actions button,
+.cloud-sync-queue-panel .cloud-sync-actions button {
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 12px;
+  background: rgba(255,255,255,.07);
+  color: var(--text);
+  min-height: 34px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.cloud-sync-queue-panel .cloud-sync-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}

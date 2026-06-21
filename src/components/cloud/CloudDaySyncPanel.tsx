@@ -5,6 +5,18 @@ import { parseFinflowCloudDayDocument, type FinflowCloudDayDocument } from '@/li
 import { buildCloudRestorePreviewDiff } from '@/lib/cloud/cloudRestoreDiffModel';
 import { CLOUD_APPLY_ROLLBACK_STORAGE_KEY, createCloudApplyRollbackSnapshot, parseCloudApplyRollbackSnapshot, serializeCloudApplyRollbackSnapshot, summarizeCloudApplyRollbackSnapshot, type CloudApplyRollbackSnapshot } from '@/lib/cloud/cloudApplyRollbackModel';
 import { buildCloudSavePreflightReport } from '@/lib/cloud/cloudSavePreflightModel';
+import {
+  CLOUD_CONFLICT_REVIEW_STORAGE_KEY,
+  CLOUD_SYNC_QUEUE_STORAGE_KEY,
+  createCloudConflictReview,
+  createCloudSyncQueueItem,
+  parseCloudConflictReviews,
+  parseCloudSyncQueue,
+  upsertCloudConflictReview,
+  upsertCloudSyncQueueItem,
+  type CloudConflictReview,
+  type CloudSyncQueueItem
+} from '@/lib/cloud/cloudSyncQueueModel';
 
 type CloudSyncStatus = 'checking' | 'local_only' | 'ready' | 'loading' | 'saving' | 'saved' | 'conflict' | 'error';
 
@@ -72,6 +84,26 @@ export function CloudDaySyncPanel(props: {
     setPendingDocument(null);
   }, [props.document.dayInput.localDate]);
 
+  function pushQueueItem(item: CloudSyncQueueItem) {
+    try {
+      const current = parseCloudSyncQueue(JSON.parse(window.localStorage.getItem(CLOUD_SYNC_QUEUE_STORAGE_KEY) ?? '[]'));
+      window.localStorage.setItem(CLOUD_SYNC_QUEUE_STORAGE_KEY, JSON.stringify(upsertCloudSyncQueueItem(current, item)));
+      window.dispatchEvent(new Event('finflow-cloud-queue-refresh'));
+    } catch {
+      // Queue is helpful but must never block the sync action itself.
+    }
+  }
+
+  function pushConflictReview(review: CloudConflictReview) {
+    try {
+      const current = parseCloudConflictReviews(JSON.parse(window.localStorage.getItem(CLOUD_CONFLICT_REVIEW_STORAGE_KEY) ?? '[]'));
+      window.localStorage.setItem(CLOUD_CONFLICT_REVIEW_STORAGE_KEY, JSON.stringify(upsertCloudConflictReview(current, review)));
+      window.dispatchEvent(new Event('finflow-cloud-queue-refresh'));
+    } catch {
+      // Conflict review state is local-only and non-blocking.
+    }
+  }
+
   async function loadFromCloud() {
     if (!initData) return;
     setStatus('loading');
@@ -103,6 +135,15 @@ export function CloudDaySyncPanel(props: {
 
       setPendingDocument(parsed);
       setRevision(payload.record.revision ?? null);
+      pushQueueItem(createCloudSyncQueueItem({
+        action: 'load_preview',
+        status: 'previewed',
+        risk: 'safe',
+        document: parsed,
+        cloudRevision: payload.record.revision ?? null,
+        title: 'Cloud preview загружен',
+        summary: `Preview для ${parsed.dayInput.localDate}: ${parsed.records.length} записей, revision ${payload.record.revision ?? '—'}.`
+      }));
       setStatus('ready');
       setMessage(`Облачный день получен для проверки. Ревизия ${payload.record.revision ?? '—'}. Нажмите «применить», чтобы заменить локальный день.`);
     } catch (error) {
@@ -124,6 +165,15 @@ export function CloudDaySyncPanel(props: {
     }
     setStatus('saving');
     setMessage('Сохраняем день в облако…');
+    pushQueueItem(createCloudSyncQueueItem({
+      action: 'save_day',
+      status: 'queued',
+      risk: cloudSavePreflight.level === 'ready' ? 'safe' : 'watch',
+      document: props.document,
+      expectedRevision: revision,
+      title: 'Cloud save поставлен в очередь',
+      summary: `День ${props.document.dayInput.localDate}: preflight ${cloudSavePreflight.level}, ${props.document.records.length} записей.`
+    }));
 
     try {
       const response = await fetch('/api/sync/day', {
@@ -140,6 +190,22 @@ export function CloudDaySyncPanel(props: {
       };
 
       if (response.status === 409 || payload.conflict) {
+        const review = createCloudConflictReview({
+          localDate: props.document.dayInput.localDate,
+          localRevision: revision,
+          cloudRevision: payload.currentRevision ?? null
+        });
+        pushConflictReview(review);
+        pushQueueItem(createCloudSyncQueueItem({
+          action: 'resolve_conflict',
+          status: 'conflict',
+          risk: 'danger',
+          document: props.document,
+          expectedRevision: revision,
+          cloudRevision: payload.currentRevision ?? null,
+          title: 'Cloud conflict требует review',
+          summary: `Cloud revision ${payload.currentRevision ?? '—'} отличается от expected ${revision ?? '—'}. Автоперезапись заблокирована.`
+        }));
         setStatus('conflict');
         setMessage(`Облако изменилось отдельно (ревизия ${payload.currentRevision ?? '—'}). Сначала загрузите данные; локальные данные не перезаписаны.`);
         return;
@@ -147,6 +213,17 @@ export function CloudDaySyncPanel(props: {
       if (!response.ok || !payload.ok) throw new Error(payload.reason ?? `HTTP_${response.status}`);
 
       setRevision(payload.revision ?? null);
+      pushQueueItem(createCloudSyncQueueItem({
+        action: 'save_day',
+        status: 'applied',
+        risk: 'safe',
+        document: props.document,
+        expectedRevision: revision,
+        cloudRevision: payload.revision ?? null,
+        title: 'Cloud save применён',
+        summary: `День ${props.document.dayInput.localDate} сохранён. Новая revision ${payload.revision ?? '—'}.`,
+        rollbackAvailable: Boolean(lastRollback)
+      }));
       setStatus('saved');
       setMessage(`День сохранён в облако. Ревизия ${payload.revision ?? '—'}.`);
     } catch (error) {
@@ -173,6 +250,16 @@ export function CloudDaySyncPanel(props: {
       // Keep rollback in React state if sessionStorage is unavailable.
     }
 
+    pushQueueItem(createCloudSyncQueueItem({
+      action: 'apply_cloud_preview',
+      status: 'applied',
+      risk: cloudRestoreDiff?.riskLevel === 'warning' ? 'watch' : 'safe',
+      document: pendingDocument,
+      cloudRevision: revision,
+      title: 'Cloud preview применён локально',
+      summary: `День ${pendingDocument.dayInput.localDate}: apply выполнен после preview, rollback snapshot создан.`,
+      rollbackAvailable: true
+    }));
     props.onLoad(pendingDocument);
     setPendingDocument(null);
     setStatus('ready');
@@ -185,6 +272,16 @@ export function CloudDaySyncPanel(props: {
     const confirmed = window.confirm(`Откатить cloud apply? Вернём локальный день ${summary.localDateBeforeApply} с ${summary.localRecordsBeforeApply} records. Supabase не изменится.`);
     if (!confirmed) return;
 
+    pushQueueItem(createCloudSyncQueueItem({
+      action: 'rollback_apply',
+      status: 'rolled_back',
+      risk: 'safe',
+      document: lastRollback.localDocumentBeforeApply,
+      cloudRevision: lastRollback.cloudRevision,
+      title: 'Cloud apply откатан локально',
+      summary: `Вернули локальный день ${lastRollback.localDocumentBeforeApply.dayInput.localDate}. Supabase не изменён.`,
+      rollbackAvailable: false
+    }));
     props.onLoad(lastRollback.localDocumentBeforeApply);
     setLastRollback(null);
     try {

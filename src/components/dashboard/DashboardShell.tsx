@@ -18,16 +18,29 @@ import { useTelegramViewportCss } from '@/lib/telegram/useTelegramViewportCss';
 import { DataResetPanel } from '@/components/system/DataResetPanel';
 import { DataStoragePanel } from '@/components/system/DataStoragePanel';
 import { SectionHistoryPanel } from '@/components/history/SectionHistoryPanel';
+import { EcosystemReadinessBoard } from '@/components/project/EcosystemReadinessBoard';
+import { GlobalDataBackbonePanel } from '@/components/system/GlobalDataBackbonePanel';
+import { TemplatesEnginePanel } from '@/components/templates/TemplatesEnginePanel';
+import { SupabaseStagingPanel } from '@/components/cloud/SupabaseStagingPanel';
+import { CloudSyncQueuePanel } from '@/components/cloud/CloudSyncQueuePanel';
+import { N8nAutomationPanel } from '@/components/automation/N8nAutomationPanel';
+import { LocalApplyCenterPanel } from '@/components/apply/LocalApplyCenterPanel';
+import { createInitialDailyRecordsFromInput } from '@/lib/day-core/dailyRecordsModel';
 
 type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'sleep' | 'ai' | 'system';
 type SystemSectionId = 'telegram' | 'overview' | 'data' | 'cloud' | 'backup' | 'qa' | 'dev';
 type SystemSubsectionId =
+  | 'data_backbone'
+  | 'data_templates'
+  | 'data_apply'
   | 'telegram_device'
   | 'telegram_launch'
   | 'telegram_checklist'
   | 'overview_readiness'
+  | 'cloud_staging'
   | 'cloud_center'
   | 'cloud_wizard'
+  | 'cloud_n8n'
   | 'backup_local'
   | 'data_reset'
   | 'data_storage'
@@ -135,6 +148,9 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     shortTitle: 'Данные',
     accent: 'amber',
     subsections: [
+      { id: 'data_backbone', label: 'Backbone' },
+      { id: 'data_templates', label: 'Шаблоны' },
+      { id: 'data_apply', label: 'Apply' },
       { id: 'data_storage', label: 'Хранилище' },
       { id: 'data_reset', label: 'Сброс' }
     ]
@@ -146,8 +162,10 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     shortTitle: 'Cloud',
     accent: 'blue',
     subsections: [
+      { id: 'cloud_staging', label: 'Staging' },
       { id: 'cloud_center', label: 'Sync' },
-      { id: 'cloud_wizard', label: 'Wizard' }
+      { id: 'cloud_wizard', label: 'Wizard' },
+      { id: 'cloud_n8n', label: 'n8n' }
     ]
   },
   {
@@ -187,14 +205,14 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
 const DEFAULT_SYSTEM_SUBSECTIONS: Record<SystemSectionId, SystemSubsectionId> = {
   telegram: 'telegram_device',
   overview: 'overview_readiness',
-  data: 'data_storage',
-  cloud: 'cloud_center',
+  data: 'data_backbone',
+  cloud: 'cloud_staging',
   backup: 'backup_local',
   qa: 'qa_guide',
   dev: 'dev_logs'
 };
 
-const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'data_reset' | 'data_storage'>, SystemRow[]> = {
+const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'data_backbone' | 'data_templates' | 'data_apply' | 'data_reset' | 'data_storage' | 'cloud_staging' | 'cloud_n8n'>, SystemRow[]> = {
   telegram_launch: [
     { icon: 'telegram', title: 'Mini App URL', meta: 'BotFather → стабильный домен', tone: 'ok' },
     { icon: 'sync', title: 'Vercel', meta: 'Deploy-safe пакет', tone: 'ok' },
@@ -207,9 +225,9 @@ const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'data_
   ],
   overview_readiness: [
     { icon: 'audit', title: 'Day Core', meta: '96%', tone: 'ok' },
-    { icon: 'telegram', title: 'Telegram', meta: '96%', tone: 'ok' },
-    { icon: 'cloud', title: 'Cloud', meta: '82% · writes off', tone: 'safe' },
-    { icon: 'system', title: 'Ecosystem', meta: '88%', tone: 'info' }
+    { icon: 'money', title: 'Money Engine', meta: '76%', tone: 'ok' },
+    { icon: 'work', title: 'Work Engine', meta: '84%', tone: 'ok' },
+    { icon: 'cloud', title: 'Cloud', meta: 'safe-off', tone: 'safe' }
   ],
   cloud_center: [
     { icon: 'sync', title: 'Cloud sync', meta: 'выключено', tone: 'safe' },
@@ -269,6 +287,7 @@ export function DashboardShell() {
   const [activeSystemSection, setActiveSystemSection] = useState<SystemSectionId | null>(null);
   const [activeSystemSubsection, setActiveSystemSubsection] = useState<Record<SystemSectionId, SystemSubsectionId>>(DEFAULT_SYSTEM_SUBSECTIONS);
   const [dailyLiveStateSyncedAt, setDailyLiveStateSyncedAt] = useState('');
+  const systemTemplateRecords = useMemo(() => createInitialDailyRecordsFromInput(liveDayInput), [liveDayInput]);
 
   const activeSystemMeta = useMemo(
     () => SYSTEM_SECTIONS.find(section => section.id === activeSystemSection) ?? null,
@@ -301,6 +320,13 @@ export function DashboardShell() {
 
   function renderSystemSubsectionContent(subsectionId: SystemSubsectionId) {
     if (subsectionId === 'telegram_device') return <TelegramDeviceTestPanel />;
+    if (subsectionId === 'overview_readiness') return <EcosystemReadinessBoard />;
+    if (subsectionId === 'data_backbone') return <GlobalDataBackbonePanel />;
+    if (subsectionId === 'data_templates') return <TemplatesEnginePanel dayInput={liveDayInput} records={systemTemplateRecords} customTemplates={[]} />;
+    if (subsectionId === 'data_apply') return <LocalApplyCenterPanel dayInput={liveDayInput} records={systemTemplateRecords} customTemplates={[]} />;
+    if (subsectionId === 'cloud_staging') return <SupabaseStagingPanel />;
+    if (subsectionId === 'cloud_center') return <CloudSyncQueuePanel />;
+    if (subsectionId === 'cloud_n8n') return <N8nAutomationPanel />;
     if (subsectionId === 'data_storage') return <DataStoragePanel />;
     if (subsectionId === 'data_reset') return <DataResetPanel />;
     return <SystemRows rows={SYSTEM_ROWS[subsectionId]} />;
@@ -346,7 +372,7 @@ export function DashboardShell() {
 
         {activeTab === 'money' && (
           <>
-            <NetCalculationPanel dayInput={liveDayInput} />
+<NetCalculationPanel dayInput={liveDayInput} />
             <DailyQuickInputPanel view="money" onDayInputChange={setLiveDayInput} />
             <SectionHistoryPanel title="Деньги" subtitle="Только денежные записи этого раздела: доходы, расходы, банк-review и шаблоны." sections={['records', 'bank', 'templates']} />
             <ImportReviewQueuePanel />

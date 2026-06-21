@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FinFlow · День (unified)</title>
+<style>
+  /* Canonical unified tokens (one palette — resolves the duplicated --ff-* sets) */
+  :root{
+    --ink:#04071b; --ink-2:#091438;
+    --panel:rgba(18,26,63,.78); --panel-2:rgba(25,28,72,.62);
+    --line:rgba(185,198,255,.16); --line-bright:rgba(158,134,255,.34);
+    --text:rgba(255,255,255,.96); --soft:rgba(216,218,246,.66); --faint:rgba(216,218,246,.42);
+    --violet:#8c5cff; --violet-2:#6d4bff; --blue:#6288ff; --cyan:#40d8ff; --magenta:#df5cff;
+    --green:#43e6a0; --amber:#ffb34d;
+    --r-card:28px; --r-tile:20px; --r-pill:999px;
+    --font:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--font); color:var(--text);
+    background:
+      radial-gradient(58% 30% at 14% 0%, rgba(223,92,255,.30), transparent 60%),
+      radial-gradient(42% 24% at 92% 2%, rgba(64,216,255,.20), transparent 60%),
+      radial-gradient(95% 60% at 50% 96%, rgba(124,58,237,.42), transparent 62%),
+      radial-gradient(60% 42% at 50% 78%, rgba(140,92,255,.34), transparent 66%),
+      linear-gradient(180deg,var(--ink),var(--ink-2));
+    background-attachment:fixed; -webkit-font-smoothing:antialiased;
+  }
+  .app{ width:min(100%,440px); margin:0 auto; padding:18px 16px 110px; }
+
+  .head{ display:flex; align-items:center; justify-content:space-between; margin:6px 0 18px; }
+  .head h1{ font-size:30px; font-weight:900; letter-spacing:-1px; }
+  .vbadge{ font-size:12px; font-weight:700; color:var(--soft);
+    border:1px solid var(--line-bright); background:var(--panel); border-radius:var(--r-pill); padding:7px 12px; }
+
+  /* segments — same component as Sleep/System */
+  .seg{ display:flex; gap:6px; background:var(--panel-2); border:1px solid var(--line);
+    border-radius:16px; padding:5px; margin-bottom:18px; }
+  .seg button{ flex:1; border:0; background:transparent; color:var(--soft); font-weight:700;
+    font-size:13.5px; padding:11px 6px; border-radius:12px; }
+  .seg button.active{ color:#fff; background:linear-gradient(135deg,var(--violet),var(--violet-2));
+    box-shadow:0 8px 22px rgba(124,92,255,.4); }
+
+  .grid{ display:grid; gap:14px; }
+
+  /* HERO — one focal element */
+  .hero{ position:relative; border-radius:var(--r-card); padding:22px;
+    background:linear-gradient(160deg, rgba(140,92,255,.22), rgba(98,136,255,.10)), var(--panel);
+    border:1px solid var(--line-bright);
+    box-shadow:0 24px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.07); overflow:hidden; }
+  .hero .glow{ position:absolute; right:-60px; top:-50px; width:200px; height:200px; border-radius:50%;
+    background:radial-gradient(circle, rgba(140,92,255,.5), transparent 70%); filter:blur(6px); }
+  .hero-kicker{ position:relative; font-size:11.5px; font-weight:800; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--faint); margin-bottom:12px; }
+  .hero-row{ position:relative; display:flex; align-items:center; gap:18px; }
+  .hero-num{ font-size:52px; font-weight:900; letter-spacing:-2.5px; line-height:.9; }
+  .hero-num .c{ font-size:30px; font-weight:800; opacity:.82; }
+  .hero-sub{ position:relative; margin-top:14px; font-size:13.5px; color:var(--soft); line-height:1.4; }
+
+  .ring{ --p:28; width:104px; height:104px; flex:0 0 auto; border-radius:50%;
+    background:
+      radial-gradient(closest-side, rgba(9,14,40,.92) 76%, transparent 77%),
+      conic-gradient(var(--cyan) calc(var(--p)*1%), rgba(255,255,255,.10) 0);
+    display:grid; place-items:center; box-shadow:0 0 34px rgba(64,216,255,.28); }
+  .ring b{ font-size:23px; font-weight:900; } .ring span{ display:block; font-size:10.5px; color:var(--faint); text-align:center; }
+
+  /* 3-up calm stats — same as Sleep stat row */
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
+  .stat{ background:var(--panel); border:1px solid var(--line); border-radius:var(--r-tile); padding:13px 12px; }
+  .stat .l{ font-size:11px; color:var(--faint); margin-bottom:5px; }
+  .stat .v{ font-size:17px; font-weight:850; letter-spacing:-.4px; }
+  .stat .v.g{ color:var(--green); } .stat .v.c{ color:var(--cyan); }
+
+  /* ONE bold decision card */
+  .decision{ position:relative; border-radius:var(--r-card); padding:20px;
+    background:linear-gradient(140deg, rgba(140,92,255,.28), rgba(223,92,255,.14)), var(--panel);
+    border:1px solid var(--line-bright); box-shadow:0 22px 60px rgba(124,58,237,.3); overflow:hidden; }
+  .decision .tag{ font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#ffd0f3; margin-bottom:10px; }
+  .decision h3{ font-size:20px; font-weight:850; letter-spacing:-.4px; margin-bottom:8px; line-height:1.2; }
+  .decision p{ font-size:13.5px; color:rgba(255,255,255,.78); line-height:1.5; }
+  .decision .glow{ position:absolute; right:-40px; bottom:-60px; width:200px; height:200px; border-radius:50%;
+    background:radial-gradient(circle, rgba(223,92,255,.5), transparent 70%); filter:blur(8px); }
+
+  /* subtle secondary, collapsible hint */
+  .soft-card{ display:flex; align-items:center; justify-content:space-between;
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--r-tile); padding:15px 18px; }
+  .soft-card .l{ color:var(--soft); font-size:14px; } .soft-card .v{ font-weight:800; font-size:15px; }
+  .soft-card .chev{ color:var(--faint); font-size:18px; }
+
+  .nav{ position:fixed; left:0;right:0; bottom:12px; width:min(100%,440px); margin:0 auto;
+    display:flex; justify-content:space-around; padding:10px 6px;
+    background:rgba(9,14,40,.82); border:1px solid var(--line); border-radius:22px;
+    backdrop-filter:blur(26px); box-shadow:0 16px 40px rgba(0,0,0,.5); }
+  .nav a{ display:grid; justify-items:center; gap:4px; font-size:10px; color:var(--faint); text-decoration:none; }
+  .nav a .e{ font-size:17px; line-height:1; filter:grayscale(.3) opacity(.8); }
+  .nav a.active{ color:#fff; } .nav a.active .e{ filter:none; }
+</style>
+
+<div class="app">
+  <div class="head"><h1>День</h1><span class="vbadge">v2.17</span></div>
+
+  <div class="seg">
+    <button class="active">План</button>
+    <button>Смена</button>
+    <button>Вечер</button>
+  </div>
+
+  <div class="grid">
+    <!-- ONE hero -->
+    <div class="hero">
+      <div class="glow"></div>
+      <div class="hero-kicker">Осталось добить сегодня</div>
+      <div class="hero-row">
+        <div>
+          <div class="hero-num">10 400<span class="c"> ₽</span></div>
+        </div>
+        <div class="ring"><div><b>28%</b><span>день</span></div></div>
+      </div>
+      <div class="hero-sub">Цель 14 400 ₽ · сделано 4 000 ₽ · 1 заказ · режим Recovery</div>
+    </div>
+
+    <!-- 3 calm stats (real Day metrics) -->
+    <div class="stats">
+      <div class="stat"><div class="l">Грязными сейчас</div><div class="v">4 000 ₽</div></div>
+      <div class="stat"><div class="l">Чистые со смены</div><div class="v g">1 200 ₽</div></div>
+      <div class="stat"><div class="l">Реально добить</div><div class="v c">8.4–10.4k</div></div>
+    </div>
+
+    <!-- ONE bold decision -->
+    <div class="decision">
+      <div class="glow"></div>
+      <div class="tag">AI · решение сейчас</div>
+      <h3>Добить ≈ 3 000 ₽ — и можно закрывать день</h3>
+      <p>Если поработать до 20:00, план закрыт без выгорания. Обязательные платежи (6-е и 15-е) и фонды при этом не трогаются.</p>
+    </div>
+
+    <!-- secondary, leads deeper (progressive disclosure) -->
+    <div class="soft-card"><span class="l">Вечерний итог дня</span><span class="chev">›</span></div>
+    <div class="soft-card"><span class="l">Бензин и расход</span><span class="v">280 041 км</span></div>
+  </div>
+</div>
+
+<div class="nav">
+  <a class="active" href="#" onclick="return false"><span class="e">☀️</span>День</a>
+  <a href="#" onclick="return false"><span class="e">💰</span>Деньги</a>
+  <a href="#" onclick="return false"><span class="e">🚕</span>Работа</a>
+  <a href="#" onclick="return false"><span class="e">📊</span>Фонды</a>
+  <a href="#" onclick="return false"><span class="e">🌙</span>Сон</a>
+  <a href="#" onclick="return false"><span class="e">✨</span>AI</a>
+  <a href="#" onclick="return false"><span class="e">⚙️</span>Система</a>
+</div>

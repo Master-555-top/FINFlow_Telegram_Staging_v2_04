@@ -621,3 +621,16 @@ Locked safety note:
 - `private_vault` and `private_raw_data` must never be uploaded to GitHub public, Vercel root, Supabase Storage, or public cloud.
 
 Readiness percentages must be reported as `было → стало`.
+
+## v2.05 memory update — Sectioned System UX
+
+The user found the System tab difficult because all technical panels were listed in one long scroll. v2.05 reorganizes System into buttons/sections: Telegram, Аудит, Cloud, Backup, Deploy and Dev. The default section is Telegram because the immediate real-world task is to run the Real Telegram Device Test after BotFather setup.
+
+Locked UX decision:
+- Do not put all developer/system panels back into one long System feed.
+- New technical panels should be placed into the correct System section or a new explicit section.
+- Daily user flow must stay separate from System/Dev.
+- Readiness percentages must always be reported as `было → стало`.
+
+Security reminder:
+`private_vault` and `private_raw_data` must never be uploaded to GitHub public, Vercel root, Supabase Storage, or public cloud. Use only `finflow_app` or a deploy-safe package for Telegram/Vercel.

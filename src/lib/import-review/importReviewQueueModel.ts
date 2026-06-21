@@ -26,7 +26,7 @@ export type ImportCandidate = {
 };
 
 export type ImportReviewQueue = {
-  schemaVersion: 'import_review_queue_v1_24' | 'import_review_queue_v1_26' | 'import_review_queue_v1_27' | 'import_review_queue_v1_28';
+  schemaVersion: 'import_review_queue_v1_24' | 'import_review_queue_v1_26' | 'import_review_queue_v1_27' | 'import_review_queue_v1_28' | 'import_review_queue_v2_33';
   queueId: string;
   createdAt: string;
   sourcePackage: string;
@@ -43,10 +43,10 @@ export type ImportReviewQueueSummary = {
 };
 
 export const importReviewQueueMock: ImportReviewQueue = {
-  schemaVersion: 'import_review_queue_v1_28',
+  schemaVersion: 'import_review_queue_v2_33',
   queueId: 'source05-demo-review-queue',
   createdAt: '2026-06-17T00:00:00+12:00',
-  sourcePackage: 'FINFlow_v3_Latest_Working_Package_v1_28.zip',
+  sourcePackage: 'FINFlow_v3_v2_33_Historical_Import_Write_Adapters.zip',
   candidates: [
     {
       id: 'candidate-bank-fuel-001',

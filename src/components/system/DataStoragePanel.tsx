@@ -7,12 +7,18 @@ import { getTodayDateInput } from '@/lib/sleep/sleepModel';
 const sectionOptions: { id: FinflowDataSection; label: string }[] = [
   { id: 'all', label: 'Все данные' },
   { id: 'day', label: 'День' },
+  { id: 'money', label: 'Деньги' },
+  { id: 'work', label: 'Работа' },
   { id: 'records', label: 'Доходы/расходы' },
   { id: 'sleep', label: 'Сон' },
   { id: 'history', label: 'Архив дня' },
   { id: 'fuel', label: 'Топливо' },
   { id: 'tasks', label: 'Задачи' },
   { id: 'funds', label: 'Фонды' },
+  { id: 'ai', label: 'AI контекст' },
+  { id: 'system', label: 'Система' },
+  { id: 'import', label: 'Импорт' },
+  { id: 'n8n', label: 'n8n' },
   { id: 'bank', label: 'Bank review' }
 ];
 

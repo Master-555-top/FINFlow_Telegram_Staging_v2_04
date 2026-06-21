@@ -1,7 +1,7 @@
 import { importReviewQueueMock, type ImportCandidate, type ImportReviewQueue } from '@/lib/import-review/importReviewQueueModel';
 import type { ImportReviewAuditEvent } from '@/lib/import-review/importReviewActions';
 
-export const IMPORT_REVIEW_PERSISTENCE_VERSION = 'import_review_persistence_v1_28' as const;
+export const IMPORT_REVIEW_PERSISTENCE_VERSION = 'import_review_persistence_v2_33' as const;
 
 export type ImportReviewPersistenceStatus = 'browser_local' | 'supabase_ready' | 'sync_required' | 'unavailable';
 
@@ -21,7 +21,7 @@ export type ImportReviewStorageAdapter = {
   isAvailable(): boolean;
 };
 
-const storageKey = 'finflow.importReviewQueue.v1_28';
+const storageKey = 'finflow.importReviewQueue.v2_33';
 
 export const browserLocalImportReviewAdapter: ImportReviewStorageAdapter = {
   read() {
@@ -58,8 +58,8 @@ export function createInitialImportReviewState(now: string = new Date().toISOStr
     schemaVersion: IMPORT_REVIEW_PERSISTENCE_VERSION,
     queue: {
       ...importReviewQueueMock,
-      schemaVersion: 'import_review_queue_v1_28',
-      sourcePackage: 'FINFlow_v3_Latest_Working_Package_v1_28.zip',
+      schemaVersion: 'import_review_queue_v2_33',
+      sourcePackage: 'FINFlow_v3_v2_33_Historical_Import_Write_Adapters.zip',
       candidates: importReviewQueueMock.candidates
     },
     auditEvents: [],
@@ -81,8 +81,8 @@ export function buildPersistedImportReviewState(
     schemaVersion: IMPORT_REVIEW_PERSISTENCE_VERSION,
     queue: {
       ...base.queue,
-      schemaVersion: 'import_review_queue_v1_28',
-      sourcePackage: 'FINFlow_v3_Latest_Working_Package_v1_28.zip',
+      schemaVersion: 'import_review_queue_v2_33',
+      sourcePackage: 'FINFlow_v3_v2_33_Historical_Import_Write_Adapters.zip',
       candidates
     },
     auditEvents,

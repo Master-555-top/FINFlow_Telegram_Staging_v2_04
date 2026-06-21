@@ -10,15 +10,15 @@ export function EcosystemReadinessBoard() {
   return (
     <section className="ecosystem-readiness-board">
       <div className="ecosystem-readiness-head">
-        <span>v2.26 • Ecosystem readiness board</span>
-        <b>Готовность FINFlow mini app</b>
-        <p>Единый экран: что уже готово, что ещё нужно доделать, и где риск перед полноценным запуском.</p>
+        <span>v2.33 • Strong mini app progress</span>
+        <b>Сколько осталось до сильного mini app</b>
+        <p>Единая оценка без самообмана: данные, исторический импорт, деньги, работа, Supabase, n8n, безопасность и QA.</p>
       </div>
 
       <div className="ecosystem-readiness-grid">
-        <div><span>Локально каждый день</span><b>{audit.previousLocalDailyUsePercent}% → {audit.localDailyUsePercent}%</b></div>
-        <div><span>Safe launch</span><b>{audit.previousSafeLaunchPercent}% → {audit.safeLaunchPercent}%</b></div>
-        <div><span>Production ecosystem</span><b>{audit.previousOverallProductionPercent}% → {audit.overallProductionPercent}%</b></div>
+        <div><span>Локально каждый день</span><b>{audit.localDailyUsePercent}%</b></div>
+        <div><span>Safe launch</span><b>{audit.safeLaunchPercent}%</b></div>
+        <div><span>Strong mini app</span><b>{audit.overallProductionPercent}%</b></div>
       </div>
 
       <div className="ecosystem-risk-list">

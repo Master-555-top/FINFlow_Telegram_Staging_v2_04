@@ -1,29 +1,31 @@
-# CURRENT STATE — v2.26
+# CURRENT STATE — v2.41
 
-Current safe base: v2.26 History/System Data Foundation.
+Current focus: n8n Automation Contract + API Safety.
 
-Main state:
-- Bottom nav hardened for Telegram/iPhone safe-area.
-- Sleep history now follows Year → Month → Day → Record.
-- Sleep editor supports Russian date text input and ISO normalization.
-- System now has Data section: Storage + Reset MVP.
-- DailyQuickInput history/rollover/cloud restore actions moved to a dedicated hook.
-- Latest screenshot showed v2.22; user must deploy v2.26 deploy-safe and may need Telegram cache busting.
+The project remains in global system-building mode. v2.41 defines the automation layer without enabling unsafe external calls: webhook contracts, dry-run payloads, workflow safety gates and credentials policy are now visible in System → Cloud → n8n.
 
-Next recommended version:
-- v2.27 — build unified History engine for all sections, with exact period filters inside nested data records.
+Current honest readiness:
+- Strong fully working mini app: about 74% complete by weighted delivery model.
+- Remaining: about 26%.
+- Realistic remaining scope: about 3–5 large build packages, not counting final UI polish.
 
-# CURRENT STATE — v2.25
+Added in v2.41:
+- n8n Automation Contract model.
+- System → Cloud → n8n panel.
+- `/api/automation/n8n/dry-run` endpoint.
+- Dry-run payloads for daily report / morning brief / backup / import / cloud / weekly review.
+- Credentials policy and forbidden payload key list.
 
-Current safe base: v2.25 DailyQuickInput Action Handlers Split.
+Locked decisions preserved:
+- No standalone global History screen.
+- History remains inside each section.
+- System remains storage/reset/backup/cloud/QA/tools.
+- Sleep remains `Обзор / История / Редактор`.
+- Sleep storage keys remain unchanged.
+- Visual baseline screens remain locked: Sleep History list, Sleep weekly chart, System grid.
+- Cloud writes remain safe-off until backup + RLS + conflict tests pass.
+- External n8n calls remain blocked until private staging/auth/redaction are ready.
+- MASTER/private/secrets never go to GitHub/Vercel/public cloud.
 
-Status:
-- v2.24 live-state/persistence hook is preserved.
-- v2.25 extracts action handler groups from DailyQuickInputPanel.
-- DailyQuickInputPanel is smaller and less mixed: UI remains there; records/day edit actions moved into hooks.
-- Sleep → Day → Work bridge remains active.
-- Telegram safe-area remains active.
-- Deploy-safe remains private-clean.
-
-Next recommended step:
-- v2.26: extract history/rollover/cloud restore actions from DailyQuickInputPanel after Telegram smoke test.
+Next recommended build:
+- v2.42 — Real Local Apply UI + Import/Template Confirm: turn preview/apply/rollback foundations into a practical working UI for daily use.

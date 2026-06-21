@@ -78,7 +78,7 @@ export function ImportReviewQueuePanel() {
     const result = applyImportReviewAction(candidate, action, {
       proposedDayId: candidate.proposedDayId ?? 'demo-2026-06-17',
       mergeIntoCandidateId: candidate.duplicateCandidateIds[0],
-      rejectionReason: 'Rejected in v1.26 persistent review state layer.'
+      rejectionReason: 'Отклонено в v2.33 import review layer.'
     }, 'user');
 
     updateWithAction(candidate.id, result.candidate, result.auditEvent);
@@ -123,10 +123,10 @@ export function ImportReviewQueuePanel() {
 
   return (
     <section className="card import-review-card">
-      <div className="section-kicker">v1.28 • Persistent patches + rollback</div>
+      <div className="section-kicker">v2.33 • Import preview + rollback</div>
       <h2 className="card-heading">Очередь проверки импорта</h2>
       <p className="card-description">
-        Подтверждённые кандидаты теперь сохраняются как applied patch records: есть dry-run preview, явное применение, локальное хранение, audit и rollback-команда. Сырые банковские и личные данные в UI не выводятся.
+        Исторические данные проходят через preview: кандидат → проверка → применение в Day Core demo → audit → rollback. Сырые банковские и личные данные в UI не выводятся.
       </p>
 
       <div className="review-persistence-bar">
@@ -166,7 +166,7 @@ export function ImportReviewQueuePanel() {
 
       {applyPreview ? (
         <div className="day-apply-preview">
-          <div className="audit-log-heading">Day Core apply preview • dry-run</div>
+          <div className="audit-log-heading">Preview применения в День • dry-run</div>
           <div className={`apply-status ${applyPreview.canApply ? 'ready' : 'blocked'}`}>
             {summarizeApplyPreview(applyPreview)}
           </div>
@@ -185,7 +185,7 @@ export function ImportReviewQueuePanel() {
             </div>
           )}
           <button className="apply-day-button" disabled={!applyPreview.canApply} onClick={applySelectedCandidateToDayCore} type="button">
-            apply to Day Core demo
+            применить в День demo
           </button>
           <div className="apply-day-summary">
             Day Core сейчас: грязными {formatRub(dayCoreDraft.taxi.grossDone)} • топливо оплачено {formatRub(dayCoreDraft.taxi.fuelAlreadyPaid)} • задач {dayCoreDraft.tasks.length}
@@ -194,9 +194,9 @@ export function ImportReviewQueuePanel() {
       ) : null}
 
       <div className="audit-log-preview">
-        <div className="audit-log-heading">Audit log preview • persisted</div>
+        <div className="audit-log-heading">Журнал действий • локально</div>
         {auditEvents.length === 0 ? (
-          <p className="audit-empty">Пока действий нет. Нажми approve / reject / attach, чтобы увидеть безопасный журнал.</p>
+          <p className="audit-empty">Пока действий нет. Нажми подтвердить / отклонить / привязать, чтобы увидеть безопасный журнал.</p>
         ) : (
           auditEvents.slice(0, 10).map(event => (
             <div className="audit-event" key={event.id}>
@@ -209,7 +209,7 @@ export function ImportReviewQueuePanel() {
 
       {dayCorePatchState.appliedRecords.length > 0 ? (
         <div className="apply-history-preview">
-          <div className="audit-log-heading">Day Core applied patches • persistent rollback</div>
+          <div className="audit-log-heading">Применённые изменения • rollback</div>
           {dayCorePatchState.appliedRecords.slice(0, 6).map(record => (
             <div className={`audit-event rollback-record ${record.rolledBackAt ? 'rolled-back' : ''}`} key={record.id}>
               <b>{record.dayId}</b> • {record.historyEvent.patches.length} patch(es) • {record.rolledBackAt ? 'rolled back' : 'active'}
@@ -224,7 +224,7 @@ export function ImportReviewQueuePanel() {
 
       {dayCorePatchState.auditRecords.length > 0 ? (
         <div className="audit-log-preview patch-audit-preview">
-          <div className="audit-log-heading">Patch audit • local persistence</div>
+          <div className="audit-log-heading">Patch-аудит • local persistence</div>
           {dayCorePatchState.auditRecords.slice(0, 6).map(event => (
             <div className="audit-event" key={event.id}>
               <b>{event.action}</b> • {event.dayId ?? 'no-day'}
@@ -260,10 +260,10 @@ function CandidateCard(props: {
       <div className="candidate-side">
         <div className={`import-candidate-action ${candidate.status}`}>{candidate.status}</div>
         <div className="review-action-stack">
-          <button disabled={!availability.approve} onClick={() => props.onAction(candidate, 'approve')} type="button">approve</button>
-          <button disabled={!availability.reject} onClick={() => props.onAction(candidate, 'reject')} type="button">reject</button>
-          <button disabled={!availability.attachToDay} onClick={() => props.onAction(candidate, 'attach_to_day')} type="button">attach</button>
-          <button disabled={!availability.mergeDuplicate} onClick={() => props.onAction(candidate, 'merge_duplicate')} type="button">merge</button>
+          <button disabled={!availability.approve} onClick={() => props.onAction(candidate, 'approve')} type="button">подтвердить</button>
+          <button disabled={!availability.reject} onClick={() => props.onAction(candidate, 'reject')} type="button">отклонить</button>
+          <button disabled={!availability.attachToDay} onClick={() => props.onAction(candidate, 'attach_to_day')} type="button">привязать</button>
+          <button disabled={!availability.mergeDuplicate} onClick={() => props.onAction(candidate, 'merge_duplicate')} type="button">дубль</button>
         </div>
         <div className="candidate-apply-state">{canApply ? 'готов к Day Core' : 'не влияет на расчёты'}</div>
       </div>
@@ -275,7 +275,7 @@ function CandidateEditor(props: { candidate: ImportCandidate; onUpdate: (patch: 
   const { candidate } = props;
   return (
     <div className="candidate-editor">
-      <div className="audit-log-heading">Edit before apply</div>
+      <div className="audit-log-heading">Правка перед применением</div>
       <label>
         Название
         <input value={candidate.title} onChange={event => props.onUpdate({ title: event.target.value })} />

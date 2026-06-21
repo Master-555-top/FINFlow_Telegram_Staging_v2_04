@@ -3,28 +3,28 @@
 ## Current package
 
 ```text
-v2.04 — Real Telegram Device Test / initData + viewport + cloud dry-run checklist
+v2.05 — System Menu Polish / Sectioned System UX
 ```
 
 ## Why this package is active
 
-User asked to continue work after v2.03. The next protocol step was to move from Telegram staging preparation into a real Telegram device-test flow without enabling risky cloud writes.
+User opened the Vercel/Telegram staging build and found the `Система` tab hard to use: all technical panels were stacked in one long scroll, so the Real Telegram Device Test was difficult to find. The work therefore paused before deeper Telegram/cloud testing and focused on System UX structure.
 
 ## Completed in this package
 
-- Added a Real Telegram Device Test model and System-tab panel.
-- Added safe runtime diagnostics for Telegram WebApp bridge, initData presence, user presence, platform, theme, viewport height and expanded state.
-- Added buttons to run safe checks for `/api/telegram/verify`, `/api/deployment/readiness`, `/api/supabase/readiness` and cloud read dry-run through `GET /api/sync/day`.
-- Kept v2.04 cloud check read-only: no `PUT /api/sync/day`, no save/write action.
-- Updated Telegram WebApp bridge typing with `viewportStableHeight`.
-- Updated deploy-safe package generator to v2.04.
-- Updated readiness percentages in required `было → стало` format.
-- Preserved v2.03 staging, v2.02 static shell audit sync, v2.01 active day session, v2.00 live-state, and all cloud/backup safety gates.
+- Reworked the `Система` tab into a sectioned hub with buttons instead of one long developer feed.
+- Added System sections: `Telegram`, `Аудит`, `Cloud`, `Backup`, `Deploy`, `Dev`.
+- Made `Telegram` the default System section because the current manual task is BotFather + real Telegram device test.
+- Moved Real Telegram Device Test, staging runbook and Telegram/Supabase checklist under the Telegram section.
+- Moved readiness board under Audit, cloud/manual wizard under Cloud, local backup under Backup, private deployment/acceptance runner under Deploy, and logs under Dev.
+- Preserved all existing panels and safety systems; no cloud writes were enabled.
+- Updated readiness reporting in required `было → стало` format.
+- Updated deploy-safe package generation to v2.05 and preserved `.npmrc` for Vercel install stability.
 
 ## Next recommended package after this
 
 ```text
-v2.05 — Telegram UX Touch Polish / Safe Cloud Save Pilot
+v2.06 — Real Telegram Device Test Results / BotFather Runtime Fixes
 ```
 
-Only start the safe cloud save pilot after an actual Telegram phone test report. If real device testing has not happened yet, keep working in dry-run/read-only mode.
+Only move toward Safe Cloud Save Pilot after the real Telegram phone test passes enough checks. Keep Supabase writes disabled until backup + RLS/security review.

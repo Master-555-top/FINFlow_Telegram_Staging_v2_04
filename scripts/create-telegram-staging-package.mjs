@@ -3,7 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 
 const appRoot = resolve(process.cwd());
-const version = 'v2_04';
+const version = 'v2_29';
 const packageName = `FINFlow_v3_TELEGRAM_STAGING_DEPLOY_SAFE_${version}.zip`;
 const exportsDir = join(appRoot, 'exports');
 const stagingDir = join(exportsDir, `.telegram-staging-package-${version}`);
@@ -15,6 +15,8 @@ const allowedPaths = [
   'src',
   'scripts/build-next.mjs',
   'package.json',
+  'package-lock.json',
+  '.npmrc',
   
   'tsconfig.json',
   'next-env.d.ts',
@@ -52,15 +54,15 @@ for (const relativePath of allowedPaths) {
   cpSync(source, target, { recursive: true });
 }
 
-writeFileSync(join(stagingDir, 'README_TELEGRAM_STAGING_v2_04.md'), `# FINFlow Telegram Staging Deploy Safe Package v2.04\n\nThis package is safe to use as the Vercel/hosting project root for the first Telegram Mini App staging + real device test.\n\n## Upload rule\nUse this deploy-safe package or the \`finflow_app\` folder only. Never upload MASTER PRIVATE FULL, \`private_vault\`, \`private_raw_data\`, raw archives, or real .env files to public GitHub/Vercel root/Supabase Storage.\n\n## Required Vercel/hosting env vars\n- TELEGRAM_BOT_TOKEN — server-only.\n- SUPABASE_URL — server-side cloud sync.\n- SUPABASE_SERVICE_ROLE_KEY — server-only, never NEXT_PUBLIC.\n- FINFLOW_ENABLE_CLOUD_SYNC=true — only when ready for cloud test.\n- FINFLOW_ENABLE_SUPABASE_WRITES=true — only after backup + manual checklist.\n\n## First staging flow\n1. Deploy this package to a private staging deployment.\n2. Open \`/api/deployment/readiness\` and confirm no secret values are returned.\n3. Put the HTTPS deployment URL into BotFather as Mini App URL.\n4. Open from real Telegram on phone and run the v2.04 Real Telegram Device Test panel: initData, viewport, readiness API, cloud GET dry-run.\n5. Run local backup before any cloud write.\n`);
+writeFileSync(join(stagingDir, 'README_TELEGRAM_STAGING_v2.24.md'), `# FINFlow Telegram Staging Deploy Safe Package v2.24\n\nThis package is safe to use as the Vercel/hosting project root for the first Telegram Mini App staging + real device test.\n\n## Upload rule\nUse this deploy-safe package or the \`finflow_app\` folder only. Never upload MASTER PRIVATE FULL, \`private_vault\`, \`private_raw_data\`, raw archives, or real .env files to public GitHub/Vercel root/Supabase Storage.\n\n## Required Vercel/hosting env vars\n- TELEGRAM_BOT_TOKEN — server-only.\n- SUPABASE_URL — server-side cloud sync.\n- SUPABASE_SERVICE_ROLE_KEY — server-only, never NEXT_PUBLIC.\n- FINFLOW_ENABLE_CLOUD_SYNC=true — only when ready for cloud test.\n- FINFLOW_ENABLE_SUPABASE_WRITES=true — only after backup + manual checklist.\n\n## First staging flow\n1. Deploy this package to a private staging deployment.\n2. Open \`/api/deployment/readiness\` and confirm no secret values are returned.\n3. Put the HTTPS deployment URL into BotFather as Mini App URL.\n4. Open from real Telegram on phone, go to Sleep and System → Telegram, and run the v2.24 live-state hook extracted DailyQuickInput system, System → QA, and Telegram Test panels: initData, viewport, readiness API, cloud GET dry-run.\n5. Run local backup before any cloud write.\n`);
 
 const manifest = {
   package: packageName,
-  version: 'v2.04',
+  version: 'v2.24',
   createdBy: 'FINFlow protocol build script',
   purpose: 'Telegram Mini App staging deploy-safe package',
   sourceRoot: 'finflow_app',
-  includedPaths: allowedPaths.filter(path => existsSync(join(appRoot, path))).concat(['README_TELEGRAM_STAGING_v2_04.md']),
+  includedPaths: allowedPaths.filter(path => existsSync(join(appRoot, path))).concat(['README_TELEGRAM_STAGING_v2.24.md']),
   forbiddenFragments,
   safety: {
     includesPrivateVault: false,

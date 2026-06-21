@@ -81,6 +81,9 @@ import { useDailyQuickInputLiveState } from '@/components/day-core/useDailyQuick
 import { useDailyQuickInputRecordActions } from '@/components/day-core/useDailyQuickInputRecordActions';
 import { useDailyQuickInputDayActions } from '@/components/day-core/useDailyQuickInputDayActions';
 import { useDailyQuickInputHistoryActions } from '@/components/day-core/useDailyQuickInputHistoryActions';
+import { MoneyEnginePanel } from '@/components/money/MoneyEnginePanel';
+import { WorkTaxiEnginePanel } from '@/components/work/WorkTaxiEnginePanel';
+import { TemplatesEnginePanel } from '@/components/templates/TemplatesEnginePanel';
 
 export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCoreInputModel) => void; view?: DailyQuickInputView }) {
   const view = props.view ?? 'daily';
@@ -506,6 +509,9 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
         <p className="card-description">Здесь только рабочий слой такси: оборот, активные часы, топливо, пробег и машина.</p>
         <LiveStateStatus syncedAt={dailyLiveSyncedAt} />
 
+        <WorkTaxiEnginePanel dayInput={dayInput} records={records} />
+        <TemplatesEnginePanel dayInput={dayInput} records={records} customTemplates={customTemplates} compact />
+
         <div className="quick-net-summary">
           <div><span>Оборот</span><b>{formatRub(net.grossDone)}</b></div>
           <div><span>Осталось грязными</span><b>{formatRub(net.remainingGrossToTarget)}</b></div>
@@ -583,6 +589,9 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
         <div className="section-kicker">v1.98 • Money Flow</div>
         <h2 className="card-heading">Деньги и записи дня</h2>
         <p className="card-description">Деньги, записи, шаблоны и bank-review без deployment/dev шума.</p>
+
+        <MoneyEnginePanel dayInput={dayInput} records={records} />
+        <TemplatesEnginePanel dayInput={dayInput} records={records} customTemplates={customTemplates} compact />
 
         <div className="quick-current-grid compact">
           <MoneyInput label="Наличные" value={dayInput.money.cash} onChange={value => updateMoney('cash', value)} />

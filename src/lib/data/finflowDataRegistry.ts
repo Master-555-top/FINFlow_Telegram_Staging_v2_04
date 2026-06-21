@@ -5,7 +5,7 @@ import {
   type FinflowHistoryEntry
 } from '@/lib/data/finflowHistoryEngine';
 
-export type FinflowDataSection = 'all' | 'day' | 'records' | 'sleep' | 'history' | 'fuel' | 'bank' | 'templates' | 'tasks' | 'funds';
+export type FinflowDataSection = 'all' | 'day' | 'records' | 'money' | 'work' | 'sleep' | 'history' | 'fuel' | 'bank' | 'templates' | 'tasks' | 'funds' | 'ai' | 'system' | 'import' | 'n8n';
 
 export type FinflowDataKey = {
   key: string;
@@ -28,7 +28,9 @@ export const FINFLOW_DATA_KEYS: FinflowDataKey[] = [
   { key: 'finflow.activeDayRolloverArchive.v2_01', label: 'Rollover archive', section: 'history', periodField: 'entries.previousLocalDate', exactPeriodReset: true },
   { key: 'finflow.editableFuelInputs.v1_64', label: 'Топливо: текущие параметры', section: 'fuel' },
   { key: 'finflow.fuelOdometerHistory.v1_68', label: 'Топливо: история пробега', section: 'fuel', periodField: 'entries.date', exactPeriodReset: true },
-  { key: 'finflow.fuelOdometerHistory.v1_66', label: 'Топливо: история пробега legacy', section: 'fuel', periodField: 'entries.date', exactPeriodReset: true }
+  { key: 'finflow.fuelOdometerHistory.v1_66', label: 'Топливо: история пробега legacy', section: 'fuel', periodField: 'entries.date', exactPeriodReset: true },
+  { key: 'finflow.importReviewQueue.v1_28', label: 'Импорт: review queue', section: 'import', periodField: 'updatedAt', exactPeriodReset: false },
+  { key: 'finflow.n8nAutomationEvents.v2_32', label: 'n8n: события автоматизации', section: 'n8n', periodField: 'createdAtIso', exactPeriodReset: true }
 ];
 
 export type FinflowDataScope = {
@@ -172,7 +174,7 @@ export function buildFinflowStorageExport(format: 'summary' | 'text' | 'json' | 
 
   if (format === 'json') {
     return JSON.stringify({
-      version: 'finflow_storage_export_v2_28',
+      version: 'finflow_storage_export_v2_33',
       exportedAtIso: new Date().toISOString(),
       scope,
       timeline: preview.timeline,
@@ -181,7 +183,7 @@ export function buildFinflowStorageExport(format: 'summary' | 'text' | 'json' | 
   }
 
   const lines = [
-    `FINFlow data export v2.28`,
+    `FINFlow data export v2.33`,
     `Scope: ${scope.section} / ${scope.period} / ${scope.anchorDateIso}`,
     `Blocks: ${values.length}`,
     `Exact timeline entries: ${preview.timeline.length}`,
@@ -209,7 +211,14 @@ export function buildFinflowStorageExport(format: 'summary' | 'text' | 'json' | 
 }
 
 function isKeyInScope(item: FinflowDataKey, scope: FinflowDataScope) {
-  return scope.section === 'all' || item.section === scope.section || (scope.section === 'tasks' && item.section === 'day') || (scope.section === 'funds' && item.section === 'day');
+  return scope.section === 'all'
+    || item.section === scope.section
+    || (scope.section === 'tasks' && item.section === 'day')
+    || (scope.section === 'funds' && item.section === 'day')
+    || (scope.section === 'money' && ['records', 'bank', 'templates'].includes(item.section))
+    || (scope.section === 'work' && ['records', 'fuel'].includes(item.section))
+    || (scope.section === 'ai' && ['day', 'sleep', 'records', 'history'].includes(item.section))
+    || (scope.section === 'system' && ['import', 'n8n', 'templates', 'bank'].includes(item.section));
 }
 
 function countStoredValue(raw: string | null) {

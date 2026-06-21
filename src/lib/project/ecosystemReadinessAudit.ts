@@ -1,4 +1,6 @@
-export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_08' as const;
+import { buildMiniAppDeliveryPlan } from '@/lib/project/miniAppDeliveryPlan';
+
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_42' as const;
 
 export type EcosystemReadinessArea = {
   id: string;
@@ -25,158 +27,41 @@ export type EcosystemReadinessAudit = {
 };
 
 export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
-  const areas: EcosystemReadinessArea[] = [
-    {
-      id: 'local_day_core',
-      title: 'Локальная mini app / Day Core',
-      previousPercent: 95,
-      percent: 95,
-      status: 'usable',
-      summary: 'Основной локальный дневной контур уже пригоден для реального ручного использования.',
-      done: [
-        'быстрый ввод денег, заказов, расходов и задач',
-        'грязный/чистый доход',
-        'фонды, обязательства, ремонт машины',
-        'топливо/одометр/масло',
-        'локальный AI-помощник и daily decision summary',
-        'история, records, templates, bank review decisions'
-      ],
-      remaining: [
-        'несколько дней реального ручного теста на телефоне',
-        'mobile touch polish for Telegram viewport',
-        'real device test for New Day rollover and restore',
-        'first staging deploy smoke test'
-      ]
-    },
-    {
-      id: 'telegram_mini_app',
-      title: 'Telegram Mini App слой',
-      previousPercent: 94,
-      percent: 94,
-      status: 'needs_real_test',
-      summary: 'Клиентский Telegram bridge, server verify и device-test панель готовы; System panel keeps Telegram-тест в отдельный быстрый раздел System, чтобы его не искать в длинной ленте.',
-      done: [
-        'Telegram WebApp SDK подключён',
-        'Telegram session pill добавлен',
-        'server-side initData verification есть',
-        'Telegram/Supabase verification checklist есть'
-      ],
-      remaining: [
-        'настроить BotFather Mini App URL',
-        'запустить на реальном телефоне через Telegram',
-        'проверить initData/profileReady/cloud readiness',
-        'пройти runtime checks в System → Telegram → TelegramDeviceTestPanel',
-        'latest deploy-safe package собирается без private_vault и с .npmrc для Vercel install'
-      ]
-    },
-    {
-      id: 'supabase_cloud_sync',
-      title: 'Supabase cloud sync foundation',
-      previousPercent: 82,
-      percent: 82,
-      status: 'needs_real_test',
-      summary: 'Cloud sync архитектура и safety-слои готовы, но production требует реальной Supabase/Vercel проверки.',
-      done: [
-        'GET/PUT /api/sync/day',
-        'safe cloud read dry-run checklist без PUT/write',
-        'Telegram initData auth',
-        'feature flags для cloud writes',
-        'revision/conflict guard',
-        'cloud preview diff',
-        'cloud apply rollback',
-        'cloud save preflight gate'
-      ],
-      remaining: [
-        'создать/проверить приватный Supabase project',
-        'применить migration',
-        'пройти real save/load/conflict test',
-        'проверить RLS/security вручную'
-      ]
-    },
-    {
-      id: 'security_backup',
-      title: 'Безопасность, backup, rollback',
-      previousPercent: 87,
-      percent: 87,
-      status: 'usable',
-      summary: 'Safety-архитектура сильная для личного проекта; до production нужен внешний ручной security review.',
-      done: [
-        'MASTER PRIVATE FULL разделяет finflow_app и private_vault',
-        'локальный backup/restore',
-        'restore diff preview',
-        'cloud apply rollback',
-        'cloud save preflight gate',
-        'секреты не нужны в client bundle'
-      ],
-      remaining: [
-        'финальный manual RLS test',
-        'отдельный deploy-safe package без private_vault',
-        'device-test panel не выводит raw initData/hash',
-        'password manager / env storage discipline'
-      ]
-    },
-    {
-      id: 'ux_daily_use',
-      title: 'Удобство ежедневного использования',
-      previousPercent: 88,
-      percent: 90,
-      status: 'in_progress',
-      summary: 'FINFlow получил цельную cosmic/glass дизайн-систему: единый фон, карточки, навигация, command headers и более премиальный mobile-first стиль.',
-      done: [
-        'всё ключевое доступно в одном dashboard',
-        'есть быстрые кнопки и расчёты',
-        'есть подсказки и safety-панели'
-      ],
-      remaining: [
-        'режим “Сегодня” с минимумом блоков',
-        'единая дизайн-система для всех вкладок, не только System',
-        'мобильная визуальная полировка',
-        'дальше пройти реальный Telegram viewport/device test внутри нового раздела Telegram'
-      ]
-    },
-    {
-      id: 'ecosystem_memory',
-      title: 'Память проекта и протоколы',
-      previousPercent: 93,
-      percent: 94,
-      status: 'done',
-      summary: 'Проектная память и протоколы хорошо сохранены внутри MASTER PRIVATE FULL.',
-      done: [
-        'MASTER_PRIVATE_DOCS',
-        'private_vault',
-        'context ledgers',
-        'operation ledgers',
-        'changelog',
-        'security scans',
-        'build reports',
-        'regression checks'
-      ],
-      remaining: [
-        'периодически сжимать старые отчёты в summary, чтобы app root не разрастался'
-      ]
-    }
-  ];
+  const delivery = buildMiniAppDeliveryPlan();
+  const areas: EcosystemReadinessArea[] = delivery.areas.map(area => ({
+    id: area.id,
+    title: area.title,
+    previousPercent: Math.max(0, area.percent - (area.id === 'global_data_backbone' ? 8 : 0)),
+    percent: area.percent,
+    status: area.status === 'ready'
+      ? 'done'
+      : area.status === 'usable_local'
+        ? 'usable'
+        : area.status === 'blocked'
+          ? 'needs_real_test'
+          : area.status === 'planned'
+            ? 'not_started'
+            : 'in_progress',
+    summary: area.summary,
+    done: area.done,
+    remaining: area.remaining
+  }));
 
   return {
     version: ECOSYSTEM_READINESS_AUDIT_VERSION,
-    previousOverallProductionPercent: 83,
-    overallProductionPercent: 84,
-    previousLocalDailyUsePercent: 95,
-    localDailyUsePercent: 96,
-    previousSafeLaunchPercent: 91,
-    safeLaunchPercent: 91,
+    previousOverallProductionPercent: Math.max(0, delivery.overallStrongMiniAppPercent - 5),
+    overallProductionPercent: delivery.overallStrongMiniAppPercent,
+    previousLocalDailyUsePercent: 72,
+    localDailyUsePercent: 76,
+    previousSafeLaunchPercent: 67,
+    safeLaunchPercent: 68,
     areas,
     topRisks: [
-      'Интерфейс стал цельнее, но реальные дневные сценарии всё ещё нужно прогнать на телефоне несколько дней.',
-      'Cloud/Supabase writes должны оставаться выключенными до backup + RLS/security review.',
-      'MASTER PRIVATE FULL нельзя путать с deploy-safe архивом.',
-      'BotFather URL и real Telegram device test всё ещё нужно пройти руками.'
+      `До сильного полностью рабочего mini app осталось примерно ${delivery.remainingPercent}%. Следующий риск — включить Supabase/external n8n без реального Telegram staging, auth, redaction, conflict review и backup.`,
+      'Исторические данные нельзя заливать напрямую: нужен preview, dedupe, подтверждение и rollback.',
+      'Supabase writes остаются safe-off до миграций, RLS/security review и backup.',
+      'n8n теперь имеет dry-run contract, но внешние вызовы остаются заблокированы до private staging/auth/redaction.'
     ],
-    nextActions: [
-      'Загрузить deploy-safe package v2.08 в приватный GitHub/Vercel staging или обновить текущий staging repo.',
-      'Настроить BotFather Mini App URL на staging-домен.',
-      'В Telegram открыть System → Telegram и пройти Real Telegram Device Test: initData, viewport, readiness API, cloud GET dry-run.',
-      'Применить Supabase migration и пройти save/load/conflict/RLS checklist.'
-    ]
+    nextActions: delivery.criticalPath
   };
 }

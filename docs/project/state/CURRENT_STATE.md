@@ -724,3 +724,55 @@ Readiness update:
 - UX daily convenience: 80% → 81%
 - Deploy-footprint readiness: 84% → 86%
 - Production-ready ecosystem: 74% → 76%
+
+## Current state update — v2.05
+
+FINFlow now has a sectioned System UX.
+
+Reason:
+- During real Vercel/Telegram staging, the System tab became too hard to use because all dev/deploy/backup/cloud/Telegram panels were stacked in a long scroll.
+- The user specifically requested a more convenient System menu split into buttons and sections before continuing Telegram testing.
+
+Added/changed:
+- `DashboardShell` now has a System hub with section buttons: Telegram, Аудит, Cloud, Backup, Deploy, Dev.
+- The default System section is Telegram so the Real Telegram Device Test is immediately visible.
+- System panels are no longer shown as one long sequence.
+- All old System tools remain available; they are only reorganized.
+- Deploy-safe generator is bumped to v2.05 and includes `.npmrc` for Vercel install stability.
+
+Safety:
+- No cloud write path was enabled.
+- `private_vault` and `private_raw_data` remain outside runtime/deploy-safe.
+- Telegram token and Supabase keys remain server-only env concerns.
+
+Readiness update:
+- Local mini app / Day Core: 95% → 95%
+- Daily local use: 93% → 94%
+- Telegram Mini App layer: 89% → 90%
+- Supabase cloud sync foundation: 82% → 82%
+- Backup / rollback / safety: 87% → 87%
+- UX daily convenience: 81% → 84%
+- Deploy-footprint readiness: 89% → 89%
+- Production-ready ecosystem: 78% → 79%
+
+Next recommended package:
+`v2.06 — Real Telegram Device Test Results / BotFather Runtime Fixes`.
+
+## Current state update — v2.42
+
+FINFlow now has a practical Local Apply Center.
+
+Implemented:
+- `src/lib/apply/localApplyEngine.ts`
+- `src/lib/apply/localApplyPersistence.ts`
+- `src/components/apply/LocalApplyCenterPanel.tsx`
+- System → Data → Apply subsection
+
+The system can now turn ready template/import drafts into Daily Records after user confirmation, publish them into Daily Live State, recalculate Money/Work through existing records, and roll back an applied batch.
+
+Current progress estimate after v2.42:
+- about 76% ready;
+- about 24% remaining before a strong fully working mini app.
+
+Next recommended build:
+v2.43 — Historical CSV/JSON Import Mapper: table/CSV/JSON import, column matching, mass preview, dedupe and confirmation without automatic writes.

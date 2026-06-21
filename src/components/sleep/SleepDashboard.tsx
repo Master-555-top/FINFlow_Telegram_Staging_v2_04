@@ -5,6 +5,7 @@ import type { DayCoreInputModel } from '@/lib/day-core/dayCoreInputModel';
 import { APP_UI_VERSION } from '@/lib/appVersion';
 import { buildMorningPlanner, type MorningPlannerSummary } from '@/lib/day-core/morningPlanModel';
 import { formatRub } from '@/lib/day-core/dayCoreModel';
+import { formatIsoDateShort, getDateMonthKey, getDateYear, getDayLabel, getMonthLabel, parseRussianDateInput } from '@/lib/data/dateInput';
 import {
   FINFLOW_SLEEP_CURRENT_STORAGE_KEY,
   FINFLOW_SLEEP_LIVE_SESSION_KEY,
@@ -578,14 +579,8 @@ function SleepAddForm(props: {
       </div>
 
       <div className="sleep-form-grid">
-        <label>
-          <span>Дата с</span>
-          <input type="date" value={props.form.fromDate} onChange={event => props.updateForm({ fromDate: event.target.value })} />
-        </label>
-        <label>
-          <span>Дата на</span>
-          <input type="date" value={props.form.toDate} onChange={event => props.updateForm({ toDate: event.target.value })} />
-        </label>
+        <DateTextInput label="Дата с" value={props.form.fromDate} onChange={iso => props.updateForm({ fromDate: iso })} />
+        <DateTextInput label="Дата на" value={props.form.toDate} onChange={iso => props.updateForm({ toDate: iso })} />
         <label>
           <span>Уснул</span>
           <input type="time" value={props.form.sleptAt} onChange={event => props.updateForm({ sleptAt: event.target.value })} />
@@ -595,6 +590,7 @@ function SleepAddForm(props: {
           <input type="time" value={props.form.wokeAt} onChange={event => props.updateForm({ wokeAt: event.target.value })} />
         </label>
       </div>
+      <p className="sleep-date-hint">Дата вводится как 05.06.26 или 5.6.2026 и сохраняется как стабильный формат YYYY-MM-DD.</p>
 
       <div className="sleep-shift-card">
         <label className="sleep-toggle-row">
@@ -626,6 +622,44 @@ function SleepAddForm(props: {
   );
 }
 
+function DateTextInput(props: { label: string; value: string; onChange: (iso: string) => void }) {
+  const [draft, setDraft] = useState(formatIsoDateShort(props.value));
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    setDraft(formatIsoDateShort(props.value));
+    setError('');
+  }, [props.value]);
+
+  function commit(value: string) {
+    const parsed = parseRussianDateInput(value);
+    if (!parsed.ok) {
+      setError(parsed.error);
+      return;
+    }
+    setError('');
+    setDraft(parsed.display);
+    props.onChange(parsed.iso);
+  }
+
+  return (
+    <label className={`sleep-date-input ${error ? 'invalid' : ''}`}>
+      <span>{props.label}</span>
+      <input
+        inputMode="numeric"
+        placeholder="05.06.26"
+        value={draft}
+        onChange={event => setDraft(event.target.value)}
+        onBlur={event => commit(event.target.value)}
+        onKeyDown={event => {
+          if (event.key === 'Enter') commit((event.target as HTMLInputElement).value);
+        }}
+      />
+      {error ? <small>{error}</small> : null}
+    </label>
+  );
+}
+
 function SleepHistory(props: {
   analyses: SleepRecordAnalysis[];
   selectedId: string;
@@ -635,29 +669,77 @@ function SleepHistory(props: {
   startEditing: (record: SleepRecord) => void;
   deleteRecord: (id: string) => void;
 }) {
+  const years = useMemo(() => Array.from(new Set(props.analyses.map(analysis => getDateYear(analysis.record.toDate)))).sort().reverse(), [props.analyses]);
+  const [selectedYear, setSelectedYear] = useState(years[0] ?? getTodayDateInput().slice(0, 4));
+  const months = useMemo(() => Array.from(new Set(props.analyses
+    .filter(analysis => getDateYear(analysis.record.toDate) === selectedYear)
+    .map(analysis => getDateMonthKey(analysis.record.toDate))))
+    .sort()
+    .reverse(), [props.analyses, selectedYear]);
+  const [selectedMonth, setSelectedMonth] = useState(months[0] ?? getTodayDateInput().slice(0, 7));
+
+  useEffect(() => {
+    if (!years.includes(selectedYear)) setSelectedYear(years[0] ?? getTodayDateInput().slice(0, 4));
+  }, [selectedYear, years]);
+
+  useEffect(() => {
+    if (!months.includes(selectedMonth)) setSelectedMonth(months[0] ?? getTodayDateInput().slice(0, 7));
+  }, [months, selectedMonth]);
+
+  const visible = props.analyses.filter(analysis => getDateMonthKey(analysis.record.toDate) === selectedMonth);
+  const groupedByDay = visible.reduce<Record<string, SleepRecordAnalysis[]>>((acc, analysis) => {
+    const key = analysis.record.toDate;
+    acc[key] = acc[key] ? [...acc[key], analysis] : [analysis];
+    return acc;
+  }, {});
+  const dayKeys = Object.keys(groupedByDay).sort().reverse();
+
   return (
-    <div className="sleep-history-list adaptive">
+    <div className="sleep-history-list adaptive sleep-history-v226">
       <div className="sleep-history-actions">
         <button type="button" onClick={props.exportHistory}>экспорт</button>
         <button type="button" onClick={props.resetToSeed}>шаблон</button>
       </div>
-      {props.analyses.map(analysis => (
-        <article
-          className={`sleep-history-row tone-${analysis.status.tone}${analysis.record.id === props.selectedId ? ' active' : ''}`}
-          key={analysis.record.id}
-        >
-          <button type="button" className="sleep-history-main" onClick={() => props.setSelectedId(analysis.record.id)}>
-            <b>{makeSleepNightLabel(analysis.record)}</b>
-            <span><small>Уснул</small>{analysis.record.sleptAt}</span>
-            <span><small>Встал</small>{analysis.record.wokeAt}</span>
-            <strong>☾ {formatSleepMinutes(analysis.record.minutes)}</strong>
-            <em>{analysis.status.shortLabel}</em>
-          </button>
-          <div className="sleep-history-tools">
-            <button type="button" onClick={() => props.startEditing(analysis.record)}>править</button>
-            <button type="button" onClick={() => props.deleteRecord(analysis.record.id)}>удалить</button>
+
+      <div className="history-period-card">
+        <span>История → Год → Месяц → День → Сон</span>
+        <div className="history-year-row">
+          {years.map(year => (
+            <button key={year} type="button" className={selectedYear === year ? 'active' : ''} onClick={() => setSelectedYear(year)}>{year}</button>
+          ))}
+        </div>
+        <div className="history-month-row">
+          {months.map(month => (
+            <button key={month} type="button" className={selectedMonth === month ? 'active' : ''} onClick={() => setSelectedMonth(month)}>{getMonthLabel(month)}</button>
+          ))}
+        </div>
+      </div>
+
+      {dayKeys.map(day => (
+        <section className="history-day-group" key={day}>
+          <div className="history-day-head">
+            <b>{getDayLabel(day)}</b>
+            <span>{groupedByDay[day].length} запись</span>
           </div>
-        </article>
+          {groupedByDay[day].map(analysis => (
+            <article
+              className={`sleep-history-row tone-${analysis.status.tone}${analysis.record.id === props.selectedId ? ' active' : ''}`}
+              key={analysis.record.id}
+            >
+              <button type="button" className="sleep-history-main" onClick={() => props.setSelectedId(analysis.record.id)}>
+                <b>{makeSleepNightLabel(analysis.record)}</b>
+                <span><small>Уснул</small>{analysis.record.sleptAt}</span>
+                <span><small>Встал</small>{analysis.record.wokeAt}</span>
+                <strong>☾ {formatSleepMinutes(analysis.record.minutes)}</strong>
+                <em>{analysis.status.shortLabel}</em>
+              </button>
+              <div className="sleep-history-tools">
+                <button type="button" onClick={() => props.startEditing(analysis.record)}>править</button>
+                <button type="button" onClick={() => props.deleteRecord(analysis.record.id)}>удалить</button>
+              </div>
+            </article>
+          ))}
+        </section>
       ))}
     </div>
   );

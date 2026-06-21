@@ -15,9 +15,11 @@ import { createDailyLiveStateOriginId, readDailyLiveStateSnapshot, subscribeDail
 import { APP_UI_VERSION } from '@/lib/appVersion';
 import { AppIcon, type IconName } from '@/components/ui/AppIcon';
 import { useTelegramViewportCss } from '@/lib/telegram/useTelegramViewportCss';
+import { DataResetPanel } from '@/components/system/DataResetPanel';
+import { DataStoragePanel } from '@/components/system/DataStoragePanel';
 
 type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'sleep' | 'ai' | 'system';
-type SystemSectionId = 'telegram' | 'overview' | 'cloud' | 'backup' | 'qa' | 'dev';
+type SystemSectionId = 'telegram' | 'overview' | 'data' | 'cloud' | 'backup' | 'qa' | 'dev';
 type SystemSubsectionId =
   | 'telegram_device'
   | 'telegram_launch'
@@ -26,6 +28,8 @@ type SystemSubsectionId =
   | 'cloud_center'
   | 'cloud_wizard'
   | 'backup_local'
+  | 'data_reset'
+  | 'data_storage'
   | 'qa_guide'
   | 'deploy_readiness'
   | 'deploy_acceptance'
@@ -122,6 +126,18 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
       { id: 'overview_readiness', label: 'Статус' }
     ]
   },
+
+  {
+    id: 'data',
+    icon: 'backup',
+    title: 'Данные',
+    shortTitle: 'Данные',
+    accent: 'amber',
+    subsections: [
+      { id: 'data_storage', label: 'Хранилище' },
+      { id: 'data_reset', label: 'Сброс' }
+    ]
+  },
   {
     id: 'cloud',
     icon: 'cloud',
@@ -170,13 +186,14 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
 const DEFAULT_SYSTEM_SUBSECTIONS: Record<SystemSectionId, SystemSubsectionId> = {
   telegram: 'telegram_device',
   overview: 'overview_readiness',
+  data: 'data_storage',
   cloud: 'cloud_center',
   backup: 'backup_local',
   qa: 'qa_guide',
   dev: 'dev_logs'
 };
 
-const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device'>, SystemRow[]> = {
+const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'data_reset' | 'data_storage'>, SystemRow[]> = {
   telegram_launch: [
     { icon: 'telegram', title: 'Mini App URL', meta: 'BotFather → стабильный домен', tone: 'ok' },
     { icon: 'sync', title: 'Vercel', meta: 'Deploy-safe пакет', tone: 'ok' },
@@ -283,6 +300,8 @@ export function DashboardShell() {
 
   function renderSystemSubsectionContent(subsectionId: SystemSubsectionId) {
     if (subsectionId === 'telegram_device') return <TelegramDeviceTestPanel />;
+    if (subsectionId === 'data_storage') return <DataStoragePanel />;
+    if (subsectionId === 'data_reset') return <DataResetPanel />;
     return <SystemRows rows={SYSTEM_ROWS[subsectionId]} />;
   }
 

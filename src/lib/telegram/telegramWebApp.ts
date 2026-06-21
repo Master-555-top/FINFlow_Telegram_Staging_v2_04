@@ -1,4 +1,4 @@
-export const TELEGRAM_WEB_APP_BRIDGE_VERSION = 'telegram_web_app_bridge_v2_22' as const;
+export const TELEGRAM_WEB_APP_BRIDGE_VERSION = 'telegram_web_app_bridge_v2_26' as const;
 
 export type TelegramWebAppUser = {
   id: number;

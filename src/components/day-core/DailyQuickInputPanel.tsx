@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { dayCoreInputMock, type DayCoreFundInput, type DayCoreInputModel, type DayCoreObligationInput, type DayCoreTaskInput } from '@/lib/day-core/dayCoreInputModel';
 import { buildFinflowAssistantAdvice } from '@/lib/assistant/finflowAssistantCore';
 import { answerAssistantQuestionLocally, buildInitialAssistantChat, createAssistantChatMessage, type FinflowAssistantChatMessage } from '@/lib/assistant/finflowAssistantChat';
@@ -12,52 +12,35 @@ import { buildDailyDecisionChatContext } from '@/lib/assistant/dailyDecisionChat
 import { calculateOilServiceStatus, estimateFuelFromMileage } from '@/lib/car/carMaintenanceModel';
 import { buildDailyFuelBudgetReport, formatFuelRub } from '@/lib/car/dailyFuelBudgetModel';
 import { calculateEditableFuelBudget, createDefaultEditableFuelInputState, parseFuelNumber, type EditableFuelInputState } from '@/lib/car/editableFuelInputsModel';
-import { EDITABLE_FUEL_INPUTS_STORAGE_KEY, createEditableFuelInputStoredState, parseEditableFuelInputStoredState } from '@/lib/car/editableFuelInputsPersistence';
-import { FUEL_ODOMETER_HISTORY_STORAGE_KEY, addFuelOdometerHistoryEntry, createFuelOdometerHistoryEntry, createInitialFuelOdometerHistoryState, deleteFuelOdometerHistoryEntry, parseFuelOdometerHistoryState, summarizeFuelOdometerHistory, type FuelOdometerHistoryState } from '@/lib/car/fuelOdometerHistoryModel';
+import { addFuelOdometerHistoryEntry, createFuelOdometerHistoryEntry, createInitialFuelOdometerHistoryState, deleteFuelOdometerHistoryEntry, summarizeFuelOdometerHistory } from '@/lib/car/fuelOdometerHistoryModel';
 import { exportFuelOdometerHistoryAsCsv, exportFuelOdometerHistoryAsJson } from '@/lib/car/fuelOdometerHistoryExport';
 import { buildFuelOdometerTrendReport } from '@/lib/car/fuelOdometerTrendModel';
 import { buildProjectSelfCheckReport } from '@/lib/project/projectSelfCheck';
 import { calculateDayNet } from '@/lib/day-core/netCalculationModel';
 import { buildFuelNetIntegrationReport } from '@/lib/day-core/fuelNetIntegrationModel';
-import { buildDailyAllocation, type DailyAllocationBucket } from '@/lib/day-core/dailyAllocationModel';
+import { buildDailyAllocation } from '@/lib/day-core/dailyAllocationModel';
 import { buildCarRepairAllocationAdvisor } from '@/lib/day-core/carRepairAllocationModel';
 import { buildDailyDecisionSummary } from '@/lib/day-core/dailyDecisionSummaryModel';
 import {
   DAILY_RECORD_FILTERS,
   DAILY_RECORD_TEMPLATES,
-  createDailyRecord,
-  createCustomTemplate,
-  createRecordFromTemplate,
-  deleteCustomTemplate,
   filterDailyRecords,
   getRecordCategoryLabel,
   createInitialDailyRecordsFromInput,
-  deleteDailyRecord,
-  deriveDayInputFromRecords,
   summarizeDailyRecords,
-  updateDailyRecord,
   type DailyRecord,
   type CustomDailyRecordTemplate,
   type DailyRecordFilterId,
-  type DailyRecordType,
-  updateCustomTemplate
+  type DailyRecordType
 } from '@/lib/day-core/dailyRecordsModel';
 import {
-  addDailyHistorySnapshot,
   analyzeDailyHistory,
-  browserLocalDailyHistoryAdapter,
-  createDailyHistorySnapshot,
-  createInitialDailyHistoryState,
-  deleteDailyHistorySnapshot,
   buildDailyHistoryComparison,
   getDailyHistorySnapshotById,
   getDailyHistoryStorageLabel,
-  summarizeDailyHistory,
-  toggleDailyHistorySnapshotLock,
-  type DailyHistoryState
+  summarizeDailyHistory
 } from '@/lib/day-core/dailyHistoryModel';
 import {
-  approveBankCandidateAsRecord,
   BANK_CANDIDATE_CATEGORY_COUNTS,
   BANK_CANDIDATE_FILTERS,
   BANK_CANDIDATE_SAMPLE,
@@ -67,228 +50,106 @@ import {
   getBankCandidatePageCount,
   getBankDecision,
   paginateBankCandidates,
-  updateBankDecision,
   type BankCandidateDecision,
   type BankCandidateFilterId
 } from '@/lib/day-core/bankCandidateReviewModel';
 import { formatPercent, formatRub } from '@/lib/day-core/dayCoreModel';
 import { CloudDaySyncPanel } from '@/components/cloud/CloudDaySyncPanel';
 import { LocalBackupRestorePanel } from '@/components/local/LocalBackupRestorePanel';
-import { createFinflowCloudDayDocument, type FinflowCloudDayDocument } from '@/lib/cloud/finflowCloudDayDocument';
+import { createFinflowCloudDayDocument } from '@/lib/cloud/finflowCloudDayDocument';
 import {
-  createDailyLiveStateOriginId,
-  createDailyLiveStateSignature,
-  createDailyLiveStateSnapshot,
-  readDailyLiveStateSnapshot,
-  subscribeDailyLiveState,
-  writeDailyLiveStateSnapshot
-} from '@/lib/day-core/dailyLiveStatePersistence';
+  expensePresets,
+  fuelPresets,
+  orderPresets,
+  recordsStorageKey,
+  storageKey,
+  type DailyQuickInputView,
+  type ExpensePreset
+} from '@/components/day-core/DailyQuickInputConfig';
 import {
-  addActiveDayRolloverArchiveEntry,
-  buildNewActiveDayDraft,
-  createActiveDayRolloverArchiveEntry,
-  createActiveDaySessionState,
-  createInitialActiveDayArchiveState,
-  getLatestActiveDayRolloverEntry,
-  readActiveDayRolloverArchiveState,
-  readActiveDaySessionState,
-  writeActiveDayRolloverArchiveState,
-  writeActiveDaySessionState,
-  type ActiveDayRolloverArchiveEntry,
-  type ActiveDaySessionState
-} from '@/lib/day-core/activeDaySessionModel';
-
-const storageKey = 'finflow.dailyQuickInput.v1_47';
-const recordsStorageKey = 'finflow.dailyRecords.v1_47';
-const customTemplatesStorageKey = 'finflow.customRecordTemplates.v1_47';
-const bankDecisionsStorageKey = 'finflow.bankCandidateDecisions.v1_47';
-
-type DailyQuickInputView = 'daily' | 'money' | 'work' | 'funds' | 'ai' | 'system' | 'legacy';
-
-type ExpensePreset = {
-  id: string;
-  title: string;
-  amount: number;
-  type: DayCoreTaskInput['type'];
-  priority: DayCoreTaskInput['priority'];
-};
-
-const orderPresets = [300, 500, 700, 1000, 1500];
-const fuelPresets = [500, 1000, 1500, 2000];
-const expensePresets: ExpensePreset[] = [
-  { id: 'food', title: 'Еда', amount: 500, type: 'food', priority: 'high' },
-  { id: 'meeting', title: 'Встреча', amount: 1500, type: 'meeting', priority: 'high' },
-  { id: 'products', title: 'Продукты', amount: 1000, type: 'admin', priority: 'normal' },
-  { id: 'car-small', title: 'Машина мелкое', amount: 1000, type: 'car', priority: 'high' }
-];
+  AllocationBucketRow,
+  LiveStateStatus,
+  MoneyInput,
+  parseMoney,
+  parseRate,
+  markNote,
+  formatSignedRub,
+  getRecordTypeLabel,
+  ProgressBar
+} from '@/components/day-core/DailyQuickInputShared';
+import { useDailyQuickInputLiveState } from '@/components/day-core/useDailyQuickInputLiveState';
+import { useDailyQuickInputRecordActions } from '@/components/day-core/useDailyQuickInputRecordActions';
+import { useDailyQuickInputDayActions } from '@/components/day-core/useDailyQuickInputDayActions';
+import { useDailyQuickInputHistoryActions } from '@/components/day-core/useDailyQuickInputHistoryActions';
 
 export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCoreInputModel) => void; view?: DailyQuickInputView }) {
   const view = props.view ?? 'daily';
-  const dailyLiveOriginId = useMemo(() => createDailyLiveStateOriginId(), []);
-  const lastDailyLiveSignatureRef = useRef('');
-  const [dayInput, setDayInput] = useState<DayCoreInputModel>(dayCoreInputMock);
   const [customOrder, setCustomOrder] = useState('');
   const [customExpense, setCustomExpense] = useState('');
   const [customExpenseTitle, setCustomExpenseTitle] = useState('Прочее');
-  const [hydrated, setHydrated] = useState(false);
-  const [historyState, setHistoryState] = useState<DailyHistoryState>(() => ({
-    ...createInitialDailyHistoryState(`${dayCoreInputMock.localDate}T00:00:00.000Z`),
-    storageMode: 'unavailable'
-  }));
   const [selectedSnapshotId, setSelectedSnapshotId] = useState<string>('');
-  const [records, setRecords] = useState<DailyRecord[]>(() => createInitialDailyRecordsFromInput(dayCoreInputMock));
   const [recordTitle, setRecordTitle] = useState('');
   const [recordAmount, setRecordAmount] = useState('');
   const [recordType, setRecordType] = useState<DailyRecordType>('taxi_order');
   const [recordFilter, setRecordFilter] = useState<DailyRecordFilterId>('all');
-  const [customTemplates, setCustomTemplates] = useState<CustomDailyRecordTemplate[]>([]);
   const [templateLabel, setTemplateLabel] = useState('');
   const [templateAmount, setTemplateAmount] = useState('');
   const [templateCategory, setTemplateCategory] = useState('other');
   const [templateType, setTemplateType] = useState<DailyRecordType>('expense');
-  const [bankDecisions, setBankDecisions] = useState<BankCandidateDecision[]>([]);
   const [bankFilter, setBankFilter] = useState<BankCandidateFilterId>('all');
   const [bankPage, setBankPage] = useState(0);
   const [assistantQuestion, setAssistantQuestion] = useState('');
   const [assistantChat, setAssistantChat] = useState<FinflowAssistantChatMessage[]>([]);
-  const [fuelInputState, setFuelInputState] = useState<EditableFuelInputState>(() => createDefaultEditableFuelInputState());
-  const [fuelHistoryState, setFuelHistoryState] = useState<FuelOdometerHistoryState>(() => createInitialFuelOdometerHistoryState());
   const [fuelHistoryExportText, setFuelHistoryExportText] = useState('');
   const [fuelHistoryExportFormat, setFuelHistoryExportFormat] = useState<'json' | 'csv'>('json');
-  const [dailyLiveSyncedAt, setDailyLiveSyncedAt] = useState('');
-  const [activeDaySession, setActiveDaySession] = useState<ActiveDaySessionState | null>(null);
-  const [latestRolloverEntry, setLatestRolloverEntry] = useState<ActiveDayRolloverArchiveEntry | null>(null);
-  const [rolloverStatus, setRolloverStatus] = useState('');
+  const {
+    dailyLiveOriginId,
+    hydrated,
+    dayInput,
+    setDayInput,
+    historyState,
+    setHistoryState,
+    records,
+    setRecords,
+    customTemplates,
+    setCustomTemplates,
+    bankDecisions,
+    setBankDecisions,
+    fuelInputState,
+    setFuelInputState,
+    fuelHistoryState,
+    setFuelHistoryState,
+    dailyLiveSyncedAt,
+    activeDaySession,
+    setActiveDaySession,
+    latestRolloverEntry,
+    setLatestRolloverEntry,
+    rolloverStatus,
+    setRolloverStatus
+  } = useDailyQuickInputLiveState({ onDayInputChange: props.onDayInputChange });
 
-  useEffect(() => {
-    try {
-      const liveSnapshot = readDailyLiveStateSnapshot();
-
-      if (liveSnapshot) {
-        setDayInput(liveSnapshot.dayInput);
-        setRecords(liveSnapshot.records);
-        setCustomTemplates(liveSnapshot.customTemplates);
-        setBankDecisions(liveSnapshot.bankDecisions);
-        setFuelInputState(liveSnapshot.fuelInputState);
-        setFuelHistoryState(liveSnapshot.fuelHistoryState);
-        setDailyLiveSyncedAt(liveSnapshot.savedAtIso);
-        lastDailyLiveSignatureRef.current = createDailyLiveStateSignature(liveSnapshot);
-      } else {
-        const raw = window.localStorage.getItem(storageKey);
-        if (raw) setDayInput(JSON.parse(raw) as DayCoreInputModel);
-        const recordsRaw = window.localStorage.getItem(recordsStorageKey);
-        if (recordsRaw) setRecords(JSON.parse(recordsRaw) as DailyRecord[]);
-        const templatesRaw = window.localStorage.getItem(customTemplatesStorageKey);
-        if (templatesRaw) setCustomTemplates(JSON.parse(templatesRaw) as CustomDailyRecordTemplate[]);
-        const bankDecisionsRaw = window.localStorage.getItem(bankDecisionsStorageKey);
-        if (bankDecisionsRaw) setBankDecisions(JSON.parse(bankDecisionsRaw) as BankCandidateDecision[]);
-        const fuelInputRaw = window.localStorage.getItem(EDITABLE_FUEL_INPUTS_STORAGE_KEY);
-        const parsedFuelInput = parseEditableFuelInputStoredState(fuelInputRaw);
-        if (parsedFuelInput) setFuelInputState(parsedFuelInput);
-        const fuelHistoryRaw = window.localStorage.getItem(FUEL_ODOMETER_HISTORY_STORAGE_KEY);
-        const parsedFuelHistory = parseFuelOdometerHistoryState(fuelHistoryRaw);
-        if (parsedFuelHistory) setFuelHistoryState(parsedFuelHistory);
-      }
-
-      const historyRaw = browserLocalDailyHistoryAdapter.read();
-      setHistoryState(historyRaw ?? createInitialDailyHistoryState());
-
-      const sessionRaw = readActiveDaySessionState();
-      if (sessionRaw) setActiveDaySession(sessionRaw);
-      const archiveRaw = readActiveDayRolloverArchiveState();
-      setLatestRolloverEntry(archiveRaw ? getLatestActiveDayRolloverEntry(archiveRaw) : null);
-    } catch {
-      // Keep safe demo input if localStorage is unavailable or corrupted.
-    }
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-
-    return subscribeDailyLiveState(snapshot => {
-      if (snapshot.originTabId === dailyLiveOriginId) return;
-
-      const incomingSignature = createDailyLiveStateSignature(snapshot);
-      if (incomingSignature === lastDailyLiveSignatureRef.current) return;
-
-      lastDailyLiveSignatureRef.current = incomingSignature;
-      setDayInput(snapshot.dayInput);
-      setRecords(snapshot.records);
-      setCustomTemplates(snapshot.customTemplates);
-      setBankDecisions(snapshot.bankDecisions);
-      setFuelInputState(snapshot.fuelInputState);
-      setFuelHistoryState(snapshot.fuelHistoryState);
-      setDailyLiveSyncedAt(snapshot.savedAtIso);
-    });
-  }, [dailyLiveOriginId, hydrated]);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(storageKey, JSON.stringify(dayInput));
-  }, [dayInput, hydrated]);
-
-  useEffect(() => {
-    props.onDayInputChange?.(dayInput);
-  }, [dayInput, props.onDayInputChange]);
-
-
-  useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(recordsStorageKey, JSON.stringify(records));
-    setDayInput(previous => deriveDayInputFromRecords(previous, records));
-  }, [records, hydrated]);
-
-
-  useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(customTemplatesStorageKey, JSON.stringify(customTemplates));
-  }, [customTemplates, hydrated]);
-
-
-  useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(bankDecisionsStorageKey, JSON.stringify(bankDecisions));
-  }, [bankDecisions, hydrated]);
-
-
-  useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(EDITABLE_FUEL_INPUTS_STORAGE_KEY, JSON.stringify(createEditableFuelInputStoredState(fuelInputState)));
-  }, [fuelInputState, hydrated]);
-
-
-  useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(FUEL_ODOMETER_HISTORY_STORAGE_KEY, JSON.stringify(fuelHistoryState));
-  }, [fuelHistoryState, hydrated]);
-
-  useEffect(() => {
-    if (!hydrated) return;
-
-    const snapshotDraft = {
-      dayInput,
-      records,
-      customTemplates,
-      bankDecisions,
-      fuelInputState,
-      fuelHistoryState
-    };
-    const nextSignature = createDailyLiveStateSignature(snapshotDraft);
-
-    if (nextSignature === lastDailyLiveSignatureRef.current) return;
-
-    const nextSnapshot = createDailyLiveStateSnapshot({
-      ...snapshotDraft,
-      originTabId: dailyLiveOriginId,
-      source: 'local_input'
-    });
-
-    if (writeDailyLiveStateSnapshot(nextSnapshot)) {
-      lastDailyLiveSignatureRef.current = nextSignature;
-      setDailyLiveSyncedAt(nextSnapshot.savedAtIso);
-    }
-  }, [bankDecisions, customTemplates, dailyLiveOriginId, dayInput, fuelHistoryState, fuelInputState, hydrated, records]);
+  const {
+    addOrder,
+    addFuel,
+    addTaskExpense,
+    addRecord,
+    patchRecord,
+    removeRecord,
+    addTemplateRecord,
+    addCustomTemplate: addCustomTemplateAction,
+    patchCustomTemplate,
+    removeCustomTemplate,
+    patchBankDecision,
+    approveBankCandidate,
+    rejectBankCandidate,
+    postponeBankCandidate
+  } = useDailyQuickInputRecordActions({
+    customTemplates,
+    bankDecisions,
+    setRecords,
+    setCustomTemplates,
+    setBankDecisions
+  });
 
   const net = useMemo(() => calculateDayNet(dayInput), [dayInput]);
   const cloudDocument = useMemo(() => createFinflowCloudDayDocument({
@@ -321,6 +182,25 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
   const fuelHistorySummary = useMemo(() => summarizeFuelOdometerHistory(fuelHistoryState), [fuelHistoryState]);
   const fuelTrendReport = useMemo(() => buildFuelOdometerTrendReport(fuelHistoryState), [fuelHistoryState]);
   const fuelNetIntegration = useMemo(() => buildFuelNetIntegrationReport({ net, fuel: editableFuelCalculation }), [net, editableFuelCalculation]);
+  const {
+    updateMoney,
+    updateTaxiNumber,
+    applyOdometerFuelToPlan,
+    strengthenCarRepairFund,
+    updateTask,
+    deleteTask,
+    updateDayField,
+    updateFund,
+    addFund,
+    deleteFund,
+    updateObligation,
+    addObligation,
+    deleteObligation
+  } = useDailyQuickInputDayActions({
+    setDayInput,
+    fuelNetIntegration,
+    carRepairAllocation
+  });
   const fuelAssistantAdvice = useMemo(() => buildFuelOdometerAssistantAdvice({ net, fuelNet: fuelNetIntegration, trend: fuelTrendReport }), [net, fuelNetIntegration, fuelTrendReport]);
   const fuelChatContext = useMemo(() => ({ version: 'fuel_odometer_chat_context_v1_73' as const, advice: fuelAssistantAdvice, fuelNet: fuelNetIntegration, trend: fuelTrendReport }), [fuelAssistantAdvice, fuelNetIntegration, fuelTrendReport]);
   const carMaintenanceChatContext = useMemo(() => buildCarMaintenanceChatContext({ oil: oilServiceStatus }), [oilServiceStatus]);
@@ -340,122 +220,38 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
   const cleanProgress = Math.min(100, Math.round((net.shiftCleanExpected / Math.max(1, net.targetNet)) * 100));
   const grossProgress = Math.min(100, Math.round((net.grossDone / Math.max(1, net.grossNeededForTargetNet)) * 100));
 
-  function updateMoney(field: 'cash' | 'card' | 'driveeBalance', value: string) {
-    const amount = parseMoney(value);
-    setDayInput(previous => ({
-      ...previous,
-      money: { ...previous.money, [field]: amount },
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Деньги сейчас обновлены вручную: ${field}.`)
-    }));
-  }
-
-  function addOrder(amount: number) {
-    if (amount <= 0) return;
-    addRecord('taxi_order', `Заказ ${formatRub(amount)}`, amount, 'taxi');
-  }
-
-  function addFuel(amount: number) {
-    if (amount <= 0) return;
-    addRecord('fuel', `Бензин ${formatRub(amount)}`, amount, 'fuel');
-  }
-
   function addExpense(preset: ExpensePreset) {
     addTaskExpense(preset.title, preset.amount, preset.type, preset.priority);
   }
 
   function addCustomOrder() {
-    addOrder(parseMoney(customOrder));
-    setCustomOrder('');
+    if (addOrder(parseMoney(customOrder))) setCustomOrder('');
   }
 
   function addCustomExpense() {
-    addTaskExpense(customExpenseTitle || 'Прочее', parseMoney(customExpense), 'admin', 'normal');
-    setCustomExpense('');
-  }
-
-  function addTaskExpense(title: string, amount: number, type: DayCoreTaskInput['type'], priority: DayCoreTaskInput['priority']) {
-    if (amount <= 0) return;
-    addRecord('expense', title, amount, type);
-  }
-
-  function addRecord(type: DailyRecordType, title: string, amount: number, category?: string) {
-    if (amount <= 0) return;
-    setRecords(previous => [
-      createDailyRecord({ type, title, amount, category, source: 'quick_button' }),
-      ...previous
-    ]);
+    if (addTaskExpense(customExpenseTitle || 'Прочее', parseMoney(customExpense), 'admin', 'normal')) setCustomExpense('');
   }
 
   function addCustomRecord() {
     const amount = parseMoney(recordAmount);
     if (amount <= 0) return;
-    addRecord(recordType, recordTitle || getRecordTypeLabel(recordType), amount);
+    if (!addRecord(recordType, recordTitle || getRecordTypeLabel(recordType), amount)) return;
     setRecordAmount('');
     setRecordTitle('');
   }
 
-  function patchRecord(recordId: string, patch: Partial<DailyRecord>) {
-    setRecords(previous => updateDailyRecord(previous, recordId, patch));
-  }
-
-  function removeRecord(recordId: string) {
-    setRecords(previous => deleteDailyRecord(previous, recordId));
-  }
-
-  function addTemplateRecord(templateId: string) {
-    const template = [...DAILY_RECORD_TEMPLATES, ...customTemplates].find(item => item.id === templateId);
-    if (!template) return;
-    setRecords(previous => [createRecordFromTemplate(template), ...previous]);
-  }
-
   function addCustomTemplate() {
     const amount = parseMoney(templateAmount);
-    if (amount <= 0) return;
-    const template = createCustomTemplate({
-      label: templateLabel || `${getRecordTypeLabel(templateType)} ${formatRub(amount)}`,
-      type: templateType,
+    const saved = addCustomTemplateAction({
+      label: templateLabel,
+      amount,
       category: templateCategory,
-      defaultTitle: templateLabel || getRecordTypeLabel(templateType),
-      defaultAmount: amount,
-      priority: templateType === 'fuel' ? 'critical' : templateType === 'expense' ? 'normal' : 'normal'
+      type: templateType,
+      priority: templateType === 'fuel' ? 'critical' : 'normal'
     });
-    setCustomTemplates(previous => [template, ...previous]);
+    if (!saved) return;
     setTemplateLabel('');
     setTemplateAmount('');
-  }
-
-  function patchCustomTemplate(templateId: string, patch: Partial<CustomDailyRecordTemplate>) {
-    setCustomTemplates(previous => updateCustomTemplate(previous, templateId, patch));
-  }
-
-  function removeCustomTemplate(templateId: string) {
-    setCustomTemplates(previous => deleteCustomTemplate(previous, templateId));
-  }
-
-  function patchBankDecision(transactionId: string, patch: Partial<BankCandidateDecision>) {
-    setBankDecisions(previous => updateBankDecision(previous, transactionId, patch));
-  }
-
-  function approveBankCandidate(transactionId: string) {
-    const candidate = BANK_CANDIDATE_SAMPLE.find(item => item.transactionId === transactionId);
-    if (!candidate) return;
-    const decision = getBankDecision(candidate, bankDecisions);
-    const record = approveBankCandidateAsRecord(candidate, { ...decision, status: 'approved' });
-    setRecords(previous => [record, ...previous]);
-    setBankDecisions(previous => updateBankDecision(previous, transactionId, { status: 'approved' }));
-  }
-
-  function applyOdometerFuelToPlan() {
-    setDayInput(previous => ({
-      ...previous,
-      taxi: {
-        ...previous.taxi,
-        fuelPlanned: Math.max(0, Math.round(fuelNetIntegration.odometerFuelRub))
-      },
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, 'Бензин по пробегу применён в план топлива дня.')
-    }));
   }
 
   function exportFuelHistory(format: 'json' | 'csv') {
@@ -471,39 +267,6 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
     if (!approved) return;
     setFuelHistoryState(createInitialFuelOdometerHistoryState());
     setFuelHistoryExportText('');
-  }
-
-  function strengthenCarRepairFund() {
-    setDayInput(previous => {
-      const existing = previous.funds.find(fund => fund.id === 'car-repair');
-      const nextFunds = existing
-        ? previous.funds.map(fund => fund.id === 'car-repair'
-          ? {
-              ...fund,
-              targetAmount: Math.max(fund.targetAmount, carRepairAllocation.targetRub),
-              priority: 'high' as const,
-              canReceiveToday: true
-            }
-          : fund)
-        : [
-            ...previous.funds,
-            {
-              id: 'car-repair',
-              title: 'Ремонт ходовки / подвески',
-              targetAmount: carRepairAllocation.targetRub,
-              currentAmount: 0,
-              priority: 'high' as const,
-              canReceiveToday: true
-            }
-          ];
-
-      return {
-        ...previous,
-        funds: nextFunds,
-        status: 'review_needed',
-        reviewNotes: markNote(previous.reviewNotes, 'Ремонтный фонд машины усилен как рабочий актив такси.')
-      };
-    });
   }
 
   function saveFuelHistoryEntry() {
@@ -546,247 +309,38 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
     setAssistantQuestion('');
   }
 
-  function rejectBankCandidate(transactionId: string) {
-    setBankDecisions(previous => updateBankDecision(previous, transactionId, { status: 'rejected' }));
-  }
-
-  function postponeBankCandidate(transactionId: string) {
-    setBankDecisions(previous => updateBankDecision(previous, transactionId, { status: 'postponed' }));
-  }
-
-
-  function updateTaxiNumber(field: keyof DayCoreInputModel['taxi'], value: string) {
-    const amount = field === 'driveeRate' ? parseRate(value) : parseMoney(value);
-    setDayInput(previous => ({
-      ...previous,
-      taxi: { ...previous.taxi, [field]: amount },
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Отредактировано поле такси: ${String(field)}.`)
-    }));
-  }
-
-  function updateTask(taskId: string, patch: Partial<Pick<DayCoreTaskInput, 'title' | 'moneyCost' | 'plannedToday' | 'priority' | 'type'>>) {
-    setDayInput(previous => ({
-      ...previous,
-      tasks: previous.tasks.map(task => task.id === taskId ? { ...task, ...patch } : task),
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Отредактирована задача/расход: ${taskId}.`)
-    }));
-  }
-
-  function deleteTask(taskId: string) {
-    setDayInput(previous => ({
-      ...previous,
-      tasks: previous.tasks.filter(task => task.id !== taskId),
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Удалена задача/расход: ${taskId}.`)
-    }));
-  }
-
-  function updateDayField(field: 'localDate' | 'localTime', value: string) {
-    setDayInput(previous => ({
-      ...previous,
-      [field]: value,
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Отредактировано поле дня: ${field}.`)
-    }));
-  }
-
-
-  function updateFund(fundId: string, patch: Partial<DayCoreFundInput>) {
-    setDayInput(previous => ({
-      ...previous,
-      funds: previous.funds.map(fund => fund.id === fundId ? { ...fund, ...patch } : fund),
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Отредактирован фонд: ${fundId}.`)
-    }));
-  }
-
-  function addFund() {
-    const id = `fund-${Date.now()}`;
-    const fund: DayCoreFundInput = {
-      id,
-      title: 'Новый фонд',
-      targetAmount: 5000,
-      currentAmount: 0,
-      priority: 'normal',
-      canReceiveToday: true
-    };
-    setDayInput(previous => ({
-      ...previous,
-      funds: [...previous.funds, fund],
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, 'Добавлен новый фонд.')
-    }));
-  }
-
-  function deleteFund(fundId: string) {
-    setDayInput(previous => ({
-      ...previous,
-      funds: previous.funds.filter(fund => fund.id !== fundId),
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Удалён фонд: ${fundId}.`)
-    }));
-  }
-
-  function updateObligation(obligationId: string, patch: Partial<DayCoreObligationInput>) {
-    setDayInput(previous => ({
-      ...previous,
-      obligations: previous.obligations.map(obligation => obligation.id === obligationId ? { ...obligation, ...patch } : obligation),
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Отредактировано обязательство: ${obligationId}.`)
-    }));
-  }
-
-  function addObligation() {
-    const id = `obligation-${Date.now()}`;
-    const obligation: DayCoreObligationInput = {
-      id,
-      title: 'Новое обязательство',
-      amountDue: 5000,
-      dueDayOfMonth: 1,
-      currentSaved: 0,
-      priority: 'high',
-      source: 'manual'
-    };
-    setDayInput(previous => ({
-      ...previous,
-      obligations: [...previous.obligations, obligation],
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, 'Добавлено новое обязательство.')
-    }));
-  }
-
-  function deleteObligation(obligationId: string) {
-    setDayInput(previous => ({
-      ...previous,
-      obligations: previous.obligations.filter(obligation => obligation.id !== obligationId),
-      source: 'manual',
-      status: 'review_needed',
-      reviewNotes: markNote(previous.reviewNotes, `Удалено обязательство: ${obligationId}.`)
-    }));
-  }
-
-  function persistHistory(nextState: DailyHistoryState) {
-    setHistoryState(nextState);
-    browserLocalDailyHistoryAdapter.write(nextState);
-  }
-
-  function saveDaySnapshot() {
-    const snapshot = createDailyHistorySnapshot(dayInput, net);
-    persistHistory(addDailyHistorySnapshot(historyState, snapshot));
-  }
-
-  function deleteSnapshot(snapshotId: string) {
-    persistHistory(deleteDailyHistorySnapshot(historyState, snapshotId));
-    if (selectedSnapshotId === snapshotId) setSelectedSnapshotId('');
-  }
-
-  function toggleSnapshotLock(snapshotId: string) {
-    persistHistory(toggleDailyHistorySnapshotLock(historyState, snapshotId));
-  }
-
-  function restoreSnapshot(snapshotId: string) {
-    const snapshot = getDailyHistorySnapshotById(historyState, snapshotId);
-    if (!snapshot) return;
-    setDayInput({
-      ...snapshot.dayInput,
-      status: 'review_needed',
-      reviewNotes: markNote(snapshot.dayInput.reviewNotes, `Восстановлено из истории: ${snapshot.localDate}.`)
-    });
-    setSelectedSnapshotId(snapshot.id);
-  }
-
-  function loadCloudDocument(document: FinflowCloudDayDocument) {
-    setDayInput(document.dayInput);
-    setRecords(document.records);
-    setCustomTemplates(document.customTemplates);
-    setBankDecisions(document.bankDecisions);
-    setFuelInputState(document.fuelInputState);
-    setFuelHistoryState(document.fuelHistoryState);
-  }
-
-  function startNewActiveDay() {
-    const approved = window.confirm('Закрыть текущий день и начать новый? FINFlow сохранит вечерний снимок + rollover archive, а заказы/расходы нового дня начнутся с нуля.');
-    if (!approved) return;
-
-    const now = new Date();
-    const currentSnapshot = createDailyLiveStateSnapshot({
-      originTabId: dailyLiveOriginId,
-      source: 'day_rollover',
-      dayInput,
-      records,
-      customTemplates,
-      bankDecisions,
-      fuelInputState,
-      fuelHistoryState
-    });
-    const nextDraft = buildNewActiveDayDraft({ previousDayInput: dayInput, previousRecords: records, customTemplates, bankDecisions, fuelInputState, now });
-    const archiveEntry = createActiveDayRolloverArchiveEntry({ snapshot: currentSnapshot, nextDayId: nextDraft.dayInput.dayId, nextLocalDate: nextDraft.dayInput.localDate, now: now.toISOString() });
-    const previousArchiveState = readActiveDayRolloverArchiveState() ?? createInitialActiveDayArchiveState(now.toISOString());
-    const nextArchiveState = addActiveDayRolloverArchiveEntry(previousArchiveState, archiveEntry, now.toISOString());
-    writeActiveDayRolloverArchiveState(nextArchiveState);
-
-    const closingSnapshot = createDailyHistorySnapshot(dayInput, net, now.toISOString());
-    persistHistory(addDailyHistorySnapshot(historyState, closingSnapshot, now.toISOString()));
-
-    setDayInput(nextDraft.dayInput);
-    setRecords(nextDraft.records);
-    setCustomTemplates(nextDraft.customTemplates);
-    setBankDecisions(nextDraft.bankDecisions);
-    setFuelInputState(nextDraft.fuelInputState);
-    setLatestRolloverEntry(archiveEntry);
-
-    const nextSession = createActiveDaySessionState({
-      activeDayId: nextDraft.dayInput.dayId,
-      activeLocalDate: nextDraft.dayInput.localDate,
-      startedAtIso: now.toISOString(),
-      lastRolloverAtIso: now.toISOString(),
-      lastClosedDayId: dayInput.dayId
-    });
-    writeActiveDaySessionState(nextSession);
-    setActiveDaySession(nextSession);
-    setRolloverStatus(`Новый день ${nextDraft.dayInput.localDate} создан. Предыдущий день сохранён в истории и rollback archive.`);
-  }
-
-  function restoreLatestRolloverDay() {
-    const archiveEntry = latestRolloverEntry ?? getLatestActiveDayRolloverEntry(readActiveDayRolloverArchiveState() ?? createInitialActiveDayArchiveState());
-    if (!archiveEntry) return;
-    const approved = window.confirm(`Вернуть день ${archiveEntry.previousLocalDate} из последнего rollover archive? Текущий активный день будет заменён локально.`);
-    if (!approved) return;
-
-    const snapshot = archiveEntry.snapshot;
-    setDayInput({
-      ...snapshot.dayInput,
-      status: 'review_needed',
-      reviewNotes: markNote(snapshot.dayInput.reviewNotes, `Откат после New Day: восстановлен день ${archiveEntry.previousLocalDate}.`)
-    });
-    setRecords(snapshot.records);
-    setCustomTemplates(snapshot.customTemplates);
-    setBankDecisions(snapshot.bankDecisions);
-    setFuelInputState(snapshot.fuelInputState);
-    setFuelHistoryState(snapshot.fuelHistoryState);
-
-    const restoredSession = createActiveDaySessionState({
-      activeDayId: snapshot.dayInput.dayId,
-      activeLocalDate: snapshot.dayInput.localDate,
-      startedAtIso: new Date().toISOString(),
-      lastRolloverAtIso: archiveEntry.closedAtIso,
-      lastClosedDayId: archiveEntry.nextDayId
-    });
-    writeActiveDaySessionState(restoredSession);
-    setActiveDaySession(restoredSession);
-    setRolloverStatus(`Восстановлен предыдущий активный день ${archiveEntry.previousLocalDate} из rollover archive.`);
-  }
+  const {
+    saveDaySnapshot,
+    deleteSnapshot,
+    toggleSnapshotLock,
+    restoreSnapshot,
+    loadCloudDocument,
+    startNewActiveDay,
+    restoreLatestRolloverDay
+  } = useDailyQuickInputHistoryActions({
+    dailyLiveOriginId,
+    dayInput,
+    net,
+    historyState,
+    selectedSnapshotId,
+    records,
+    customTemplates,
+    bankDecisions,
+    fuelInputState,
+    fuelHistoryState,
+    latestRolloverEntry,
+    setSelectedSnapshotId,
+    setDayInput,
+    setHistoryState,
+    setRecords,
+    setCustomTemplates,
+    setBankDecisions,
+    setFuelInputState,
+    setFuelHistoryState,
+    setLatestRolloverEntry,
+    setActiveDaySession,
+    setRolloverStatus
+  });
 
   function resetDay() {
     setDayInput({
@@ -804,7 +358,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
   if (view === 'daily') {
     return (
       <section className={`card quick-input-card daily-mode-card ${net.mode}`}>
-        <div className="section-kicker">v2.01 • Active Day Session</div>
+        <div className="section-kicker">Active Day Session</div>
         <h2 className="card-heading">День: утро → смена → вечер</h2>
         <p className="card-description">
           Ежедневный режим теперь показывает только то, что нужно для сегодняшнего дня. Cloud, backup, deployment и dev-панели вынесены в “Система”.
@@ -813,7 +367,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
 
         <div className="active-day-session-card">
           <div>
-            <span>Активный день v2.01</span>
+            <span>Активный день</span>
             <b>{dayInput.localDate} • {dayInput.dayId}</b>
             <p>{activeDaySession ? `Сессия: ${activeDaySession.activeLocalDate}` : 'Сессия будет зафиксирована при первом New Day flow.'}</p>
             {latestRolloverEntry ? <small>Последний закрытый день: {latestRolloverEntry.previousLocalDate} → {latestRolloverEntry.nextLocalDate}</small> : <small>Rollover archive пока пуст.</small>}
@@ -1470,7 +1024,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
           </div>
           {editableFuelCalculation.warning ? <p className="quick-warning">{editableFuelCalculation.warning}</p> : null}
           <p className="quick-note">{editableFuelCalculation.recommendation}</p>
-          <p className="quick-note">Сохранение локально: {EDITABLE_FUEL_INPUTS_STORAGE_KEY}</p>
+          <p className="quick-note">Сохранение локально включено: пробег, бензин и история остаются на устройстве.</p>
 
           <div className="fuel-history-actions">
             <button type="button" onClick={saveFuelHistoryEntry} disabled={!editableFuelCalculation.isValid || editableFuelCalculation.kmDriven <= 0}>
@@ -2108,80 +1662,4 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       <button className="quick-reset-button" type="button" onClick={resetDay}>сбросить demo-день</button>
     </section>
   );
-}
-
-
-function AllocationBucketRow(props: { bucket: DailyAllocationBucket }) {
-  const percent = props.bucket.targetAmount > 0 ? Math.round((props.bucket.allocatedAmount / props.bucket.targetAmount) * 100) : 0;
-  return (
-    <article className={`allocation-bucket ${props.bucket.priority}`}>
-      <div>
-        <div className="allocation-bucket-title">{props.bucket.title}</div>
-        <div className="allocation-bucket-note">{props.bucket.reason}</div>
-        <ProgressBar value={percent} />
-      </div>
-      <div className="allocation-bucket-money">
-        <b>{formatRub(props.bucket.allocatedAmount)}</b>
-        <span>из {formatRub(props.bucket.targetAmount)}</span>
-        {props.bucket.remainingNeed > 0 ? <small>ещё {formatRub(props.bucket.remainingNeed)}</small> : <small>закрыто</small>}
-      </div>
-    </article>
-  );
-}
-
-
-function LiveStateStatus(props: { syncedAt: string }) {
-  return (
-    <div className="live-state-status-pill">
-      <b>v2.00 live-state</b>
-      <span>{props.syncedAt ? `сохранено ${new Date(props.syncedAt).toLocaleTimeString('ru-RU')}` : 'готов к первому сохранению'}</span>
-    </div>
-  );
-}
-
-function MoneyInput(props: { label: string; value: number; onChange: (value: string) => void }) {
-  return (
-    <label className="quick-money-input">
-      <span>{props.label}</span>
-      <input inputMode="numeric" value={String(props.value)} onChange={event => props.onChange(event.target.value)} />
-    </label>
-  );
-}
-
-function ProgressBar(props: { value: number }) {
-  return (
-    <div className="progress-track" aria-label={`Прогресс ${props.value}%`}>
-      <div className="progress-fill" style={{ width: `${Math.max(0, Math.min(100, props.value))}%` }} />
-    </div>
-  );
-}
-
-function parseMoney(value: string) {
-  const parsed = Number(value.replace(/\s/g, '').replace(',', '.'));
-  if (!Number.isFinite(parsed)) return 0;
-  return Math.max(0, Math.round(parsed));
-}
-
-function parseRate(value: string) {
-  const parsed = Number(value.replace(/\s/g, '').replace(',', '.'));
-  if (!Number.isFinite(parsed)) return 0;
-  if (parsed > 1) return Math.max(0, Math.min(0.5, parsed / 100));
-  return Math.max(0, Math.min(0.5, parsed));
-}
-
-function markNote(previous: string[], note: string) {
-  return [note, ...previous.filter(item => item !== note)].slice(0, 12);
-}
-
-function formatSignedRub(value: number) {
-  const prefix = value > 0 ? '+' : '';
-  return `${prefix}${formatRub(value)}`;
-}
-
-function getRecordTypeLabel(type: DailyRecordType) {
-  if (type === 'taxi_order') return 'Заказ такси';
-  if (type === 'fuel') return 'Бензин';
-  if (type === 'drivee_topup') return 'Drivee пополнение';
-  if (type === 'income') return 'Доход';
-  return 'Расход';
 }

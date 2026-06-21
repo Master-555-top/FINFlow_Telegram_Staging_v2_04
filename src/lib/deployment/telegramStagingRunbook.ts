@@ -26,12 +26,12 @@ export type TelegramStagingRunbook = {
 export function buildTelegramStagingRunbook(): TelegramStagingRunbook {
   return {
     version: TELEGRAM_STAGING_RUNBOOK_VERSION,
-    packageVersion: 'v2.22',
+    packageVersion: 'v2.26',
     readinessBefore: 81,
     readinessAfter: 84,
     goal: 'Подготовить FINFlow к первому безопасному запуску как Telegram Mini App на staging-домене без загрузки MASTER PRIVATE FULL/private_vault в публичную инфраструктуру.',
     deploySafePackageName: 'FINFlow_v3_TELEGRAM_STAGING_DEPLOY_SAFE_v2_03.zip',
-    allowedUploadRoot: 'finflow_app или сгенерированный deploy-safe package v2.22',
+    allowedUploadRoot: 'finflow_app или сгенерированный deploy-safe package v2.26',
     forbiddenUploadRoots: [
       'MASTER PRIVATE FULL целиком',
       'private_vault',
@@ -112,7 +112,7 @@ export function buildTelegramStagingRunbook(): TelegramStagingRunbook {
       }
     ],
     rollbackPlan: [
-      'Оставить v2.22 master private zip локально как точку восстановления.',
+      'Оставить v2.26 master private zip локально как точку восстановления.',
       'Если staging сломан — откатить Vercel deployment на предыдущий build или отключить BotFather URL.',
       'Cloud writes держать выключенными до успешного ручного save/load/conflict теста.',
       'Перед любым cloud apply использовать local backup/rollback snapshot.'

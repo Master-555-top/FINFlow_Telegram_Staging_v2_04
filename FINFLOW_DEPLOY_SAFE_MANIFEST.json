@@ -1,8 +1,8 @@
 {
-  "package": "FINFlow_v3_TELEGRAM_STAGING_DEPLOY_SAFE_v2_47.zip",
-  "appVersion": "0.2.47",
-  "version": "v2_47",
-  "createdAt": "2026-06-22T08:18:39.361Z",
+  "package": "FINFlow_v3_TELEGRAM_STAGING_DEPLOY_SAFE_v2_49.zip",
+  "appVersion": "0.2.49",
+  "version": "v2_49",
+  "createdAt": "2026-06-22T08:50:07.104Z",
   "createdBy": "FINFlow audited deploy-safe packaging script",
   "purpose": "Telegram Mini App private staging deploy-safe package",
   "sourceRoot": "finflow_app",
@@ -23,7 +23,7 @@
     ".vercelignore",
     ".dockerignore",
     "supabase",
-    "README_TELEGRAM_STAGING_v2.47.md"
+    "README_TELEGRAM_STAGING_v2.49.md"
   ],
   "forbiddenPathFragments": [
     "private_vault",
@@ -39,7 +39,7 @@
     ".env.development",
     "tsconfig.tsbuildinfo"
   ],
-  "fileCount": 169,
+  "fileCount": 175,
   "files": [
     {
       "path": ".dockerignore",
@@ -67,9 +67,9 @@
       "sha256": "9a0f51be252a834c243837362c44ae169c56fc7fda443d6582de96d0d1926800"
     },
     {
-      "path": "README_TELEGRAM_STAGING_v2.47.md",
+      "path": "README_TELEGRAM_STAGING_v2.49.md",
       "bytes": 1108,
-      "sha256": "368de359b7b54f9ef1e6d3543e21ca10b18745001caea390f4e9709710446b8b"
+      "sha256": "9f796664877467739d5120d43a9c693ea3f8093f0e33134f898977f7e51f0cbf"
     },
     {
       "path": "app/api/assistant/dry-run/route.ts",
@@ -139,12 +139,12 @@
     {
       "path": "package-lock.json",
       "bytes": 35859,
-      "sha256": "47e905ed40d56223c37cb44833fc66717502d4d0ede1e86d43cc02bcc836da3c"
+      "sha256": "1a2c153c82645ffb533a6d9f46c10ea4a7b1308c31ac0ebb3fce03c82f5558a5"
     },
     {
       "path": "package.json",
       "bytes": 1008,
-      "sha256": "d7a503ca1dbbf6681426e5ae40efc9ace98ef57c8784fc3b57e634a908ca7cdc"
+      "sha256": "a864ec994da257b7d0b454090a9f3f3686b3a51a1f9f8e794b144c3823ab038d"
     },
     {
       "path": "scripts/build-next.mjs",
@@ -188,8 +188,8 @@
     },
     {
       "path": "src/components/dashboard/DashboardShell.tsx",
-      "bytes": 21352,
-      "sha256": "5f8c02d6598fcdb0f031a421f39d16d79fd84244f577addd7fb90195fd0da19f"
+      "bytes": 21920,
+      "sha256": "4409bfe1c0a3c97fe0ddd3945292d95f7a5f1d977f3d1a04888871d62db00e4f"
     },
     {
       "path": "src/components/dashboard/SystemCheckGuidePanel.tsx",
@@ -322,6 +322,11 @@
       "sha256": "8dc03d827db17d0d8ef831309d25d587fa56d247afc12119c9d3685388838096"
     },
     {
+      "path": "src/components/project/FinalLocalMvpSmokePanel.tsx",
+      "bytes": 9168,
+      "sha256": "cf72248ca33d1caaef3869b600d974fa0789a4310177fc7784c433fb377c2629"
+    },
+    {
       "path": "src/components/project/RealDailyUseHardeningPanel.tsx",
       "bytes": 2979,
       "sha256": "91562dc903fd5dae32690c7b846a987135637d2472c5ffeeba73a5a293e4ffe0"
@@ -330,6 +335,11 @@
       "path": "src/components/project/RealDataWeekTestPanel.tsx",
       "bytes": 9603,
       "sha256": "7be1d543aa553196303f21fcd786d4a4772e7a7819fc9a1c99f456b233fa7f5b"
+    },
+    {
+      "path": "src/components/project/RealUsageGapsPanel.tsx",
+      "bytes": 7095,
+      "sha256": "507e583d7bb09aacc9eef5edc0ff7023451f20040cded0072e8156acab6a7ccf"
     },
     {
       "path": "src/components/sleep/SleepDashboard.tsx",
@@ -713,8 +723,13 @@
     },
     {
       "path": "src/lib/project/ecosystemReadinessAudit.ts",
-      "bytes": 2830,
-      "sha256": "2edfa2fcffcad9810cac674a18e3b4de0b6a86300043b0d806243bfef9029402"
+      "bytes": 2847,
+      "sha256": "d11dc0b970e66d36141b68b7ba494a0d3ada6a9ae8cb82d56a1fbb981db03613"
+    },
+    {
+      "path": "src/lib/project/finalLocalMvpSmoke.ts",
+      "bytes": 14508,
+      "sha256": "cd9bb43347146be892045c00574c5280edfe4784633a2327812d701660255213"
     },
     {
       "path": "src/lib/project/finflowEcosystemMap.ts",
@@ -728,8 +743,8 @@
     },
     {
       "path": "src/lib/project/miniAppDeliveryPlan.ts",
-      "bytes": 12730,
-      "sha256": "bf73e897af3772f45be5d349688fbe4a4a73271d438bee75b696b36e00a84d66"
+      "bytes": 13474,
+      "sha256": "33d6f6c0ecca0c30f5e2f997622206d20f5b1f8d9a4b50c251bb96d9eeb0e76e"
     },
     {
       "path": "src/lib/project/projectSelfCheck.ts",
@@ -745,6 +760,11 @@
       "path": "src/lib/project/realDataWeekTest.ts",
       "bytes": 14526,
       "sha256": "f5a3315f5bbb3245df463541c8f6e308d3029780785a19f7b07598ea5dfeac34"
+    },
+    {
+      "path": "src/lib/project/realUsageGaps.ts",
+      "bytes": 14288,
+      "sha256": "030a7bdcd90735f9fa7916c118a51c20138dfce1c223df9f0138e1c008ebf5df"
     },
     {
       "path": "src/lib/server/assistantExternalBridgeDraft.ts",
@@ -870,6 +890,16 @@
       "path": "supabase/schema_v1_48_records_bank_review.sql",
       "bytes": 11240,
       "sha256": "196df082f47312459d018fc889259bbacac1384919ba69d4e8aced330265d9c1"
+    },
+    {
+      "path": "tests/final-local-mvp-smoke.test.mjs",
+      "bytes": 1524,
+      "sha256": "e6856db8cd7c3088ed9cb0e92c15ba4549607cec67a7e2bbd1e90fb3c9561d9f"
+    },
+    {
+      "path": "tests/real-usage-gaps.test.mjs",
+      "bytes": 1008,
+      "sha256": "5a98b6fd3e01b25278fa6f6bd7792e2f4d429aa9faea822cf7c8481ef655fcbe"
     },
     {
       "path": "tests/security-regression.test.mjs",

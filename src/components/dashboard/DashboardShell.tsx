@@ -28,6 +28,8 @@ import { N8nAutomationPanel } from '@/components/automation/N8nAutomationPanel';
 import { LocalApplyCenterPanel } from '@/components/apply/LocalApplyCenterPanel';
 import { CsvJsonImportMapperPanel } from '@/components/import-review/CsvJsonImportMapperPanel';
 import { RealDataWeekTestPanel } from '@/components/project/RealDataWeekTestPanel';
+import { RealUsageGapsPanel } from '@/components/project/RealUsageGapsPanel';
+import { FinalLocalMvpSmokePanel } from '@/components/project/FinalLocalMvpSmokePanel';
 import { createInitialDailyRecordsFromInput } from '@/lib/day-core/dailyRecordsModel';
 
 type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'sleep' | 'ai' | 'system';
@@ -51,6 +53,8 @@ type SystemSubsectionId =
   | 'data_storage'
   | 'qa_guide'
   | 'qa_week_test'
+  | 'qa_gaps'
+  | 'qa_mvp_smoke'
   | 'deploy_readiness'
   | 'deploy_acceptance'
   | 'dev_logs';
@@ -195,6 +199,8 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     subsections: [
       { id: 'qa_guide', label: 'План' },
       { id: 'qa_week_test', label: 'Неделя' },
+      { id: 'qa_gaps', label: 'Gaps' },
+      { id: 'qa_mvp_smoke', label: 'MVP' },
       { id: 'deploy_readiness', label: 'Статус' },
       { id: 'deploy_acceptance', label: 'Runner' }
     ]
@@ -221,7 +227,7 @@ const DEFAULT_SYSTEM_SUBSECTIONS: Record<SystemSectionId, SystemSubsectionId> = 
   dev: 'dev_logs'
 };
 
-const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'telegram_preflight' | 'data_backbone' | 'data_templates' | 'data_apply' | 'data_mapper' | 'data_reset' | 'data_storage' | 'cloud_staging' | 'cloud_n8n' | 'qa_week_test'>, SystemRow[]> = {
+const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'telegram_preflight' | 'data_backbone' | 'data_templates' | 'data_apply' | 'data_mapper' | 'data_reset' | 'data_storage' | 'cloud_staging' | 'cloud_n8n' | 'qa_week_test' | 'qa_gaps' | 'qa_mvp_smoke'>, SystemRow[]> = {
   telegram_launch: [
     { icon: 'telegram', title: 'Mini App URL', meta: 'BotFather → стабильный домен', tone: 'ok' },
     { icon: 'sync', title: 'Vercel', meta: 'Deploy-safe пакет', tone: 'ok' },
@@ -339,6 +345,8 @@ export function DashboardShell() {
     if (subsectionId === 'cloud_center') return <CloudSyncQueuePanel />;
     if (subsectionId === 'cloud_n8n') return <N8nAutomationPanel />;
     if (subsectionId === 'qa_week_test') return <RealDataWeekTestPanel dayInput={liveDayInput} records={systemTemplateRecords} />;
+    if (subsectionId === 'qa_gaps') return <RealUsageGapsPanel dayInput={liveDayInput} records={systemTemplateRecords} />;
+    if (subsectionId === 'qa_mvp_smoke') return <FinalLocalMvpSmokePanel dayInput={liveDayInput} records={systemTemplateRecords} />;
     if (subsectionId === 'data_storage') return <DataStoragePanel />;
     if (subsectionId === 'data_reset') return <DataResetPanel />;
     return <SystemRows rows={SYSTEM_ROWS[subsectionId]} />;

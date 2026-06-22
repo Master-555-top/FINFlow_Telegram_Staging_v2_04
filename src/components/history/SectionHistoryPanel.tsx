@@ -44,6 +44,13 @@ export function SectionHistoryPanel(props: SectionHistoryPanelProps) {
     if (!props.categories?.length) return entries;
     return entries.filter(entry => props.categories?.includes(entry.category));
   }, [entries, props.categories]);
+  const periodSummary = useMemo(() => {
+    const totalAmount = filteredEntries.reduce((sum, entry) => sum + (typeof entry.amount === 'number' ? entry.amount : 0), 0);
+    const categoryCount = new Set(filteredEntries.map(entry => entry.category)).size;
+    const sectionCount = new Set(filteredEntries.map(entry => entry.section)).size;
+    const latestDate = filteredEntries[0]?.dateIso ?? '—';
+    return { totalAmount, categoryCount, sectionCount, latestDate };
+  }, [filteredEntries]);
   const tree = useMemo(() => buildHistoryTree(filteredEntries), [filteredEntries]);
   const activeYear = tree[0] ?? null;
   const activeMonth = activeYear?.months[0] ?? null;
@@ -79,6 +86,13 @@ export function SectionHistoryPanel(props: SectionHistoryPanelProps) {
         <span>{activeMonth?.label ?? 'месяц'}</span>
         <i>→</i>
         <span>{visibleDays.length ? `${visibleDays.length} дн.` : 'дни'}</span>
+      </div>
+
+      <div className="history-summary-grid section-period-summary">
+        <div><span>Записей</span><b>{filteredEntries.length}</b></div>
+        <div><span>Сумма</span><b>{periodSummary.totalAmount ? `${periodSummary.totalAmount.toLocaleString('ru-RU')} ₽` : '—'}</b></div>
+        <div><span>Категорий</span><b>{periodSummary.categoryCount}</b></div>
+        <div><span>Последняя дата</span><b>{periodSummary.latestDate}</b></div>
       </div>
 
       <div className="section-history-days">

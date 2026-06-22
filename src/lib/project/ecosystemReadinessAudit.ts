@@ -1,6 +1,6 @@
 import { buildMiniAppDeliveryPlan } from '@/lib/project/miniAppDeliveryPlan';
 
-export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_42' as const;
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_47' as const;
 
 export type EcosystemReadinessArea = {
   id: string;
@@ -31,7 +31,7 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
   const areas: EcosystemReadinessArea[] = delivery.areas.map(area => ({
     id: area.id,
     title: area.title,
-    previousPercent: Math.max(0, area.percent - (area.id === 'global_data_backbone' ? 8 : 0)),
+    previousPercent: area.previousPercent ?? area.percent,
     percent: area.percent,
     status: area.status === 'ready'
       ? 'done'
@@ -49,18 +49,18 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
 
   return {
     version: ECOSYSTEM_READINESS_AUDIT_VERSION,
-    previousOverallProductionPercent: Math.max(0, delivery.overallStrongMiniAppPercent - 5),
+    previousOverallProductionPercent: 83,
     overallProductionPercent: delivery.overallStrongMiniAppPercent,
-    previousLocalDailyUsePercent: 72,
-    localDailyUsePercent: 76,
-    previousSafeLaunchPercent: 67,
-    safeLaunchPercent: 68,
+    previousLocalDailyUsePercent: 86,
+    localDailyUsePercent: 88,
+    previousSafeLaunchPercent: 80,
+    safeLaunchPercent: 82,
     areas,
     topRisks: [
-      `До сильного полностью рабочего mini app осталось примерно ${delivery.remainingPercent}%. Следующий риск — включить Supabase/external n8n без реального Telegram staging, auth, redaction, conflict review и backup.`,
-      'Исторические данные нельзя заливать напрямую: нужен preview, dedupe, подтверждение и rollback.',
+      `До сильного полностью рабочего mini app осталось примерно ${delivery.remainingPercent}%. Следующий риск — считать local-first слой готовым без 2–3 реальных дней проверки, Telegram staging, Daily Save QA, Codex safety sync, Telegram device preflight, Real Data Week Test, backup и conflict review.`,
+      'Исторические данные и daily apply нельзя заливать напрямую: нужен preview, dedupe, подтверждение, локальная запись и rollback.',
       'Supabase writes остаются safe-off до миграций, RLS/security review и backup.',
-      'n8n теперь имеет dry-run contract, но внешние вызовы остаются заблокированы до private staging/auth/redaction.'
+      'n8n имеет dry-run contract, но внешние вызовы остаются заблокированы до private staging/auth/redaction; v2.47 не включает external automations и cloud writes.'
     ],
     nextActions: delivery.criticalPath
   };

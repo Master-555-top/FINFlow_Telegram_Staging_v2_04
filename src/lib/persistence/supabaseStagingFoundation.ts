@@ -1,4 +1,4 @@
-export const SUPABASE_STAGING_FOUNDATION_VERSION = 'supabase_staging_foundation_v2_40' as const;
+export const SUPABASE_STAGING_FOUNDATION_VERSION = 'supabase_staging_foundation_v2_46' as const;
 
 export type SupabaseStagingGateStatus = 'pass' | 'watch' | 'blocked';
 
@@ -184,7 +184,7 @@ export function buildSupabaseStagingReadiness(input: SupabaseStagingReadinessInp
       'В Vercel/локально добавить env только server-side: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, FINFLOW_ENABLE_* flags.',
       'Запустить readiness endpoint и убедиться, что секреты не возвращаются в ответе.',
       'Сделать локальный backup, затем Telegram staging smoke test.',
-      'Проверить Cloud Sync Queue, conflict cards, RLS/cross-user isolation и revision conflict перед включением реальных writes.'
+      'Проверить Telegram/Supabase preflight, Cloud Sync Queue, conflict cards, RLS/cross-user isolation и revision conflict перед включением реальных writes.'
     ]
   };
 }

@@ -7,6 +7,7 @@ import { DailyQuickInputPanel } from '@/components/day-core/DailyQuickInputPanel
 import { LiveTimeWidget, TimeOfDayPill } from '@/components/live/LiveTimeWidget';
 import { TelegramSessionPill } from '@/components/telegram/TelegramSessionPill';
 import { TelegramDeviceTestPanel } from '@/components/deployment/TelegramDeviceTestPanel';
+import { TelegramSupabasePreflightPanel } from '@/components/deployment/TelegramSupabasePreflightPanel';
 import { SleepDashboard } from '@/components/sleep/SleepDashboard';
 import { ImportReviewQueuePanel } from '@/components/import-review/ImportReviewQueuePanel';
 import { dayCoreMock } from '@/lib/day-core/dayCoreModel';
@@ -25,6 +26,8 @@ import { SupabaseStagingPanel } from '@/components/cloud/SupabaseStagingPanel';
 import { CloudSyncQueuePanel } from '@/components/cloud/CloudSyncQueuePanel';
 import { N8nAutomationPanel } from '@/components/automation/N8nAutomationPanel';
 import { LocalApplyCenterPanel } from '@/components/apply/LocalApplyCenterPanel';
+import { CsvJsonImportMapperPanel } from '@/components/import-review/CsvJsonImportMapperPanel';
+import { RealDataWeekTestPanel } from '@/components/project/RealDataWeekTestPanel';
 import { createInitialDailyRecordsFromInput } from '@/lib/day-core/dailyRecordsModel';
 
 type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'sleep' | 'ai' | 'system';
@@ -33,7 +36,9 @@ type SystemSubsectionId =
   | 'data_backbone'
   | 'data_templates'
   | 'data_apply'
+  | 'data_mapper'
   | 'telegram_device'
+  | 'telegram_preflight'
   | 'telegram_launch'
   | 'telegram_checklist'
   | 'overview_readiness'
@@ -45,6 +50,7 @@ type SystemSubsectionId =
   | 'data_reset'
   | 'data_storage'
   | 'qa_guide'
+  | 'qa_week_test'
   | 'deploy_readiness'
   | 'deploy_acceptance'
   | 'dev_logs';
@@ -126,6 +132,7 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     primary: true,
     subsections: [
       { id: 'telegram_device', label: 'Чек' },
+      { id: 'telegram_preflight', label: 'Preflight' },
       { id: 'telegram_launch', label: 'Старт' },
       { id: 'telegram_checklist', label: 'Защита' }
     ]
@@ -151,6 +158,7 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
       { id: 'data_backbone', label: 'Backbone' },
       { id: 'data_templates', label: 'Шаблоны' },
       { id: 'data_apply', label: 'Apply' },
+      { id: 'data_mapper', label: 'CSV/JSON' },
       { id: 'data_storage', label: 'Хранилище' },
       { id: 'data_reset', label: 'Сброс' }
     ]
@@ -186,6 +194,7 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     accent: 'green',
     subsections: [
       { id: 'qa_guide', label: 'План' },
+      { id: 'qa_week_test', label: 'Неделя' },
       { id: 'deploy_readiness', label: 'Статус' },
       { id: 'deploy_acceptance', label: 'Runner' }
     ]
@@ -212,7 +221,7 @@ const DEFAULT_SYSTEM_SUBSECTIONS: Record<SystemSectionId, SystemSubsectionId> = 
   dev: 'dev_logs'
 };
 
-const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'data_backbone' | 'data_templates' | 'data_apply' | 'data_reset' | 'data_storage' | 'cloud_staging' | 'cloud_n8n'>, SystemRow[]> = {
+const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'telegram_preflight' | 'data_backbone' | 'data_templates' | 'data_apply' | 'data_mapper' | 'data_reset' | 'data_storage' | 'cloud_staging' | 'cloud_n8n' | 'qa_week_test'>, SystemRow[]> = {
   telegram_launch: [
     { icon: 'telegram', title: 'Mini App URL', meta: 'BotFather → стабильный домен', tone: 'ok' },
     { icon: 'sync', title: 'Vercel', meta: 'Deploy-safe пакет', tone: 'ok' },
@@ -320,13 +329,16 @@ export function DashboardShell() {
 
   function renderSystemSubsectionContent(subsectionId: SystemSubsectionId) {
     if (subsectionId === 'telegram_device') return <TelegramDeviceTestPanel />;
+    if (subsectionId === 'telegram_preflight') return <TelegramSupabasePreflightPanel />;
     if (subsectionId === 'overview_readiness') return <EcosystemReadinessBoard />;
     if (subsectionId === 'data_backbone') return <GlobalDataBackbonePanel />;
     if (subsectionId === 'data_templates') return <TemplatesEnginePanel dayInput={liveDayInput} records={systemTemplateRecords} customTemplates={[]} />;
     if (subsectionId === 'data_apply') return <LocalApplyCenterPanel dayInput={liveDayInput} records={systemTemplateRecords} customTemplates={[]} />;
+    if (subsectionId === 'data_mapper') return <CsvJsonImportMapperPanel />;
     if (subsectionId === 'cloud_staging') return <SupabaseStagingPanel />;
     if (subsectionId === 'cloud_center') return <CloudSyncQueuePanel />;
     if (subsectionId === 'cloud_n8n') return <N8nAutomationPanel />;
+    if (subsectionId === 'qa_week_test') return <RealDataWeekTestPanel dayInput={liveDayInput} records={systemTemplateRecords} />;
     if (subsectionId === 'data_storage') return <DataStoragePanel />;
     if (subsectionId === 'data_reset') return <DataResetPanel />;
     return <SystemRows rows={SYSTEM_ROWS[subsectionId]} />;

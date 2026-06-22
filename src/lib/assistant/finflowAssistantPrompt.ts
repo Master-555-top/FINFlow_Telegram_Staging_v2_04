@@ -74,6 +74,44 @@ export function buildExternalAssistantPayload(input: {
   };
 }
 
+const externalAssistantMetricKeys = [
+  'grossDone',
+  'grossExpected',
+  'targetNet',
+  'shiftCleanExpected',
+  'realFreeExpectedAfterDayPlan',
+  'remainingNetToTarget',
+  'driveeExpected',
+  'driveeTopupCashflow',
+  'fuelStillNeeded',
+  'allocationShortage',
+  'ordersCount',
+  'recordsGross',
+  'recordsFuel',
+  'recordsDriveeTopup',
+  'recordsExpenses'
+] as const;
+
+export function parseFinflowExternalAssistantPayload(value: unknown): FinflowExternalAssistantPayload | null {
+  if (!isObject(value) || !hasOnlyKeys(value, ['schemaVersion', 'purpose', 'language', 'privacyMode', 'localAdvice', 'metrics', 'rules'])) return null;
+  if (value.schemaVersion !== FINFLOW_ASSISTANT_PROMPT_VERSION) return null;
+  if (value.purpose !== 'daily_finflow_decision_support' || value.language !== 'ru') return null;
+  if (value.privacyMode !== 'minimized_no_raw_private_data') return null;
+  if (!isAssistantAdvice(value.localAdvice) || !isObject(value.metrics)) return null;
+  if (!hasOnlyKeys(value.metrics, [...externalAssistantMetricKeys])) return null;
+
+  for (const key of externalAssistantMetricKeys) {
+    const metric = value.metrics[key];
+    if (typeof metric !== 'number' || !Number.isFinite(metric) || Math.abs(metric) > 1_000_000_000_000) return null;
+  }
+  if (typeof value.metrics.ordersCount !== 'number' || !Number.isSafeInteger(value.metrics.ordersCount) || value.metrics.ordersCount < 0) return null;
+
+  if (!Array.isArray(value.rules) || value.rules.length > 24) return null;
+  if (!value.rules.every(rule => isSafeText(rule, 600))) return null;
+
+  return value as FinflowExternalAssistantPayload;
+}
+
 export function buildExternalAssistantSystemPrompt() {
   return [
     'Ты встроенный помощник FINFlow.',
@@ -88,4 +126,40 @@ export function buildExternalAssistantSystemPrompt() {
 
 export function buildExternalAssistantUserPrompt(payload: FinflowExternalAssistantPayload) {
   return JSON.stringify(payload, null, 2);
+}
+
+function isAssistantAdvice(value: unknown): value is FinflowAssistantAdvice {
+  if (!isObject(value) || !hasOnlyKeys(value, ['mode', 'headline', 'nextAction', 'signals', 'disclaimer'])) return false;
+  if (!['emergency', 'recovery', 'work_focus', 'allocation_focus', 'stable'].includes(String(value.mode))) return false;
+  if (!isSafeText(value.headline, 500) || !isSafeText(value.nextAction, 1_000) || !isSafeText(value.disclaimer, 1_000)) return false;
+  if (!Array.isArray(value.signals) || value.signals.length > 24) return false;
+
+  return value.signals.every(signal => {
+    if (!isObject(signal) || !hasOnlyKeys(signal, ['id', 'priority', 'title', 'message'])) return false;
+    return isSafeText(signal.id, 120)
+      && ['critical', 'high', 'normal', 'info'].includes(String(signal.priority))
+      && isSafeText(signal.title, 500)
+      && isSafeText(signal.message, 1_500);
+  });
+}
+
+function isSafeText(value: unknown, maxLength: number): value is string {
+  return typeof value === 'string' && value.length <= maxLength && !containsSecretShapedValue(value);
+}
+
+function containsSecretShapedValue(value: string) {
+  return /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/i.test(value)
+    || /\b\d{6,12}:[A-Za-z0-9_-]{30,}\b/.test(value)
+    || /\bsk-[A-Za-z0-9_-]{20,}\b/.test(value)
+    || /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/.test(value)
+    || /\b(?:TELEGRAM_BOT_TOKEN|SUPABASE_SERVICE_ROLE_KEY|OPENAI_API_KEY)\s*=\s*\S+/i.test(value);
+}
+
+function hasOnlyKeys(value: Record<string, unknown>, allowed: readonly string[]) {
+  const allowedKeys = new Set(allowed);
+  return Object.keys(value).every(key => allowedKeys.has(key));
+}
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }

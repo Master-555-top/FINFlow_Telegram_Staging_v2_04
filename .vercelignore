@@ -10,6 +10,7 @@ FILE_MANIFEST_v*.json
 
 # Raw SQL is applied manually to Supabase, not executed by the app at runtime
 supabase/
+tests/
 
 # Local-only sensitive data (must never deploy)
 private_raw_data/

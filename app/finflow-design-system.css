@@ -1,0 +1,965 @@
+/*
+ * FinFlow Unified Design System v2.42
+ * Final visual contract. Imported after legacy layers so existing behavior and
+ * component structure remain intact while presentation is normalized globally.
+ */
+
+:root {
+  color-scheme: dark;
+
+  --ff-canvas: #070910;
+  --ff-canvas-raised: #0b0e18;
+  --ff-surface: rgba(19, 23, 36, .88);
+  --ff-surface-strong: rgba(25, 30, 46, .96);
+  --ff-surface-soft: rgba(255, 255, 255, .045);
+  --ff-surface-hover: rgba(255, 255, 255, .075);
+  --ff-border: rgba(255, 255, 255, .105);
+  --ff-border-strong: rgba(255, 255, 255, .17);
+  --ff-text: #f7f8fc;
+  --ff-text-secondary: rgba(235, 238, 248, .72);
+  --ff-text-tertiary: rgba(224, 228, 240, .48);
+  --ff-accent: #7667ff;
+  --ff-accent-strong: #8a7cff;
+  --ff-accent-blue: #4d8dff;
+  --ff-accent-cyan: #4fd7f7;
+  --ff-good: #45d69a;
+  --ff-warn: #ffbd5b;
+  --ff-danger: #ff6f8d;
+  --ff-info: #63a2ff;
+  --ff-shadow-card: 0 16px 44px rgba(0, 0, 0, .24);
+  --ff-shadow-float: 0 20px 60px rgba(0, 0, 0, .42);
+  --ff-radius-card: 24px;
+  --ff-radius-inner: 17px;
+  --ff-radius-control: 14px;
+  --ff-space-page: 16px;
+
+  /* Compatibility aliases used throughout the existing UI. */
+  --bg-0: var(--ff-canvas);
+  --bg-1: var(--ff-canvas-raised);
+  --bg-2: #171b2c;
+  --glass: var(--ff-surface-soft);
+  --glass-strong: var(--ff-surface-hover);
+  --line: var(--ff-border);
+  --text: var(--ff-text);
+  --muted: var(--ff-text-secondary);
+  --soft: var(--ff-text-tertiary);
+  --violet: var(--ff-accent);
+  --violet-2: #6757ee;
+  --blue: var(--ff-accent-blue);
+  --good: var(--ff-good);
+  --warn: var(--ff-warn);
+  --danger: var(--ff-danger);
+  --radius-xl: var(--ff-radius-card);
+  --radius-lg: 20px;
+  --radius-md: var(--ff-radius-control);
+}
+
+html {
+  background: var(--ff-canvas);
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body.finflow-app {
+  min-width: 280px;
+  margin: 0;
+  overflow-x: hidden;
+  color: var(--ff-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", sans-serif;
+  font-feature-settings: "tnum" 1, "ss01" 1;
+  background:
+    radial-gradient(ellipse 70% 42% at 50% -12%, rgba(118, 103, 255, .18), transparent 70%),
+    radial-gradient(ellipse 52% 32% at 92% 18%, rgba(77, 141, 255, .075), transparent 74%),
+    linear-gradient(180deg, #080a12 0%, var(--ff-canvas) 42%, #06070c 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.finflow-app::before {
+  width: 360px;
+  height: 360px;
+  inset: -240px auto auto 50%;
+  transform: translateX(-50%);
+  opacity: .48;
+  background: rgba(118, 103, 255, .16);
+  filter: blur(80px);
+}
+
+body.finflow-app::after {
+  display: none;
+}
+
+.finflow-app ::selection {
+  color: #fff;
+  background: rgba(118, 103, 255, .52);
+}
+
+.finflow-app :where(button, input, select, textarea) {
+  font: inherit;
+}
+
+.finflow-app :where(button, [role='button'], a, input, select, textarea) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.finflow-app :where(button, [role='button']):not(:disabled) {
+  cursor: pointer;
+}
+
+.finflow-app :where(button, input, select, textarea):focus-visible,
+.finflow-app :where([role='button'], [role='tab']):focus-visible {
+  outline: 3px solid rgba(112, 157, 255, .56);
+  outline-offset: 2px;
+}
+
+.finflow-app :where(button, input, select, textarea):disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+/* App frame and top chrome */
+.finflow-app .app-shell {
+  width: min(100%, 560px);
+  min-height: var(--tg-viewport-height, 100vh);
+  margin: 0 auto;
+  padding-top: max(12px, calc(var(--finflow-safe-top, 0px) + 8px));
+  padding-right: max(var(--ff-space-page), var(--tg-content-safe-right, 0px));
+  padding-bottom: var(--finflow-bottom-nav-space, 118px) !important;
+  padding-left: max(var(--ff-space-page), var(--tg-content-safe-left, 0px));
+}
+
+.finflow-app .topbar {
+  align-items: center;
+  padding: 5px 2px 12px;
+  gap: 12px;
+}
+
+.finflow-app .logo {
+  gap: 2px;
+}
+
+.finflow-app .logo-title {
+  color: var(--ff-text);
+  font-size: clamp(25px, 7vw, 30px);
+  font-weight: 720;
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.finflow-app .logo-subtitle {
+  color: var(--ff-text-tertiary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+
+.finflow-app .topbar-pills {
+  gap: 6px;
+}
+
+.finflow-app .pill,
+.finflow-app .telegram-session-pill {
+  min-height: 36px;
+  padding: 8px 11px;
+  border: 1px solid var(--ff-border);
+  border-radius: 999px;
+  color: var(--ff-text-secondary);
+  background: rgba(18, 22, 34, .78);
+  box-shadow: none;
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+}
+
+.finflow-app .live-strip {
+  min-height: 38px;
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-control);
+  color: var(--ff-text-secondary);
+  background: rgba(255, 255, 255, .035);
+  box-shadow: none;
+}
+
+.finflow-app .daily-live-state-banner {
+  min-height: 0;
+  margin: 0 0 12px;
+  padding: 9px 11px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(69, 214, 154, .14);
+  border-radius: var(--ff-radius-control);
+  color: var(--ff-text-secondary);
+  background: rgba(69, 214, 154, .045);
+  box-shadow: none;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.finflow-app .daily-live-state-banner i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--ff-good);
+  box-shadow: 0 0 0 4px rgba(69, 214, 154, .09);
+}
+
+.finflow-app .daily-live-state-banner b {
+  color: var(--ff-good);
+  font-size: 10px;
+  letter-spacing: .02em;
+}
+
+.finflow-app .daily-live-state-banner span {
+  margin-left: auto;
+  color: var(--ff-text-tertiary);
+  font-size: 10px;
+}
+
+.finflow-app .tab-command-card {
+  margin: 2px 2px 8px;
+  padding: 9px 0 4px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.finflow-app .tab-command-card h1 {
+  margin: 0;
+  color: var(--ff-text);
+  font-size: clamp(28px, 8vw, 36px);
+  font-weight: 720;
+  line-height: 1.06;
+  letter-spacing: -.045em;
+}
+
+.finflow-app .tab-command-card p {
+  max-width: 470px;
+  margin: 7px 0 0;
+}
+
+.finflow-app .tab-command-orb {
+  display: none;
+}
+
+.finflow-app .tab-command-chips {
+  margin-top: 10px;
+  gap: 6px;
+}
+
+.finflow-app .tab-command-chips span {
+  padding: 6px 9px;
+  border: 1px solid var(--ff-border);
+  border-radius: 999px;
+  color: var(--ff-text-secondary);
+  background: rgba(255, 255, 255, .035);
+  font-size: 10px;
+  font-weight: 620;
+}
+
+/* Shared surface language */
+.finflow-app .card,
+.finflow-app .section-history-panel,
+.finflow-app .money-engine-panel,
+.finflow-app .work-engine-panel,
+.finflow-app .wake-options-card,
+.finflow-app .sleep-stats-panel,
+.finflow-app .sleep-stats-hero,
+.finflow-app .system-premium-window,
+.finflow-app .system-data-panel,
+.finflow-app .history-period-card,
+.finflow-app .history-day-group {
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-card);
+  background: var(--ff-surface);
+  box-shadow: var(--ff-shadow-card);
+  backdrop-filter: blur(22px) saturate(1.18);
+  -webkit-backdrop-filter: blur(22px) saturate(1.18);
+}
+
+.finflow-app .card {
+  padding: clamp(15px, 4vw, 19px);
+}
+
+.finflow-app .card::before {
+  width: 180px;
+  height: 180px;
+  inset: -125px -110px auto auto;
+  opacity: .5;
+  background: rgba(118, 103, 255, .12);
+  filter: blur(28px);
+}
+
+.finflow-app .card-hero,
+.finflow-app .tab-command-card {
+  border-color: rgba(132, 121, 255, .18);
+  background:
+    radial-gradient(circle at 88% 4%, rgba(118, 103, 255, .18), transparent 44%),
+    var(--ff-surface-strong);
+}
+
+.finflow-app :where(.card-heading, .card h2, .section-history-head b, .money-engine-head b) {
+  color: var(--ff-text);
+  font-weight: 680;
+  letter-spacing: -.025em;
+}
+
+.finflow-app .card-heading,
+.finflow-app .card h2 {
+  font-size: clamp(18px, 5vw, 22px);
+  line-height: 1.16;
+}
+
+.finflow-app :where(.card-description, .tab-command-card p, .section-history-head p) {
+  color: var(--ff-text-secondary);
+  font-size: 13px;
+  line-height: 1.48;
+}
+
+.finflow-app :where(
+  .section-kicker,
+  .day-cockpit-hero-copy span,
+  .day-card-title-row span,
+  .day-decision-card span,
+  .day-task-summary-card span,
+  .day-metric-tile span,
+  .day-finance-tile span,
+  .day-shift-bar span,
+  .section-history-head span,
+  .section-history-controls span,
+  .sleep-stats-hero span,
+  .sleep-week-day span
+) {
+  color: var(--ff-text-tertiary);
+  font-size: 11px;
+  font-weight: 650;
+  text-transform: none;
+  letter-spacing: .01em;
+}
+
+.finflow-app .section-kicker {
+  margin-bottom: 7px;
+  color: rgba(151, 141, 255, .9);
+}
+
+.finflow-app :where(.stats-grid, .metric-grid, .summary-grid) {
+  gap: 9px;
+}
+
+.finflow-app :where(.stat-box, .metric-box, .summary-item) {
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-inner);
+  background: var(--ff-surface-soft);
+  box-shadow: none;
+}
+
+/* Controls: native-feeling, large enough to tap, with one accent hierarchy. */
+.finflow-app :where(
+  .premium-segmented,
+  .day-cockpit-segmented,
+  .sleep-segmented,
+  .daily-filter-row,
+  .bank-filter-row,
+  .system-inner-tabs
+) {
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .045);
+  box-shadow: none;
+}
+
+.finflow-app :where(
+  .premium-segmented button,
+  .day-cockpit-segmented button,
+  .sleep-segmented button,
+  .daily-filter-row button,
+  .bank-filter-row button,
+  .system-inner-tab
+) {
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 12px;
+  color: var(--ff-text-secondary);
+  background: transparent;
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 650;
+  transition: color .18s ease, background-color .18s ease, transform .18s ease;
+}
+
+.finflow-app :where(
+  .premium-segmented button.active,
+  .day-cockpit-segmented button.active,
+  .sleep-segmented button.active,
+  .daily-filter-row button.active,
+  .bank-filter-row button.active,
+  .system-inner-tab.active
+) {
+  color: #fff;
+  background: rgba(118, 103, 255, .88);
+  box-shadow: 0 6px 18px rgba(81, 67, 219, .24);
+}
+
+.finflow-app :where(input:not([type='checkbox']):not([type='radio']), select, textarea) {
+  min-height: 44px;
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-control);
+  color: var(--ff-text);
+  background: rgba(5, 7, 12, .42);
+  box-shadow: none;
+}
+
+.finflow-app :where(input, textarea)::placeholder {
+  color: var(--ff-text-tertiary);
+}
+
+.finflow-app select option {
+  color: var(--ff-text);
+  background: #171a26;
+}
+
+.finflow-app :where(
+  .primary-button,
+  .sleep-primary-action,
+  .sleep-save-button,
+  .premium-primary-button,
+  button[data-variant='primary']
+) {
+  min-height: 46px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: var(--ff-radius-control);
+  color: #fff;
+  background: linear-gradient(135deg, var(--ff-accent-strong), #6656eb);
+  box-shadow: 0 10px 26px rgba(88, 71, 225, .25);
+  font-weight: 700;
+}
+
+.finflow-app :where(button, [role='button']):active:not(:disabled) {
+  transform: scale(.985);
+  opacity: .92;
+}
+
+/* Main tab bar: seven destinations stay available without looking like seven cards. */
+.finflow-app .bottom-nav.premium-bottom-nav {
+  left: max(10px, var(--tg-content-safe-left, 0px)) !important;
+  right: max(10px, var(--tg-content-safe-right, 0px)) !important;
+  bottom: calc(var(--finflow-safe-bottom, 0px) + 9px) !important;
+  width: min(calc(100vw - 20px), 520px) !important;
+  max-width: calc(100vw - 20px);
+  min-height: 70px;
+  margin-inline: auto;
+  padding: 6px;
+  gap: 2px;
+  grid-template-columns: repeat(7, minmax(44px, 1fr));
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, .115);
+  border-radius: 23px;
+  background: rgba(14, 17, 27, .86);
+  box-shadow: var(--ff-shadow-float), inset 0 1px 0 rgba(255, 255, 255, .04);
+  backdrop-filter: blur(28px) saturate(1.35);
+  -webkit-backdrop-filter: blur(28px) saturate(1.35);
+}
+
+.finflow-app .premium-bottom-nav .nav-btn {
+  min-width: 44px;
+  min-height: 56px;
+  padding: 6px 1px 5px;
+  gap: 3px;
+  border: 0;
+  border-radius: 16px;
+  color: var(--ff-text-tertiary);
+  background: transparent;
+  box-shadow: none;
+  transition: color .18s ease, background-color .18s ease, transform .18s ease;
+}
+
+.finflow-app .premium-bottom-nav .nav-btn svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 1.8;
+}
+
+.finflow-app .premium-bottom-nav .nav-btn span {
+  max-width: 100%;
+  overflow: hidden;
+  color: currentColor;
+  font-size: 8.5px;
+  font-weight: 630;
+  line-height: 1;
+  letter-spacing: -.015em;
+  text-overflow: ellipsis;
+}
+
+.finflow-app .premium-bottom-nav .nav-btn.active {
+  color: #fff;
+  background: rgba(118, 103, 255, .2);
+  box-shadow: none;
+}
+
+.finflow-app .premium-bottom-nav .nav-btn.active svg {
+  color: #9d93ff;
+  filter: drop-shadow(0 4px 9px rgba(118, 103, 255, .34));
+}
+
+/* Day dashboard */
+.finflow-app .day-cockpit-v220 {
+  gap: 12px;
+  overflow: visible;
+}
+
+.finflow-app .day-cockpit-v220::before,
+.finflow-app .day-cockpit-v220::after {
+  opacity: .28;
+  filter: blur(70px);
+}
+
+.finflow-app .day-cockpit-head {
+  margin: 2px 2px 0;
+  align-items: end;
+}
+
+.finflow-app .day-cockpit-head h1,
+.finflow-app .premium-screen-head h1,
+.finflow-app .sleep-head h1 {
+  margin: 0;
+  color: var(--ff-text);
+  font-size: clamp(28px, 8vw, 36px);
+  font-weight: 720;
+  line-height: 1.06;
+  letter-spacing: -.045em;
+}
+
+.finflow-app .day-cockpit-hero {
+  min-height: 176px;
+  padding: clamp(17px, 5vw, 22px);
+  border: 1px solid rgba(var(--day-tone, 118, 103, 255), .22);
+  border-radius: 27px;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(var(--day-tone, 118, 103, 255), .2), transparent 43%),
+    var(--ff-surface-strong);
+  box-shadow: var(--ff-shadow-card);
+}
+
+.finflow-app .day-cockpit-orb {
+  opacity: .32;
+  filter: blur(10px);
+}
+
+.finflow-app .day-cockpit-hero-copy h2 {
+  max-width: 310px;
+  font-size: clamp(25px, 7.5vw, 38px);
+  font-weight: 710;
+  line-height: 1.02;
+  letter-spacing: -.05em;
+}
+
+.finflow-app .day-cockpit-ring {
+  box-shadow: none;
+  filter: saturate(.92);
+}
+
+.finflow-app .day-quick-metrics,
+.finflow-app .day-money-grid {
+  gap: 9px;
+}
+
+.finflow-app :where(
+  .day-metric-tile,
+  .day-finance-tile,
+  .day-decision-card,
+  .day-fund-card,
+  .day-shift-card,
+  .day-task-summary-card,
+  .day-allocation-card,
+  .morning-bridge-card,
+  .morning-option-card
+) {
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-inner);
+  background: var(--ff-surface-soft);
+  box-shadow: none;
+}
+
+.finflow-app .day-metric-tile {
+  min-height: 94px;
+  padding: 13px;
+  border-top-color: rgba(var(--tile-tone, 118, 103, 255), .3);
+}
+
+.finflow-app :where(.day-metric-tile b, .day-finance-tile b) {
+  color: var(--ff-text);
+  font-weight: 700;
+  letter-spacing: -.035em;
+}
+
+.finflow-app .day-task-row {
+  min-height: 50px;
+  border: 1px solid var(--ff-border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .035);
+  box-shadow: none;
+}
+
+.finflow-app .day-task-row.fits {
+  border-color: rgba(69, 214, 154, .2);
+  background: rgba(69, 214, 154, .045);
+}
+
+.finflow-app .day-task-row.miss {
+  border-color: rgba(255, 111, 141, .18);
+  background: rgba(255, 111, 141, .04);
+}
+
+/* Data entry, engines, and section history */
+.finflow-app .quick-input-card,
+.finflow-app .net-card,
+.finflow-app .money-engine-panel,
+.finflow-app .work-engine-panel,
+.finflow-app .section-history-panel {
+  margin-block: 12px;
+}
+
+.finflow-app .money-engine-panel,
+.finflow-app .work-engine-panel {
+  padding: clamp(15px, 4vw, 19px);
+  border-color: rgba(118, 103, 255, .15);
+  background: var(--ff-surface);
+}
+
+.finflow-app .work-engine-panel {
+  border-color: rgba(79, 215, 247, .14);
+}
+
+.finflow-app :where(
+  .money-engine-hero > div,
+  .money-engine-hero > p,
+  .money-engine-metric,
+  .money-source,
+  .money-engine-block,
+  .money-category,
+  .money-obligation,
+  .money-signal,
+  .money-empty-line,
+  .templates-line,
+  .daily-mode-card,
+  .daily-phase-card,
+  .daily-record,
+  .bank-candidate,
+  .assistant-panel,
+  .assistant-signal,
+  .fuel-ai-advice-panel,
+  .allocation-panel,
+  .allocation-bucket,
+  .car-repair-allocation-panel,
+  .daily-decision-summary-panel,
+  .self-check-row,
+  .history-snapshot
+) {
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-inner);
+  background: var(--ff-surface-soft);
+  box-shadow: none;
+}
+
+.finflow-app .money-engine-hero b {
+  font-size: clamp(29px, 8vw, 44px);
+  font-weight: 720;
+  letter-spacing: -.055em;
+}
+
+.finflow-app .money-engine-metrics,
+.finflow-app .money-engine-sources {
+  gap: 8px;
+}
+
+.finflow-app .money-engine-block {
+  padding: 12px;
+}
+
+.finflow-app :where(.metric-green, .money-engine-green, .signal-green, .obligation-covered) {
+  border-color: rgba(69, 214, 154, .2);
+}
+
+.finflow-app :where(.metric-amber, .money-engine-amber, .signal-amber, .obligation-due_soon) {
+  border-color: rgba(255, 189, 91, .22);
+}
+
+.finflow-app :where(.metric-red, .money-engine-red, .signal-red) {
+  border-color: rgba(255, 111, 141, .21);
+}
+
+.finflow-app .section-history-panel {
+  padding: 15px;
+  gap: 11px;
+  background: var(--ff-surface);
+}
+
+.finflow-app .section-history-head em {
+  border: 1px solid var(--ff-border);
+  border-radius: 14px;
+  color: #a69dff;
+  background: rgba(118, 103, 255, .12);
+}
+
+.finflow-app .section-history-controls label,
+.finflow-app .section-history-days article,
+.finflow-app .section-history-empty,
+.finflow-app .section-history-entry,
+.finflow-app .data-timeline-row {
+  border: 1px solid var(--ff-border);
+  background: rgba(255, 255, 255, .035);
+  box-shadow: none;
+}
+
+.finflow-app .section-history-path span {
+  border: 1px solid rgba(255, 255, 255, .055);
+  color: var(--ff-text-secondary);
+  background: rgba(255, 255, 255, .04);
+}
+
+/* Sleep: same product, with a quieter night accent. */
+.finflow-app .sleep-v2181,
+.finflow-app .sleep-screen {
+  gap: 12px;
+}
+
+.finflow-app .sleep-v2181 .sleep-segmented.v2181 {
+  gap: 4px;
+  padding: 4px;
+}
+
+.finflow-app :where(
+  .sleep-live-start,
+  .sleep-live-status,
+  .sleep-wake-card,
+  .wake-options-card,
+  .sleep-history-row,
+  .sleep-preview-card,
+  .morning-planner-card,
+  .sleep-mode-panel-v231,
+  .sleep-week-chart-card,
+  .sleep-stat-card,
+  .sleep-selected-card
+) {
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-inner);
+  background: var(--ff-surface-soft);
+  box-shadow: none;
+}
+
+.finflow-app .sleep-live-start,
+.finflow-app .sleep-wake-card,
+.finflow-app .sleep-mode-panel-v231 {
+  background:
+    radial-gradient(circle at 92% 4%, rgba(var(--sleep-tone, 118, 103, 255), .14), transparent 42%),
+    var(--ff-surface-strong);
+}
+
+.finflow-app .wake-option {
+  border-color: rgba(var(--sleep-tone, 118, 103, 255), .16);
+  background: rgba(255, 255, 255, .035);
+}
+
+.finflow-app .sleep-week-bar .sleep-bar-track,
+.finflow-app .sleep-bar-track {
+  background: rgba(255, 255, 255, .07);
+}
+
+/* System: bento overview and plain, readable detail lists. */
+.finflow-app .premium-screen.system-premium-screen {
+  gap: 14px;
+}
+
+.finflow-app .premium-screen-head {
+  margin: 3px 2px 4px;
+  align-items: center;
+}
+
+.finflow-app .premium-screen-head > span {
+  padding: 7px 9px;
+  border: 1px solid var(--ff-border);
+  border-radius: 999px;
+  color: var(--ff-text-tertiary);
+  background: rgba(255, 255, 255, .035);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.finflow-app .premium-back-button {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  border: 1px solid var(--ff-border);
+  border-radius: 14px;
+  color: var(--ff-text);
+  background: var(--ff-surface-soft);
+  box-shadow: none;
+}
+
+.finflow-app .system-premium-grid {
+  gap: 10px;
+}
+
+.finflow-app .system-premium-tile {
+  min-height: 114px;
+  padding: 15px;
+  border: 1px solid var(--ff-border);
+  border-radius: 20px;
+  color: var(--ff-text);
+  background:
+    radial-gradient(circle at 88% 8%, rgba(var(--system-tone, 118, 103, 255), .12), transparent 44%),
+    var(--ff-surface);
+  box-shadow: none;
+}
+
+.finflow-app .system-premium-tile.primary {
+  border-color: rgba(118, 103, 255, .2);
+  background:
+    radial-gradient(circle at 88% 8%, rgba(118, 103, 255, .2), transparent 46%),
+    var(--ff-surface-strong);
+}
+
+.finflow-app .system-premium-tile b {
+  font-weight: 680;
+  letter-spacing: -.025em;
+}
+
+.finflow-app .system-premium-window {
+  padding: 13px;
+}
+
+.finflow-app .system-premium-row,
+.finflow-app .system-data-preview article,
+.finflow-app .premium-result-row,
+.finflow-app .verification-stage,
+.finflow-app .telegram-staging-item,
+.finflow-app .ecosystem-area,
+.finflow-app .acceptance-test {
+  min-height: 52px;
+  border: 1px solid var(--ff-border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .035);
+  box-shadow: none;
+}
+
+.finflow-app :where(.system-premium-row.ok, .premium-result-row.pass, .verification-stage.done) {
+  border-color: rgba(69, 214, 154, .18);
+  background: rgba(69, 214, 154, .035);
+}
+
+.finflow-app :where(.system-premium-row.warn, .watch) {
+  border-color: rgba(255, 189, 91, .2);
+}
+
+.finflow-app :where(.system-premium-row.danger, .danger) {
+  border-color: rgba(255, 111, 141, .2);
+}
+
+/* Empty, disabled, and informational states remain visible without dominating. */
+.finflow-app :where(.disabled, .blocked) {
+  filter: saturate(.72);
+}
+
+.finflow-app :where(.empty-state, .section-history-empty, .money-empty-line) {
+  color: var(--ff-text-secondary);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .finflow-app :where(button, [role='button']):not(:disabled):hover {
+    filter: brightness(1.08);
+  }
+
+  .finflow-app .premium-bottom-nav .nav-btn:hover,
+  .finflow-app .system-premium-tile:hover,
+  .finflow-app .day-task-row:hover {
+    background-color: var(--ff-surface-hover);
+  }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --ff-space-page: 13px;
+  }
+
+  .finflow-app .topbar-pills {
+    max-width: 58%;
+    justify-content: flex-end;
+  }
+
+  .finflow-app .pill,
+  .finflow-app .telegram-session-pill {
+    max-width: 128px;
+    overflow: hidden;
+    padding-inline: 9px;
+    font-size: 10px;
+    text-overflow: ellipsis;
+  }
+
+  .finflow-app .day-cockpit-hero {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .finflow-app .money-engine-metrics,
+  .finflow-app .money-engine-sources {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --ff-space-page: 11px;
+  }
+
+  .finflow-app .daily-live-state-banner {
+    flex-wrap: wrap;
+  }
+
+  .finflow-app .day-cockpit-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .finflow-app .day-cockpit-ring {
+    justify-self: start;
+  }
+
+  .finflow-app .bottom-nav.premium-bottom-nav {
+    grid-template-columns: repeat(7, 44px);
+    justify-content: start;
+  }
+}
+
+@media (min-width: 760px) {
+  .finflow-app .app-shell {
+    padding-top: max(22px, calc(var(--finflow-safe-top, 0px) + 12px));
+  }
+
+  .finflow-app .bottom-nav.premium-bottom-nav {
+    bottom: calc(var(--finflow-safe-bottom, 0px) + 16px) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finflow-app *,
+  .finflow-app *::before,
+  .finflow-app *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --ff-border: rgba(255, 255, 255, .24);
+    --ff-text-secondary: rgba(247, 248, 252, .86);
+    --ff-text-tertiary: rgba(247, 248, 252, .68);
+  }
+}

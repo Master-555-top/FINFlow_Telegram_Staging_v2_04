@@ -6,8 +6,10 @@ import { FINFLOW_DATA_KEYS } from '@/lib/data/finflowDataRegistry';
 import { parseHistoricalImportDraft } from '@/lib/data/historicalImportDraft';
 import { buildCanonicalWritePreview } from '@/lib/data/canonicalWriteAdapters';
 import { buildMiniAppDeliveryPlan } from '@/lib/project/miniAppDeliveryPlan';
+import { buildCsvJsonImportMapperPreview } from '@/lib/data/csvJsonImportMapper';
 
 const sampleImport = '20.06.26 такси смена 8500\n20.06.26 бензин 1800\n20.06.26 продукты 900\n19.06.26 сон уснул 04:20 встал 14:20';
+const sampleTableImport = 'date;time;section;title;category;amount\n20.06.26;08:48;work;Заказ такси;Такси;350\n20.06.26;18:20;work;Заправка;Работа / Заправка;1800';
 
 export function GlobalDataBackbonePanel() {
   const backbone = useMemo(() => buildCanonicalBackboneSummary(FINFLOW_DATA_KEYS), []);
@@ -15,14 +17,15 @@ export function GlobalDataBackbonePanel() {
   const [draftText, setDraftText] = useState(sampleImport);
   const draft = useMemo(() => parseHistoricalImportDraft(draftText), [draftText]);
   const writePreview = useMemo(() => buildCanonicalWritePreview(draft), [draft]);
+  const tablePreview = useMemo(() => buildCsvJsonImportMapperPreview(sampleTableImport), []);
   const strongEntities = FINFLOW_CANONICAL_ENTITIES.filter(item => item.requiredForStrongMiniApp);
 
   return (
     <div className="system-data-panel global-backbone-panel">
       <div className="system-data-hero">
-        <span>v2.38 • Data Backbone + Apply/Lifecycle</span>
+        <span>v2.45 • Data Backbone + daily save QA</span>
         <b>{delivery.overallStrongMiniAppPercent}% готово</b>
-        <p>До сильного полностью рабочего mini app осталось примерно {delivery.remainingPercent}%. Теперь учитываются apply/rollback шаблонов, lifecycle смены и readiness по слоям.</p>
+        <p>До сильного полностью рабочего mini app осталось примерно {delivery.remainingPercent}%. Теперь учитываются apply/rollback, lifecycle смены, CSV/JSON импорт, daily loop Деньги/Работа/Apply/История и readiness по слоям.</p>
       </div>
 
       <div className="system-data-preview compact backbone-progress-grid">
@@ -65,6 +68,20 @@ export function GlobalDataBackbonePanel() {
         ))}
       </div>
 
+
+
+      <div className="system-data-preview compact">
+        <div className="system-data-preview-head">
+          <b>CSV/JSON mapper</b>
+          <span>{tablePreview.readyAfterConfirm}/{tablePreview.totalRows} ready · {tablePreview.format}</span>
+        </div>
+        {tablePreview.rows.slice(0, 3).map(row => (
+          <article key={row.id} className={row.confidence === 'low' ? 'danger' : ''}>
+            <b>{row.dateIso ?? 'дата?'} · {row.targetSection}</b>
+            <span>{row.title} · {row.amount ?? 'сумма?'}</span>
+          </article>
+        ))}
+      </div>
 
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">

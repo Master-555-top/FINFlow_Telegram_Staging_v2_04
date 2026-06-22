@@ -34,11 +34,31 @@ export type N8nAutomationContractSnapshot = {
   mode: 'contract_only' | 'dry_run_ready' | 'blocked_by_cloud' | 'ready_for_private_n8n';
   readinessPercent: number;
   canCallExternalN8n: boolean;
+  gates: N8nAutomationSafetyGates;
   workflows: N8nWebhookContract[];
   dryRunPayloadExample: N8nDryRunPayload;
   credentialsPolicy: string[];
   safetyRules: string[];
   remainingToProduction: string[];
+};
+
+export type N8nAutomationSafetyGates = {
+  privateWebhookConfigured: boolean;
+  cloudSafe: boolean;
+  authReady: boolean;
+  redactionReady: boolean;
+  backupReady: boolean;
+  externalCallsEnabled: boolean;
+};
+
+export type N8nAutomationReadinessInput = {
+  hasPrivateN8nUrl?: boolean;
+  cloudSafe?: boolean;
+  authReady?: boolean;
+  redactionReady?: boolean;
+  backupReady?: boolean;
+  externalCallsEnabled?: boolean;
+  delivery?: MiniAppDeliveryPlan;
 };
 
 export type N8nDryRunPayload = {
@@ -228,16 +248,24 @@ export function buildN8nDryRunPayload(event: N8nAutomationWorkflowId = 'daily_ev
   };
 }
 
-export function buildN8nAutomationContractSnapshot(input?: { hasPrivateN8nUrl?: boolean; cloudSafe?: boolean; delivery?: MiniAppDeliveryPlan }): N8nAutomationContractSnapshot {
-  const hasPrivateN8nUrl = Boolean(input?.hasPrivateN8nUrl);
-  const cloudSafe = Boolean(input?.cloudSafe);
+export function buildN8nAutomationContractSnapshot(input?: N8nAutomationReadinessInput): N8nAutomationContractSnapshot {
+  const gates: N8nAutomationSafetyGates = {
+    privateWebhookConfigured: Boolean(input?.hasPrivateN8nUrl),
+    cloudSafe: Boolean(input?.cloudSafe),
+    authReady: Boolean(input?.authReady),
+    redactionReady: Boolean(input?.redactionReady),
+    backupReady: Boolean(input?.backupReady),
+    externalCallsEnabled: Boolean(input?.externalCallsEnabled)
+  };
+  const canCallExternalN8n = Object.values(gates).every(Boolean);
   const blocked = n8nWebhookContracts.filter(item => item.status === 'blocked_until_cloud').length;
   const dryRunReady = n8nWebhookContracts.filter(item => item.status === 'dry_run_ready').length;
   const contractReady = n8nWebhookContracts.filter(item => item.status === 'contract_ready').length;
-  const readinessPercent = Math.min(100, Math.round(((dryRunReady * 18) + (contractReady * 13) + (hasPrivateN8nUrl ? 15 : 0) + (cloudSafe ? 14 : 0))));
-  const mode: N8nAutomationContractSnapshot['mode'] = hasPrivateN8nUrl && cloudSafe
+  const passedGates = Object.values(gates).filter(Boolean).length;
+  const readinessPercent = Math.min(100, Math.round((dryRunReady * 15) + (contractReady * 10) + (passedGates / Object.keys(gates).length) * 50));
+  const mode: N8nAutomationContractSnapshot['mode'] = canCallExternalN8n
     ? 'ready_for_private_n8n'
-    : blocked > 0 && !cloudSafe
+    : blocked > 0 && !gates.cloudSafe
       ? 'blocked_by_cloud'
       : dryRunReady > 0
         ? 'dry_run_ready'
@@ -248,7 +276,8 @@ export function buildN8nAutomationContractSnapshot(input?: { hasPrivateN8nUrl?: 
     generatedAt: new Date().toISOString(),
     mode,
     readinessPercent,
-    canCallExternalN8n: hasPrivateN8nUrl && cloudSafe,
+    canCallExternalN8n,
+    gates,
     workflows: n8nWebhookContracts,
     dryRunPayloadExample: buildN8nDryRunPayload(),
     credentialsPolicy: [

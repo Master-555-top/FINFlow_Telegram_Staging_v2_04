@@ -268,3 +268,226 @@ function hashString(value: string): number {
   }
   return hash;
 }
+
+export type DailyHistoryPeriodId = 'day' | 'week' | 'month' | 'year' | 'all';
+
+export type DailyHistoryPeriodSummary = {
+  period: DailyHistoryPeriodId;
+  label: string;
+  anchorDate: string;
+  savedDays: number;
+  totalGross: number;
+  totalClean: number;
+  totalFree: number;
+  totalOrders: number;
+  averageClean: number;
+  targetNet: number;
+  targetHitDays: number;
+  targetHitRate: number;
+  bestDay: DailyHistorySnapshot | null;
+  worstDay: DailyHistorySnapshot | null;
+  snapshots: DailyHistorySnapshot[];
+};
+
+export type DailySaveQaStatus = 'ready' | 'review' | 'blocked';
+
+export type DailySaveQaCheck = {
+  id: string;
+  title: string;
+  status: 'done' | 'warning' | 'blocked';
+  detail: string;
+};
+
+export type DailySaveQaSnapshot = {
+  version: 'daily_save_qa_v2_45';
+  status: DailySaveQaStatus;
+  percent: number;
+  headline: string;
+  nextAction: string;
+  duplicateSameDateSnapshots: number;
+  currentDayAlreadySaved: boolean;
+  checks: DailySaveQaCheck[];
+};
+
+export function buildDailyHistoryPeriodSummary(
+  state: DailyHistoryState,
+  period: DailyHistoryPeriodId,
+  anchorDate: string,
+  targetNet: number = 8500
+): DailyHistoryPeriodSummary {
+  const snapshots = filterSnapshotsByPeriod(state.snapshots, period, anchorDate)
+    .sort((a, b) => a.localDate.localeCompare(b.localDate) || a.savedAt.localeCompare(b.savedAt));
+  const totalGross = snapshots.reduce((sum, snapshot) => sum + snapshot.summary.grossDone, 0);
+  const totalClean = snapshots.reduce((sum, snapshot) => sum + snapshot.summary.shiftClean, 0);
+  const totalFree = snapshots.reduce((sum, snapshot) => sum + snapshot.summary.freeAfterPlan, 0);
+  const totalOrders = snapshots.reduce((sum, snapshot) => sum + snapshot.summary.ordersDone, 0);
+  const bestDay = snapshots.reduce<DailyHistorySnapshot | null>((best, snapshot) => !best || snapshot.summary.shiftClean > best.summary.shiftClean ? snapshot : best, null);
+  const worstDay = snapshots.reduce<DailyHistorySnapshot | null>((worst, snapshot) => !worst || snapshot.summary.shiftClean < worst.summary.shiftClean ? snapshot : worst, null);
+  const targetHitDays = snapshots.filter(snapshot => snapshot.summary.shiftClean >= targetNet).length;
+
+  return {
+    period,
+    label: buildPeriodLabel(period, anchorDate),
+    anchorDate,
+    savedDays: snapshots.length,
+    totalGross,
+    totalClean,
+    totalFree,
+    totalOrders,
+    averageClean: snapshots.length > 0 ? Math.round(totalClean / snapshots.length) : 0,
+    targetNet,
+    targetHitDays,
+    targetHitRate: snapshots.length > 0 ? Math.round((targetHitDays / snapshots.length) * 100) : 0,
+    bestDay,
+    worstDay,
+    snapshots
+  };
+}
+
+export function buildDailySaveQaSnapshot(input: {
+  dayInput: DayCoreInputModel;
+  net: NetCalculationResult;
+  recordsCount: number;
+  ordersCount: number;
+  workCosts: number;
+  personalExpenses: number;
+  historyState: DailyHistoryState;
+}): DailySaveQaSnapshot {
+  const sameDateSnapshots = input.historyState.snapshots.filter(snapshot => snapshot.localDate === input.dayInput.localDate);
+  const currentDayAlreadySaved = sameDateSnapshots.length > 0;
+  const hasRealRecords = input.recordsCount > 0;
+  const hasWorkProgress = input.ordersCount > 0 || input.net.grossDone > 0;
+  const hasWorkCosts = input.workCosts > 0 || input.dayInput.taxi.fuelAlreadyPaid > 0;
+  const hasMoneyBaseline = input.dayInput.money.cash + input.dayInput.money.card + input.dayInput.money.driveeBalance > 0;
+  const reviewNotes = input.dayInput.reviewNotes.length;
+
+  const checks: DailySaveQaCheck[] = [
+    {
+      id: 'records-source',
+      title: 'Есть источник записей',
+      status: hasRealRecords ? 'done' : 'blocked',
+      detail: hasRealRecords ? `${input.recordsCount} записей готовы к снимку дня.` : 'Нет записей дня: snapshot будет почти пустым.'
+    },
+    {
+      id: 'work-progress',
+      title: 'Работа/заказы попали в день',
+      status: hasWorkProgress ? 'done' : 'warning',
+      detail: hasWorkProgress ? `${input.ordersCount} заказов / ${input.net.grossDone.toLocaleString('ru-RU')} ₽ грязными.` : 'Заказы или оборот пока не внесены.'
+    },
+    {
+      id: 'work-costs',
+      title: 'Рабочие издержки отделены',
+      status: hasWorkCosts ? 'done' : hasWorkProgress ? 'warning' : 'blocked',
+      detail: hasWorkCosts ? `Бензин/Drivee учтены: ${input.workCosts.toLocaleString('ru-RU')} ₽.` : 'Без бензина/Drivee чистые могут быть завышены.'
+    },
+    {
+      id: 'money-baseline',
+      title: 'Деньги сейчас введены',
+      status: hasMoneyBaseline ? 'done' : 'warning',
+      detail: hasMoneyBaseline ? 'Наличные/карта/Drivee дают базу для свободных денег.' : 'Нет текущего баланса: свободные деньги условные.'
+    },
+    {
+      id: 'personal-expenses',
+      title: 'Личные расходы проверены',
+      status: input.personalExpenses > 0 ? 'done' : 'warning',
+      detail: input.personalExpenses > 0 ? `Личные расходы: ${input.personalExpenses.toLocaleString('ru-RU')} ₽.` : 'Еда/встречи/прочее не внесены или их не было.'
+    },
+    {
+      id: 'duplicate-save',
+      title: 'Нет случайного дубля дня',
+      status: currentDayAlreadySaved ? 'warning' : 'done',
+      detail: currentDayAlreadySaved ? `На эту дату уже есть ${sameDateSnapshots.length} снимок/снимка. Перед сохранением проверь, нужен ли новый.` : 'На эту дату ещё нет сохранённого снимка.'
+    },
+    {
+      id: 'review-notes',
+      title: 'Review notes понятны',
+      status: reviewNotes > 8 ? 'warning' : 'done',
+      detail: reviewNotes > 8 ? `Много заметок review: ${reviewNotes}. Перед backup лучше проверить.` : 'Review notes не выглядят перегруженными.'
+    }
+  ];
+
+  const score = checks.reduce((sum, check) => {
+    if (check.status === 'done') return sum + 1;
+    if (check.status === 'warning') return sum + 0.5;
+    return sum;
+  }, 0);
+  const percent = Math.round((score / checks.length) * 100);
+  const blockedCount = checks.filter(check => check.status === 'blocked').length;
+  const status: DailySaveQaStatus = blockedCount > 0 ? 'blocked' : percent >= 78 ? 'ready' : 'review';
+
+  return {
+    version: 'daily_save_qa_v2_45',
+    status,
+    percent,
+    headline: status === 'ready'
+      ? `День можно сохранять · ${percent}%`
+      : status === 'blocked'
+        ? `Сохранение рискованно · ${percent}%`
+        : `Нужна проверка перед snapshot · ${percent}%`,
+    nextAction: buildDailySaveNextAction(status, checks),
+    duplicateSameDateSnapshots: sameDateSnapshots.length,
+    currentDayAlreadySaved,
+    checks
+  };
+}
+
+function buildDailySaveNextAction(status: DailySaveQaStatus, checks: DailySaveQaCheck[]) {
+  const firstBlocked = checks.find(check => check.status === 'blocked');
+  const firstWarning = checks.find(check => check.status === 'warning');
+  if (firstBlocked) return `Сначала исправь: ${firstBlocked.title}.`;
+  if (status === 'ready') return 'Можно сохранить snapshot дня, затем сделать backup перед cloud/Supabase.';
+  if (firstWarning) return `Проверь перед сохранением: ${firstWarning.title}.`;
+  return 'Проверь записи и сохрани день.';
+}
+
+function filterSnapshotsByPeriod(snapshots: DailyHistorySnapshot[], period: DailyHistoryPeriodId, anchorDate: string) {
+  if (period === 'all') return snapshots;
+  const anchor = parseLocalDate(anchorDate);
+  if (!anchor) return snapshots;
+  return snapshots.filter(snapshot => {
+    const date = parseLocalDate(snapshot.localDate);
+    if (!date) return false;
+    if (period === 'day') return snapshot.localDate === anchorDate;
+    if (period === 'week') {
+      const [start, end] = getWeekRange(anchor);
+      return date >= start && date <= end;
+    }
+    if (period === 'month') return date.getFullYear() === anchor.getFullYear() && date.getMonth() === anchor.getMonth();
+    if (period === 'year') return date.getFullYear() === anchor.getFullYear();
+    return true;
+  });
+}
+
+function buildPeriodLabel(period: DailyHistoryPeriodId, anchorDate: string) {
+  const anchor = parseLocalDate(anchorDate);
+  if (!anchor || period === 'all') return 'Вся история';
+  if (period === 'day') return formatRuDate(anchor);
+  if (period === 'week') {
+    const [start, end] = getWeekRange(anchor);
+    return `${formatRuDate(start)} — ${formatRuDate(end)}`;
+  }
+  if (period === 'month') return anchor.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+  return String(anchor.getFullYear());
+}
+
+function getWeekRange(date: Date): [Date, Date] {
+  const start = new Date(date);
+  const day = start.getDay();
+  const mondayOffset = day === 0 ? -6 : 1 - day;
+  start.setDate(start.getDate() + mondayOffset);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  end.setHours(23, 59, 59, 999);
+  return [start, end];
+}
+
+function parseLocalDate(value: string) {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return null;
+  return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+}
+
+function formatRuDate(date: Date) {
+  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+}

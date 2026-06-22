@@ -1,4 +1,4 @@
-export const TELEGRAM_DEVICE_TEST_VERSION = 'telegram_device_test_v2_29' as const;
+export const TELEGRAM_DEVICE_TEST_VERSION = 'telegram_device_test_v2_46' as const;
 
 export type TelegramDeviceTestCheckStatus = 'ready' | 'manual_required' | 'test_required' | 'blocked' | 'passed' | 'failed' | 'expected_safe_fail';
 
@@ -12,7 +12,7 @@ export type TelegramDeviceTestCheck = {
 
 export type TelegramDeviceTestRunbook = {
   version: typeof TELEGRAM_DEVICE_TEST_VERSION;
-  packageVersion: 'v2.29';
+  packageVersion: 'v2.46';
   readinessBefore: number;
   readinessAfter: number;
   goal: string;
@@ -27,10 +27,10 @@ export type TelegramDeviceTestRunbook = {
 export function buildTelegramDeviceTestRunbook(): TelegramDeviceTestRunbook {
   return {
     version: TELEGRAM_DEVICE_TEST_VERSION,
-    packageVersion: 'v2.29',
-    readinessBefore: 92,
-    readinessAfter: 94,
-    goal: 'Провести первый реальный Telegram Mini App device-test сценарий: initData, viewport, readiness API и cloud dry-run без опасных записей в Supabase.',
+    packageVersion: 'v2.46',
+    readinessBefore: 74,
+    readinessAfter: 80,
+    goal: 'Провести v2.46 Telegram Mini App device-test: initData, viewport/safe-area, readiness API, Daily Save QA, Period History и Supabase readonly preflight без опасных writes.',
     safeModeRules: [
       'Сначала открывать FINFlow через реальный Telegram Mini App button, а не обычный браузер.',
       'Cloud write не включать до local backup и ручного checklist: FINFLOW_ENABLE_SUPABASE_WRITES=false для первого dry-run.',
@@ -97,7 +97,7 @@ export function buildTelegramDeviceTestRunbook(): TelegramDeviceTestRunbook {
         title: 'Cloud write пока не выполняется',
         status: 'blocked',
         detail: 'PUT/save откладывается до backup, RLS/security review и guarded conflict wizard.',
-        successCriteria: 'v2.04 panel не запускает PUT /api/sync/day.'
+        successCriteria: 'v2.46 preflight panel не запускает PUT /api/sync/day.'
       }
     ],
     rollbackPlan: [
@@ -106,6 +106,6 @@ export function buildTelegramDeviceTestRunbook(): TelegramDeviceTestRunbook {
       'Если viewport ломается — продолжить локально из browser mode и чинить CSS без затрагивания cloud/backend.',
       'Если cloud readiness показывает неожиданный writes=true — отключить FINFLOW_ENABLE_SUPABASE_WRITES до ручной проверки.'
     ],
-    nextStepAfterDeviceTest: 'v2.14 — System color/spacing calibration, then Day cockpit'
+    nextStepAfterDeviceTest: 'v2.47 — Real data week test + Supabase readonly staging verification'
   };
 }

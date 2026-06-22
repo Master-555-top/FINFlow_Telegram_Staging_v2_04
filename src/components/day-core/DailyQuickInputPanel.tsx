@@ -36,9 +36,12 @@ import {
 import {
   analyzeDailyHistory,
   buildDailyHistoryComparison,
+  buildDailyHistoryPeriodSummary,
+  buildDailySaveQaSnapshot,
   getDailyHistorySnapshotById,
   getDailyHistoryStorageLabel,
-  summarizeDailyHistory
+  summarizeDailyHistory,
+  type DailyHistoryPeriodId
 } from '@/lib/day-core/dailyHistoryModel';
 import {
   BANK_CANDIDATE_CATEGORY_COUNTS,
@@ -84,6 +87,7 @@ import { useDailyQuickInputHistoryActions } from '@/components/day-core/useDaily
 import { MoneyEnginePanel } from '@/components/money/MoneyEnginePanel';
 import { WorkTaxiEnginePanel } from '@/components/work/WorkTaxiEnginePanel';
 import { TemplatesEnginePanel } from '@/components/templates/TemplatesEnginePanel';
+import { RealDailyUseHardeningPanel } from '@/components/project/RealDailyUseHardeningPanel';
 
 export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCoreInputModel) => void; view?: DailyQuickInputView }) {
   const view = props.view ?? 'daily';
@@ -91,6 +95,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
   const [customExpense, setCustomExpense] = useState('');
   const [customExpenseTitle, setCustomExpenseTitle] = useState('Прочее');
   const [selectedSnapshotId, setSelectedSnapshotId] = useState<string>('');
+  const [historyPeriod, setHistoryPeriod] = useState<DailyHistoryPeriodId>('week');
   const [recordTitle, setRecordTitle] = useState('');
   const [recordAmount, setRecordAmount] = useState('');
   const [recordType, setRecordType] = useState<DailyRecordType>('taxi_order');
@@ -169,6 +174,22 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
   const carRepairAllocation = useMemo(() => buildCarRepairAllocationAdvisor({ day: dayInput, allocation, net }), [dayInput, allocation, net]);
   const carRepairAllocationChatContext = useMemo(() => buildCarRepairAllocationChatContext({ repair: carRepairAllocation }), [carRepairAllocation]);
   const recordsSummary = useMemo(() => summarizeDailyRecords(records), [records]);
+  const historyPeriodSummary = useMemo(
+    () => buildDailyHistoryPeriodSummary(historyState, historyPeriod, dayInput.localDate, net.targetNet),
+    [historyState, historyPeriod, dayInput.localDate, net.targetNet]
+  );
+  const dailySaveQa = useMemo(
+    () => buildDailySaveQaSnapshot({
+      dayInput,
+      net,
+      recordsCount: records.filter(record => record.enabled).length,
+      ordersCount: recordsSummary.ordersCount,
+      workCosts: recordsSummary.fuelPaid + recordsSummary.driveeTopupPaid,
+      personalExpenses: recordsSummary.expensesTotal,
+      historyState
+    }),
+    [dayInput, net, records, recordsSummary, historyState]
+  );
   const assistantHour = hydrated
     ? new Date().getHours()
     : Number(dayCoreInputMock.localTime.slice(0, 2));
@@ -367,6 +388,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
           Ежедневный режим теперь показывает только то, что нужно для сегодняшнего дня. Cloud, backup, deployment и dev-панели вынесены в “Система”.
         </p>
         <LiveStateStatus syncedAt={dailyLiveSyncedAt} />
+        <RealDailyUseHardeningPanel dayInput={dayInput} records={records} />
 
         <div className="active-day-session-card">
           <div>
@@ -510,6 +532,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
         <LiveStateStatus syncedAt={dailyLiveSyncedAt} />
 
         <WorkTaxiEnginePanel dayInput={dayInput} records={records} />
+        <RealDailyUseHardeningPanel dayInput={dayInput} records={records} compact />
         <TemplatesEnginePanel dayInput={dayInput} records={records} customTemplates={customTemplates} compact />
 
         <div className="quick-net-summary">
@@ -591,6 +614,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
         <p className="card-description">Деньги, записи, шаблоны и bank-review без deployment/dev шума.</p>
 
         <MoneyEnginePanel dayInput={dayInput} records={records} />
+        <RealDailyUseHardeningPanel dayInput={dayInput} records={records} compact />
         <TemplatesEnginePanel dayInput={dayInput} records={records} customTemplates={customTemplates} compact />
 
         <div className="quick-current-grid compact">
@@ -1583,9 +1607,54 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
           <span>{getDailyHistoryStorageLabel(historyState)}</span>
           <span>сохранено дней: <b>{historySummary.daysSaved}</b></span>
         </div>
+
+        <div className={`daily-save-qa-panel ${dailySaveQa.status}`}>
+          <div className="history-status-row">
+            <span>v2.45 • Daily Save QA</span>
+            <b>{dailySaveQa.headline}</b>
+          </div>
+          <p className="quick-note">{dailySaveQa.nextAction}</p>
+          <div className="history-summary-grid">
+            <div><span>Готовность</span><b>{dailySaveQa.percent}%</b></div>
+            <div><span>Дублей даты</span><b>{dailySaveQa.duplicateSameDateSnapshots}</b></div>
+            <div><span>Snapshot</span><b>{dailySaveQa.currentDayAlreadySaved ? 'уже есть' : 'новый'}</b></div>
+          </div>
+          <div className="daily-save-checks">
+            {dailySaveQa.checks.slice(0, 5).map(check => (
+              <div className={`daily-save-check ${check.status}`} key={check.id}>
+                <b>{check.status === 'done' ? '✓' : check.status === 'warning' ? '△' : '!'} {check.title}</b>
+                <span>{check.detail}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="period-history-panel">
+          <div className="history-status-row">
+            <span>История по периодам</span>
+            <b>{historyPeriodSummary.label}</b>
+          </div>
+          <div className="record-filter-row">
+            {(['week', 'month', 'year', 'all'] as DailyHistoryPeriodId[]).map(periodId => (
+              <button className={historyPeriod === periodId ? 'active' : ''} key={periodId} type="button" onClick={() => setHistoryPeriod(periodId)}>
+                {periodId === 'week' ? 'Неделя' : periodId === 'month' ? 'Месяц' : periodId === 'year' ? 'Год' : 'Всё'}
+              </button>
+            ))}
+          </div>
+          <div className="history-summary-grid">
+            <div><span>Дней</span><b>{historyPeriodSummary.savedDays}</b></div>
+            <div><span>Грязными</span><b>{formatRub(historyPeriodSummary.totalGross)}</b></div>
+            <div><span>Чистыми</span><b>{formatRub(historyPeriodSummary.totalClean)}</b></div>
+            <div><span>Среднее чистыми</span><b>{formatRub(historyPeriodSummary.averageClean)}</b></div>
+            <div><span>Заказов</span><b>{historyPeriodSummary.totalOrders}</b></div>
+            <div><span>Цель дней</span><b>{historyPeriodSummary.targetHitRate}%</b></div>
+          </div>
+          <p className="quick-note">Периоды строятся из сохранённых snapshots дня. Это не отдельная глобальная История, а локальная история раздела День.</p>
+        </div>
+
         <div className="history-summary-grid">
-          <div><span>Грязными</span><b>{formatRub(historySummary.totalGross)}</b></div>
-          <div><span>Чистыми</span><b>{formatRub(historySummary.totalClean)}</b></div>
+          <div><span>Грязными всего</span><b>{formatRub(historySummary.totalGross)}</b></div>
+          <div><span>Чистыми всего</span><b>{formatRub(historySummary.totalClean)}</b></div>
           <div><span>Среднее чистыми</span><b>{formatRub(historySummary.averageClean)}</b></div>
         </div>
 

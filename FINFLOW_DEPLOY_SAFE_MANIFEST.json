@@ -1,0 +1,902 @@
+{
+  "package": "FINFlow_v3_TELEGRAM_STAGING_DEPLOY_SAFE_v2_47.zip",
+  "appVersion": "0.2.47",
+  "version": "v2_47",
+  "createdAt": "2026-06-22T08:18:39.361Z",
+  "createdBy": "FINFlow audited deploy-safe packaging script",
+  "purpose": "Telegram Mini App private staging deploy-safe package",
+  "sourceRoot": "finflow_app",
+  "includedPaths": [
+    "app",
+    "src",
+    "scripts",
+    "tests",
+    "package.json",
+    "package-lock.json",
+    ".npmrc",
+    "tsconfig.json",
+    "next-env.d.ts",
+    "next.config.js",
+    "vercel.json",
+    ".env.example",
+    ".gitignore",
+    ".vercelignore",
+    ".dockerignore",
+    "supabase",
+    "README_TELEGRAM_STAGING_v2.47.md"
+  ],
+  "forbiddenPathFragments": [
+    "private_vault",
+    "private_raw_data",
+    "master_private_docs",
+    "docs",
+    "node_modules",
+    ".next",
+    ".npm-cache",
+    "exports",
+    ".env.local",
+    ".env.production",
+    ".env.development",
+    "tsconfig.tsbuildinfo"
+  ],
+  "fileCount": 169,
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 601,
+      "sha256": "7911c82f085a0d52c55e550ac478095a85d30159f2a5e1339afd2defe141e56d"
+    },
+    {
+      "path": ".env.example",
+      "bytes": 893,
+      "sha256": "cefb1823a98f8485871942730e7ddcfe543e06756244efeb871c07449f665a5a"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 447,
+      "sha256": "cbec221173635f09ca00a1f8c0ea0f10783e1003f2017c2d4c1aa79dc73c816a"
+    },
+    {
+      "path": ".npmrc",
+      "bytes": 67,
+      "sha256": "619be67960100308f10d2446a63a7bbc99edd1d80c4894834888134cc26f17f1"
+    },
+    {
+      "path": ".vercelignore",
+      "bytes": 550,
+      "sha256": "9a0f51be252a834c243837362c44ae169c56fc7fda443d6582de96d0d1926800"
+    },
+    {
+      "path": "README_TELEGRAM_STAGING_v2.47.md",
+      "bytes": 1108,
+      "sha256": "368de359b7b54f9ef1e6d3543e21ca10b18745001caea390f4e9709710446b8b"
+    },
+    {
+      "path": "app/api/assistant/dry-run/route.ts",
+      "bytes": 1557,
+      "sha256": "9093446c85cfdffb5b745aaba3cc92e6080f1ccc69ef2f32ed4fa44aab18f6ab"
+    },
+    {
+      "path": "app/api/automation/n8n/dry-run/route.ts",
+      "bytes": 1972,
+      "sha256": "bc72854d3b0293abd4c2a0eee6688208d377987c8e796487075123cd2cf06cf6"
+    },
+    {
+      "path": "app/api/deployment/readiness/route.ts",
+      "bytes": 348,
+      "sha256": "0650cfc291a4113b190f7c9b51862380362a9b74e3e41cdc6ea9d4ee332800d9"
+    },
+    {
+      "path": "app/api/supabase/readiness/route.ts",
+      "bytes": 1652,
+      "sha256": "de2e11a049c8a0813afe57c7247523599ee645566193b2bfb68e2de546f18c70"
+    },
+    {
+      "path": "app/api/sync/day/route.ts",
+      "bytes": 4389,
+      "sha256": "e3827fd92f5c7eee7bd5fae86a20a92f8ecf48ffeb4a0d35595b1a9cf2b30213"
+    },
+    {
+      "path": "app/api/telegram/verify/route.ts",
+      "bytes": 2298,
+      "sha256": "47ceb7a6cad3f9e03b43636cde7e60b7d1ec5fd1b6e65a15c6d7c31e32041be3"
+    },
+    {
+      "path": "app/finflow-design-system.css",
+      "bytes": 23369,
+      "sha256": "fadf78dbe460f55f4c88fbc9900845cef82c462ed6a33a7c2c70f70148f76ed5"
+    },
+    {
+      "path": "app/finflow-ui-overrides.css",
+      "bytes": 49880,
+      "sha256": "340fb3f2041118f79519068a31d53ca402ea858d65e53d5d744ed523bc468cdd"
+    },
+    {
+      "path": "app/globals.css",
+      "bytes": 174136,
+      "sha256": "3d7e4062b83412765a74f7be99630355cc238562eff189e8b5ccaaeea3a06898"
+    },
+    {
+      "path": "app/layout.tsx",
+      "bytes": 1025,
+      "sha256": "874bf2a6b2d32370beb6880147d17ff7e789f1dfec05c919602aa1f740199592"
+    },
+    {
+      "path": "app/page.tsx",
+      "bytes": 652,
+      "sha256": "a11864b4ca004204ad771c639111fd7587fc811944bfc813dffd62c5493b8dfa"
+    },
+    {
+      "path": "next-env.d.ts",
+      "bytes": 247,
+      "sha256": "7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651"
+    },
+    {
+      "path": "next.config.js",
+      "bytes": 658,
+      "sha256": "a99e1891d8201e29e6f967c407efa93465efd3863c7a25224a9fb243bb7dff16"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 35859,
+      "sha256": "47e905ed40d56223c37cb44833fc66717502d4d0ede1e86d43cc02bcc836da3c"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1008,
+      "sha256": "d7a503ca1dbbf6681426e5ae40efc9ace98ef57c8784fc3b57e634a908ca7cdc"
+    },
+    {
+      "path": "scripts/build-next.mjs",
+      "bytes": 816,
+      "sha256": "75383d52f70f560acb65e7cd9c33013c6605c86b50c306bf06318c2360741698"
+    },
+    {
+      "path": "scripts/create-telegram-staging-package.mjs",
+      "bytes": 6969,
+      "sha256": "c9596fbe2b06ea38a9ff0f25600963167cc3393b3b2409603212010dc352a330"
+    },
+    {
+      "path": "src/components/apply/LocalApplyCenterPanel.tsx",
+      "bytes": 11721,
+      "sha256": "10ff77c340baa5183e83016858d1c2ec6c2b5b3af9dfbcc7ebe9c0733b1f7bba"
+    },
+    {
+      "path": "src/components/automation/N8nAutomationPanel.tsx",
+      "bytes": 6105,
+      "sha256": "60e31e29ac51dc4cad7d6aea65c8452d1104c5e72754cd57eb47963047db8226"
+    },
+    {
+      "path": "src/components/backup/LocalBackupRestorePanel.tsx",
+      "bytes": 9374,
+      "sha256": "14e06829efbd600406a17664dfd9add5106419efa346c01896b5fe34eae7ec31"
+    },
+    {
+      "path": "src/components/cloud/CloudDaySyncPanel.tsx",
+      "bytes": 18065,
+      "sha256": "1dc5f6e304d5b5982f95c8244c7e59a65cd38f3386653df5e903357653e79fcc"
+    },
+    {
+      "path": "src/components/cloud/CloudSyncQueuePanel.tsx",
+      "bytes": 7355,
+      "sha256": "1177b776548bef9878c679068e10e85bb9e5891ed61cbe64df4167a5d7757fa9"
+    },
+    {
+      "path": "src/components/cloud/SupabaseStagingPanel.tsx",
+      "bytes": 5028,
+      "sha256": "38fc2eac3245478111091d2e34cc6a4c64142eb02fe7680d52f7fbf2721fca76"
+    },
+    {
+      "path": "src/components/dashboard/DashboardShell.tsx",
+      "bytes": 21352,
+      "sha256": "5f8c02d6598fcdb0f031a421f39d16d79fd84244f577addd7fb90195fd0da19f"
+    },
+    {
+      "path": "src/components/dashboard/SystemCheckGuidePanel.tsx",
+      "bytes": 1675,
+      "sha256": "f5d0ea724988220100a899360422f2f116ab9b222a65ff829811354d4422406f"
+    },
+    {
+      "path": "src/components/day-core/DailyQuickInputConfig.ts",
+      "bytes": 1155,
+      "sha256": "4865fd3a5a5d4cdeca58fea76c316bcbdada6c21a92b256eadda804bfbb2b2d7"
+    },
+    {
+      "path": "src/components/day-core/DailyQuickInputPanel.tsx",
+      "bytes": 102131,
+      "sha256": "1b07574a5ffb6a07e841c16ce7e0bc7a868fc94b20ba49ef04644d435c63ba9f"
+    },
+    {
+      "path": "src/components/day-core/DailyQuickInputShared.tsx",
+      "bytes": 3053,
+      "sha256": "9f4df7c232cb29655d6b2c472d5981f57a7ba40100f0f2afc22cf3e9ab0a6579"
+    },
+    {
+      "path": "src/components/day-core/DayCoreDashboard.tsx",
+      "bytes": 17572,
+      "sha256": "a95452118c9fc71101cb39a60fe743f01e484d67354c9b515ae2656b80c5854d"
+    },
+    {
+      "path": "src/components/day-core/NetCalculationPanel.tsx",
+      "bytes": 4603,
+      "sha256": "b1fec8233420d74106ef8c3aaab09c030d7650cb5a678db63f5d332161e29051"
+    },
+    {
+      "path": "src/components/day-core/useDailyQuickInputDayActions.ts",
+      "bytes": 7600,
+      "sha256": "95bbb023a522641d4d9a37ebf462d453e5f4b93061134e4db9b6db304db055d3"
+    },
+    {
+      "path": "src/components/day-core/useDailyQuickInputHistoryActions.ts",
+      "bytes": 8637,
+      "sha256": "d5379876ca86d0b85b411704c50a5483770de29dc6573dc78f5d25a9d3fb16c4"
+    },
+    {
+      "path": "src/components/day-core/useDailyQuickInputLiveState.ts",
+      "bytes": 8714,
+      "sha256": "60a3289b28c9e124b4d4a65c4ce9d13af68871d0d5064d9048181044fe7b5755"
+    },
+    {
+      "path": "src/components/day-core/useDailyQuickInputRecordActions.ts",
+      "bytes": 5314,
+      "sha256": "7b8345c1c4052f781775af5bf16a2b6665f8d7b70730541f5cec8a9e0bb536e5"
+    },
+    {
+      "path": "src/components/deployment/DeploymentAcceptanceTestRunnerPanel.tsx",
+      "bytes": 9242,
+      "sha256": "c5e18e56b682778229431e1e3dd9988bf01fc64ff3afb53112e30bea7bfe9615"
+    },
+    {
+      "path": "src/components/deployment/ManualCloudTestWizardPanel.tsx",
+      "bytes": 7665,
+      "sha256": "0907291b3b2646b8a4e7991f4baf3479e16e4ac0cb0e5952f68a5542d426bdc9"
+    },
+    {
+      "path": "src/components/deployment/PrivateDeploymentPanel.tsx",
+      "bytes": 3660,
+      "sha256": "7566726decec6d48bd96311b1f34e2fe68cf903ba6bdc88ae25e37fff2a21e67"
+    },
+    {
+      "path": "src/components/deployment/TelegramDeviceTestPanel.tsx",
+      "bytes": 9760,
+      "sha256": "dc17fd424ce43d42899cc95b9a19ec2ee008280b1c9f890142fd8453e0956d95"
+    },
+    {
+      "path": "src/components/deployment/TelegramStagingDeployPanel.tsx",
+      "bytes": 3996,
+      "sha256": "16df10cf2eaff60c2e78f1463b87fcd02c5918db7349f2745e67016673380845"
+    },
+    {
+      "path": "src/components/deployment/TelegramSupabasePreflightPanel.tsx",
+      "bytes": 7222,
+      "sha256": "8fe4f17852069291a97f1643604006bf4b9129fb503f311623ce7354d8ae83fe"
+    },
+    {
+      "path": "src/components/deployment/TelegramSupabaseVerificationChecklistPanel.tsx",
+      "bytes": 10432,
+      "sha256": "2fbffd6306f7f11068b29d6559f329b054cad9d0bf709dd6bb67e098347d74d0"
+    },
+    {
+      "path": "src/components/dev/DevErrorLogPanel.tsx",
+      "bytes": 2347,
+      "sha256": "034204f658b4d846e3ff4a88a0a4c56fc40331d783e118cf61f98da8e7a8226a"
+    },
+    {
+      "path": "src/components/dev/ErrorBoundary.tsx",
+      "bytes": 1188,
+      "sha256": "3cbc7fd610a0e968e50e17e1ab6fdb79aafaba6f51414f20410d18ecfe04a290"
+    },
+    {
+      "path": "src/components/history/SectionHistoryPanel.tsx",
+      "bytes": 5249,
+      "sha256": "e6ff69bdccf03f7ccfbc13cbb8a37709c4b8d41d9878c283908e0ccc55646e6a"
+    },
+    {
+      "path": "src/components/import-review/CsvJsonImportMapperPanel.tsx",
+      "bytes": 4667,
+      "sha256": "7df8d7513893277ac0c86575d61979037ea2b7b95def8b9a4c67968e6a3ff3ec"
+    },
+    {
+      "path": "src/components/import-review/ImportReviewQueuePanel.tsx",
+      "bytes": 14959,
+      "sha256": "296ebd10004c7b1835d662a3b9cff0bf804e91d076e61474501e205a81e573e8"
+    },
+    {
+      "path": "src/components/live/LiveTimeWidget.tsx",
+      "bytes": 1331,
+      "sha256": "0443d49ea781b9c047427c7490d18688d47820915723e8eed072475408a4ba6a"
+    },
+    {
+      "path": "src/components/local/LocalBackupRestorePanel.tsx",
+      "bytes": 8173,
+      "sha256": "4e06e4e05a7f43f497069d2df655328c95284bbc521a7ee427bd86ac787ffbdb"
+    },
+    {
+      "path": "src/components/money/MoneyEnginePanel.tsx",
+      "bytes": 5158,
+      "sha256": "46a6fe70279e98c489f85fabc514c2f3e53a239bfc1f363220f886dd78970beb"
+    },
+    {
+      "path": "src/components/project/EcosystemReadinessBoard.tsx",
+      "bytes": 2593,
+      "sha256": "8dc03d827db17d0d8ef831309d25d587fa56d247afc12119c9d3685388838096"
+    },
+    {
+      "path": "src/components/project/RealDailyUseHardeningPanel.tsx",
+      "bytes": 2979,
+      "sha256": "91562dc903fd5dae32690c7b846a987135637d2472c5ffeeba73a5a293e4ffe0"
+    },
+    {
+      "path": "src/components/project/RealDataWeekTestPanel.tsx",
+      "bytes": 9603,
+      "sha256": "7be1d543aa553196303f21fcd786d4a4772e7a7819fc9a1c99f456b233fa7f5b"
+    },
+    {
+      "path": "src/components/sleep/SleepDashboard.tsx",
+      "bytes": 36867,
+      "sha256": "2993dee09c7f88bb203140baa79a5b2de9700334b1553ab6ddc7d98a5d111581"
+    },
+    {
+      "path": "src/components/system/DataResetPanel.tsx",
+      "bytes": 5387,
+      "sha256": "1ce45834eff4149f375a7ca8b53ce5b8d34ea9473fb3d939c27bcd485831706e"
+    },
+    {
+      "path": "src/components/system/DataStoragePanel.tsx",
+      "bytes": 5431,
+      "sha256": "bb31ac9dcccf4e84a548397f44f290041d0334f4a8e3572841bfbe1ad3ceb804"
+    },
+    {
+      "path": "src/components/system/GlobalDataBackbonePanel.tsx",
+      "bytes": 6564,
+      "sha256": "09883e0ee6850b81bf31d2e222de7c4b9281473a50c5edd4fa999b89011f06f7"
+    },
+    {
+      "path": "src/components/telegram/TelegramSessionPill.tsx",
+      "bytes": 1316,
+      "sha256": "8bb5840238ecb10665d842060fcf355dde98fcb9da7f26e829b84a4ea430c87d"
+    },
+    {
+      "path": "src/components/templates/TemplatesEnginePanel.tsx",
+      "bytes": 7387,
+      "sha256": "6ecde6f94c0729c13607bd17c651e1e4c35e9f1e26c0f8221b1f4d55b993cfd7"
+    },
+    {
+      "path": "src/components/ui/AppIcon.tsx",
+      "bytes": 3710,
+      "sha256": "8a7844bda61fcf02d4466dff3825b0e48fa040e27d6624f2f8d17587da721310"
+    },
+    {
+      "path": "src/components/ui/CockpitCards.tsx",
+      "bytes": 1802,
+      "sha256": "820625f5025d8b972403e641f53768643529249c5cdf9d57cf36be9726e93123"
+    },
+    {
+      "path": "src/components/work/WorkTaxiEnginePanel.tsx",
+      "bytes": 6288,
+      "sha256": "a13abf8304ac93eab4461ecd27def10be0610878fcc5de655f05eee3abfec91f"
+    },
+    {
+      "path": "src/lib/appVersion.ts",
+      "bytes": 608,
+      "sha256": "74fb17572554658ddadda9d63b399426f7240a32a9cc21ad928527d9559b3aac"
+    },
+    {
+      "path": "src/lib/apply/localApplyEngine.ts",
+      "bytes": 15319,
+      "sha256": "f180f6508ab84e96c27e84f20e651dc727927eb9ec4962fd0a8b31fd6518e356"
+    },
+    {
+      "path": "src/lib/apply/localApplyPersistence.ts",
+      "bytes": 3263,
+      "sha256": "0c4ebc41a22241a415e33e7b7c7aa3743b8f9f03e6ee8f820811c977ef902ef6"
+    },
+    {
+      "path": "src/lib/assistant/carMaintenanceChatContext.ts",
+      "bytes": 4132,
+      "sha256": "88ac71020ea55858320820ee89a57cf9c32227cc3a84e8d9113efacc3067e68b"
+    },
+    {
+      "path": "src/lib/assistant/carRepairAllocationChatContext.ts",
+      "bytes": 4019,
+      "sha256": "65ec0e60d1c1014b488b6530ba5cc09235c047f3f30455c7eab7364e195fb0a4"
+    },
+    {
+      "path": "src/lib/assistant/dailyDecisionChatContext.ts",
+      "bytes": 3065,
+      "sha256": "d3c5390367fea8047a7b5b5d63b3621c30869cc6e22cbab946a8c2d8811e045c"
+    },
+    {
+      "path": "src/lib/assistant/finflowAssistantChat.ts",
+      "bytes": 4961,
+      "sha256": "44b1b4f5ca7cbbc753e0d976e624724f1fa7435a25e3af8df6fafea66ec26803"
+    },
+    {
+      "path": "src/lib/assistant/finflowAssistantCore.ts",
+      "bytes": 6226,
+      "sha256": "c5eb409008152eee4da14495a216874288c4663298a3e9b236a9aae950e1ee9e"
+    },
+    {
+      "path": "src/lib/assistant/finflowAssistantPrompt.ts",
+      "bytes": 7542,
+      "sha256": "ac431f4d8769a3f28ff02aa02b70dbf3b29200a9f22cecc4e16a8d855d4f6a3b"
+    },
+    {
+      "path": "src/lib/assistant/fuelOdometerAssistantAdvice.ts",
+      "bytes": 5758,
+      "sha256": "d94d1d64602a0c7c68ec7562c49706a3e66813abf53c84b34aea65c4c78b7320"
+    },
+    {
+      "path": "src/lib/assistant/fuelOdometerChatContext.ts",
+      "bytes": 3746,
+      "sha256": "cdd7313e4d417055ed8a092818837849006a47120ecb11282d2ee8cd16c283cc"
+    },
+    {
+      "path": "src/lib/automation/n8nAutomationContract.ts",
+      "bytes": 13156,
+      "sha256": "7895a29daa7c23e844f33fdb4a518e02ca289e5e57d6ffe0aa9965cf6ea0fe64"
+    },
+    {
+      "path": "src/lib/backup/localBackupRestore.ts",
+      "bytes": 8815,
+      "sha256": "8a3aeb16317fd3e4376ceac795b8724b4593f92bf61d2de0e1f79b176f1d2320"
+    },
+    {
+      "path": "src/lib/car/carMaintenanceModel.ts",
+      "bytes": 4702,
+      "sha256": "136d5cb69f2d60d44a1701b4d2c8e6c3ac3dbff6c8c2902deb9a8c55b8355edd"
+    },
+    {
+      "path": "src/lib/car/dailyFuelBudgetModel.ts",
+      "bytes": 4239,
+      "sha256": "78981403b58b767326c08de57dcf163cbad0783949c8c605cf22075cccfc3973"
+    },
+    {
+      "path": "src/lib/car/editableFuelInputsModel.ts",
+      "bytes": 3441,
+      "sha256": "1e55d38e2dd6b670a3c37d24102e3a7cfb5bdc432690bc24046c5e12b470e40b"
+    },
+    {
+      "path": "src/lib/car/editableFuelInputsPersistence.ts",
+      "bytes": 1783,
+      "sha256": "71c356650a6561aae833eb52d03c898ed2ddf97bc92bd0026cb62f444af86023"
+    },
+    {
+      "path": "src/lib/car/fuelOdometerHistoryExport.ts",
+      "bytes": 1369,
+      "sha256": "e25d2931a00dee4a21af4d0f1341bae4a196c2937dd8578a14f200ba256c1d25"
+    },
+    {
+      "path": "src/lib/car/fuelOdometerHistoryModel.ts",
+      "bytes": 4378,
+      "sha256": "15130050c638833afa9132937dc5bc2b55482f74ad96a5509354fdc309c50d8d"
+    },
+    {
+      "path": "src/lib/car/fuelOdometerTrendModel.ts",
+      "bytes": 4842,
+      "sha256": "480cb19bea6012a92d1b969a44be06528ba71e70154f21b1540df5abad7b3f49"
+    },
+    {
+      "path": "src/lib/cloud/cloudApplyRollbackModel.ts",
+      "bytes": 3063,
+      "sha256": "1e9392e39c586dbe46fede56f8545cf9ef0e010db6a3c09f4fd1a6ea4caaa284"
+    },
+    {
+      "path": "src/lib/cloud/cloudRestoreDiffModel.ts",
+      "bytes": 2103,
+      "sha256": "0d0abb59095b51f392243a61ad9d7ec33106411314e0a33c5418b574a0b0dbdd"
+    },
+    {
+      "path": "src/lib/cloud/cloudSavePreflightModel.ts",
+      "bytes": 4831,
+      "sha256": "5a1fb731669feb530445068aa28b9a95be87d780473019469d165ef28ea632f5"
+    },
+    {
+      "path": "src/lib/cloud/cloudSyncQueueModel.ts",
+      "bytes": 12160,
+      "sha256": "eb7070b7ce1547b7fc00ec05d08d067c91e970b4d3d5be7b8e844126f8edd127"
+    },
+    {
+      "path": "src/lib/cloud/finflowCloudDayDocument.ts",
+      "bytes": 8713,
+      "sha256": "495e6a5abae234a9067bda87a8fb4828133d6819743d283b87e0ff868f6dd963"
+    },
+    {
+      "path": "src/lib/data/canonicalWriteAdapters.ts",
+      "bytes": 14556,
+      "sha256": "21f461c693fcd2aa851fd812209f25691bcd53eddb6810842f2e7cebbaa318ac"
+    },
+    {
+      "path": "src/lib/data/csvJsonImportMapper.ts",
+      "bytes": 16459,
+      "sha256": "a21388654c8e34e86c032f2e3184d81f8c772d95b5bae3446358af17e9b03ea3"
+    },
+    {
+      "path": "src/lib/data/dateInput.ts",
+      "bytes": 2643,
+      "sha256": "c60a7e006cc72b75a07434b95cbc4c9083fa99c13a1cb2b18b48a72b07366621"
+    },
+    {
+      "path": "src/lib/data/finflowCanonicalDataModel.ts",
+      "bytes": 7445,
+      "sha256": "28d0563f27c8234a980773f7f434c7a1fa237e0cfd6e1f9168a46b0a2cd6f1af"
+    },
+    {
+      "path": "src/lib/data/finflowDataRegistry.ts",
+      "bytes": 11219,
+      "sha256": "7c731e6b2f4860bb7e74ab2ae65f4712b89f7f4e705c813776e45b8981d598d9"
+    },
+    {
+      "path": "src/lib/data/finflowHistoryEngine.ts",
+      "bytes": 12805,
+      "sha256": "6cc93415cdc4f3f61db813db9aebfb823238ad1f796855260267e3a557a14976"
+    },
+    {
+      "path": "src/lib/data/historicalImportDraft.ts",
+      "bytes": 7726,
+      "sha256": "134ed8e78a98ff9849fa8b6f8e6ed7686197ebcdd40e8b61d2033bc7603d26f6"
+    },
+    {
+      "path": "src/lib/day-core/activeDaySessionModel.ts",
+      "bytes": 9427,
+      "sha256": "c0377907495f6188a0e6a33bb41fc00e42816b3541e2bd210649a5f624dccbe4"
+    },
+    {
+      "path": "src/lib/day-core/bankCandidateReviewModel.ts",
+      "bytes": 36057,
+      "sha256": "46f77f78646f897607dd262c5de285fefdb8a44eb0eb89a3d7b2215e146b5b06"
+    },
+    {
+      "path": "src/lib/day-core/carRepairAllocationModel.ts",
+      "bytes": 5287,
+      "sha256": "a73e891f86275e4d11144f6a47bc1bb7f88c5202c544efbfa74c7bff4099435d"
+    },
+    {
+      "path": "src/lib/day-core/dailyAllocationModel.ts",
+      "bytes": 7105,
+      "sha256": "00bdfb57d2a6e00f446163ab2cc21e68b4ccf3fca23a364b5bdba1c899691c95"
+    },
+    {
+      "path": "src/lib/day-core/dailyDecisionSummaryModel.ts",
+      "bytes": 10722,
+      "sha256": "a32802b8638237d2eb226c7f296a71cc30617fd985908c1c8e8347bbccf0ee11"
+    },
+    {
+      "path": "src/lib/day-core/dailyHistoryModel.ts",
+      "bytes": 20608,
+      "sha256": "db09c09b01e1247a85c29031e3b60fb6c9f5b81409b8fac58ff48ebad0afc279"
+    },
+    {
+      "path": "src/lib/day-core/dailyLiveStatePersistence.ts",
+      "bytes": 6444,
+      "sha256": "e99d967ee26244186dff4f5da0e7aed3df378611920f1e89dbf890cfc87f94b3"
+    },
+    {
+      "path": "src/lib/day-core/dailyRecordsModel.ts",
+      "bytes": 12620,
+      "sha256": "1a077396c1950d0b42a5422b2452c568cf801ec027c1b7885726b0bb011f145c"
+    },
+    {
+      "path": "src/lib/day-core/dayCoreApplyLayer.ts",
+      "bytes": 12809,
+      "sha256": "ebc541572639af11da20d4382b32fe8b1e0feed81865a14c97d7ef1ac8182cc6"
+    },
+    {
+      "path": "src/lib/day-core/dayCoreInputModel.ts",
+      "bytes": 5880,
+      "sha256": "c1cb296a92da93ead7111851d254d663e7527a27a6ec6a5d09f4b68a1635ad8f"
+    },
+    {
+      "path": "src/lib/day-core/dayCoreModel.ts",
+      "bytes": 5658,
+      "sha256": "8706df65f15483b83e2ce97910d7836cda2bdf0f84e83ab9c2f8665549b49dcf"
+    },
+    {
+      "path": "src/lib/day-core/dayCorePatchPersistence.ts",
+      "bytes": 6426,
+      "sha256": "93614a620e307c51b78282f002921d8ca1611d26c168723e682adbc38757a030"
+    },
+    {
+      "path": "src/lib/day-core/fuelNetIntegrationModel.ts",
+      "bytes": 4244,
+      "sha256": "dbe7f03ed0c03015c7b13fc411e068874194134a968df92faecfed215857b1be"
+    },
+    {
+      "path": "src/lib/day-core/morningPlanModel.ts",
+      "bytes": 7436,
+      "sha256": "570bec1155d582304a23aaada9b8f356ee388fa7dbfc7acb798ca023af39f741"
+    },
+    {
+      "path": "src/lib/day-core/netCalculationModel.ts",
+      "bytes": 9097,
+      "sha256": "a8cc73d46c94318dfd370b29352c97d7a98005b7403127b86eb7bd511c41c339"
+    },
+    {
+      "path": "src/lib/deployment/backupAwareCloudTestFlow.ts",
+      "bytes": 2790,
+      "sha256": "7fc71d3e0a7acc3ed8bc4e233e2ec9e10a1c30c78f79a783507635029d071472"
+    },
+    {
+      "path": "src/lib/deployment/deploymentAcceptanceTestRunner.ts",
+      "bytes": 7600,
+      "sha256": "69dfe5db9da7b55015d1690684f9ce75ac2d151a9077eb9f01f6fcd8ec6c79b3"
+    },
+    {
+      "path": "src/lib/deployment/manualCloudTestWizard.ts",
+      "bytes": 11872,
+      "sha256": "a1c443bbc246debb3be0c0486d1ac4597e567af717e78ef489210951b17110f0"
+    },
+    {
+      "path": "src/lib/deployment/telegramDeviceTestModel.ts",
+      "bytes": 6437,
+      "sha256": "a384a77299b389905387f05c44045fc5e89f7f2295590afb32dd0d19ad16bbfd"
+    },
+    {
+      "path": "src/lib/deployment/telegramStagingRunbook.ts",
+      "bytes": 5581,
+      "sha256": "da756e476bfb5d7bad401cf29452f0c2d18e10845480609c33f2952c8c6b2f6d"
+    },
+    {
+      "path": "src/lib/deployment/telegramSupabasePreflight.ts",
+      "bytes": 8718,
+      "sha256": "7944d935315c879dd783e64b90358252cc1a1b25cee37da665d3d21ea4ce23b4"
+    },
+    {
+      "path": "src/lib/deployment/telegramSupabaseVerificationChecklist.ts",
+      "bytes": 7628,
+      "sha256": "31ef009c015ac7e4c89ab63e6932deba8ec86c74790a1f44818886a7bcc11262"
+    },
+    {
+      "path": "src/lib/deployment/verificationChecklistProgress.ts",
+      "bytes": 5549,
+      "sha256": "add673c92454ac02857e7b9bf1208967fb68b1bc60528363c7a758e816e2196d"
+    },
+    {
+      "path": "src/lib/deployment/verificationHandoffReport.ts",
+      "bytes": 4718,
+      "sha256": "dc45cb62a22c49565899eabf7cff41b72e897e12b2eb650b71be84cf33e6bc50"
+    },
+    {
+      "path": "src/lib/error-log/errorLog.ts",
+      "bytes": 1276,
+      "sha256": "e69b030f2b2968b0a84005ff3e8f3d44571a71282fdd31a0290f89f2209999b4"
+    },
+    {
+      "path": "src/lib/import-review/importReviewActions.ts",
+      "bytes": 6199,
+      "sha256": "696ad5cf9a732bbe65a23415697747194c4fee3b3eb25e803c237e2b07e53f1a"
+    },
+    {
+      "path": "src/lib/import-review/importReviewPersistence.ts",
+      "bytes": 3537,
+      "sha256": "14ec3bfb4ccc3c780d4d76f63bdaad79f294bbcecc8d61e12a7e1befe107f837"
+    },
+    {
+      "path": "src/lib/import-review/importReviewQueueModel.ts",
+      "bytes": 6140,
+      "sha256": "01d1ed97135748f13a313e8d134d95aa441ed821fd6b892fd0dbf1e20abdab27"
+    },
+    {
+      "path": "src/lib/local/localBackupDiffModel.ts",
+      "bytes": 5448,
+      "sha256": "43553ea0b864ffeddfa816d54c7bbf34b414122d493046810f0504650ee71796"
+    },
+    {
+      "path": "src/lib/local/localBackupModel.ts",
+      "bytes": 5176,
+      "sha256": "45817dbad40b6e36181c3cfeaf3fe3a2a934ee73aee4b7c608bcead4155c74e0"
+    },
+    {
+      "path": "src/lib/money/moneyEngine.ts",
+      "bytes": 15032,
+      "sha256": "3d3a940ddb144e5b69c8bf67dd13bef5726bf4cd2a6d9ef0b0dbd25784888564"
+    },
+    {
+      "path": "src/lib/persistence/finflowPersistenceTypes.ts",
+      "bytes": 1111,
+      "sha256": "89742deb6606a61d01fdd6a5d4523fef9d2d4b80eae40aa4d7f9a932aeab3c79"
+    },
+    {
+      "path": "src/lib/persistence/localPersistenceAdapter.ts",
+      "bytes": 432,
+      "sha256": "9e15be98af4dbe769d029f38ef0865c2f68a710375cc83a022b8cfe6056d18aa"
+    },
+    {
+      "path": "src/lib/persistence/supabasePersistencePlan.ts",
+      "bytes": 1158,
+      "sha256": "8f058aaaf7dc3b46ed4021ec09b35d2969e5d0d0b228e0daea5ade065eba779b"
+    },
+    {
+      "path": "src/lib/persistence/supabaseStagingFoundation.ts",
+      "bytes": 8998,
+      "sha256": "c622822b95ba62bf70911597352ac9b505e341935aac42b268237e0635d4d137"
+    },
+    {
+      "path": "src/lib/project/ecosystemReadinessAudit.ts",
+      "bytes": 2830,
+      "sha256": "2edfa2fcffcad9810cac674a18e3b4de0b6a86300043b0d806243bfef9029402"
+    },
+    {
+      "path": "src/lib/project/finflowEcosystemMap.ts",
+      "bytes": 2655,
+      "sha256": "2fe9caf2e896a9e35cf1eadab03a434cf563a3f3fc59d8c76b756036a03554ac"
+    },
+    {
+      "path": "src/lib/project/finflowRealityContext.ts",
+      "bytes": 2652,
+      "sha256": "90b04d1542b7822ad0d2a977ffe3cbd292cc6f88cb2d13edd8025dba13079705"
+    },
+    {
+      "path": "src/lib/project/miniAppDeliveryPlan.ts",
+      "bytes": 12730,
+      "sha256": "bf73e897af3772f45be5d349688fbe4a4a73271d438bee75b696b36e00a84d66"
+    },
+    {
+      "path": "src/lib/project/projectSelfCheck.ts",
+      "bytes": 4735,
+      "sha256": "76ea9fac3b3d59f1c2f8c1353ee8f203c5bb6fca844622b62dd7ae3ab3002d2c"
+    },
+    {
+      "path": "src/lib/project/realDailyUseHardening.ts",
+      "bytes": 9161,
+      "sha256": "a928f18df2caa48a35a03e4973ab212e4b3a294b8c867b5f1d6b95fc2555c742"
+    },
+    {
+      "path": "src/lib/project/realDataWeekTest.ts",
+      "bytes": 14526,
+      "sha256": "f5a3315f5bbb3245df463541c8f6e308d3029780785a19f7b07598ea5dfeac34"
+    },
+    {
+      "path": "src/lib/server/assistantExternalBridgeDraft.ts",
+      "bytes": 2095,
+      "sha256": "1d434b9072a8f8173f0be0d6cf5f202556bf8483cb8b0386d37285fa0290512c"
+    },
+    {
+      "path": "src/lib/server/deploymentReadiness.ts",
+      "bytes": 6027,
+      "sha256": "d1aa1a93890bfca4fc755a0ebfcb037f28490b235ea731bc8c5186ea124f6ca8"
+    },
+    {
+      "path": "src/lib/server/finflowCloudDayRepository.ts",
+      "bytes": 4245,
+      "sha256": "ce1a6129300a3a0f280a42f3d2041172324d94b8e693d5b138adba575d63cbc7"
+    },
+    {
+      "path": "src/lib/server/finflowProfileRepository.ts",
+      "bytes": 2724,
+      "sha256": "e43b201987d23921c4c1c77d17e08fa662ef0c6b61d42efe364900b57eeece61"
+    },
+    {
+      "path": "src/lib/server/finflowProfileResolver.ts",
+      "bytes": 1620,
+      "sha256": "ce7abe5befcb422791e521ef8863917c3630a2b7590ff9466938bab48af10ab1"
+    },
+    {
+      "path": "src/lib/server/supabaseServerClient.ts",
+      "bytes": 1852,
+      "sha256": "c1cdce21ef5dc509c4e102a8c16c12c422ccefd5364ea7440a04584935510f8b"
+    },
+    {
+      "path": "src/lib/server/supabaseServerClientGuard.ts",
+      "bytes": 2073,
+      "sha256": "c600873737a2ccd504d9d7027aac5431275059d1ea6a99704d35d679f4e09dce"
+    },
+    {
+      "path": "src/lib/server/telegramRequestAuth.ts",
+      "bytes": 661,
+      "sha256": "caf18ec024cec6e4385b7ffa9b90796986b62a6c04b12b41051ce2f08a855edb"
+    },
+    {
+      "path": "src/lib/sleep/sleepModel.ts",
+      "bytes": 25004,
+      "sha256": "1cd518b08bb80b5721d79cef53fca92d849845fd9d1ddbb01d6b8b75b982774b"
+    },
+    {
+      "path": "src/lib/sleep/sleepStorage.ts",
+      "bytes": 1780,
+      "sha256": "83c7fed04e3c221957e456eb1d0525c3975e744aa9e13870472ec56714f37b98"
+    },
+    {
+      "path": "src/lib/telegram/telegramInitData.ts",
+      "bytes": 3195,
+      "sha256": "2ad5fb48285b350d977223c5c413040b7931f7f2f0245482120ac0946c844d71"
+    },
+    {
+      "path": "src/lib/telegram/telegramWebApp.ts",
+      "bytes": 2181,
+      "sha256": "8347e0824e86336e6e73a732fc597bdf908317063aa66cbdfc3fb6355e3235ac"
+    },
+    {
+      "path": "src/lib/telegram/useTelegramSession.ts",
+      "bytes": 2515,
+      "sha256": "eaf6c903ecbb33d1d7475bb828ba3a70d2c88acddd41ffd98c0649bb86f10496"
+    },
+    {
+      "path": "src/lib/telegram/useTelegramViewportCss.ts",
+      "bytes": 3506,
+      "sha256": "04ecede2b9429f868260af1caced4665bda0f74d99ff6467dceab68cf5189cb0"
+    },
+    {
+      "path": "src/lib/templates/finflowTemplatesEngine.ts",
+      "bytes": 25809,
+      "sha256": "020ae542ce268f5f8b0109d617cd6b60ce5046cb73eb9812add4a59845c642f6"
+    },
+    {
+      "path": "src/lib/templates/templateApplyEngine.ts",
+      "bytes": 15934,
+      "sha256": "558eac44905ad15f82f134d44c4a84e273968e91213700b1029f32bad1c2b276"
+    },
+    {
+      "path": "src/lib/time/timeOfDay.ts",
+      "bytes": 826,
+      "sha256": "efb2b6885630eecba604c3979a98e3170f8b10633a7e4309d7b6e727f94b8514"
+    },
+    {
+      "path": "src/lib/work/taxiOrderLogParser.ts",
+      "bytes": 11887,
+      "sha256": "23bf9ac71d2e82d239a6fd3709ee52a88c5fe213399b1f68a665873baa8da5e9"
+    },
+    {
+      "path": "src/lib/work/workShiftLifecycle.ts",
+      "bytes": 9146,
+      "sha256": "9bbb6908ea292598e01cd962ab08e53885fd2245c44fd5f154cc38089d45e44c"
+    },
+    {
+      "path": "src/lib/work/workTaxiEngine.ts",
+      "bytes": 16121,
+      "sha256": "99b0d67aabf2166cfc2e641b8642f857149dd7e48fb968a6c14a68eda02d0550"
+    },
+    {
+      "path": "supabase/migration_v1_73_telegram_cloud_day.sql",
+      "bytes": 3887,
+      "sha256": "0161427964b425b06f33ac64f37f4bc1bf86d5c00ba0ff85fd0cd6b14bbc8acf"
+    },
+    {
+      "path": "supabase/migrations/202606220232_finflow_v3_data_backbone_draft.sql",
+      "bytes": 6454,
+      "sha256": "fffb245e63d5a1d2e9861b70b6a88551b76b120a37babc95abe480ceb6cecc34"
+    },
+    {
+      "path": "supabase/migrations/202606220239_finflow_v3_staging_foundation.sql",
+      "bytes": 6542,
+      "sha256": "5b9cd811b5c5b3b022746770070be32286df2e918c88d3552ef5bedaedccfb80"
+    },
+    {
+      "path": "supabase/migrations/202606220240_finflow_v3_cloud_queue_conflict_review.sql",
+      "bytes": 1128,
+      "sha256": "41936b7578b2046fc8e55892853b5bd4829a5c8fd5d642e617ea4cb6893a23f6"
+    },
+    {
+      "path": "supabase/schema_v1_48_records_bank_review.sql",
+      "bytes": 11240,
+      "sha256": "196df082f47312459d018fc889259bbacac1384919ba69d4e8aced330265d9c1"
+    },
+    {
+      "path": "tests/security-regression.test.mjs",
+      "bytes": 3855,
+      "sha256": "5982018e38b59fd380bebb83839210e9cfa7fed64b27207e493f2b7a80c3f95f"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 754,
+      "sha256": "b736ccd7c5cc68b8fe8f20bfcb9120c9df651a6c10e6a9172a4f703eeb8bd8b8"
+    },
+    {
+      "path": "vercel.json",
+      "bytes": 534,
+      "sha256": "6fc49796381324e9c320104cb9290911f6d3b56bf63698cfeee4160589364f81"
+    }
+  ],
+  "safety": {
+    "allowlistEnforced": true,
+    "contentSecretScanPassed": true,
+    "includesProjectDocs": false,
+    "includesPrivateVault": false,
+    "includesPrivateRawData": false,
+    "includesNodeModules": false,
+    "includesNextBuildOutput": false,
+    "includesRealEnvFiles": false,
+    "externalAutomationEnabledByDefault": false,
+    "useAsVercelRoot": true
+  }
+}

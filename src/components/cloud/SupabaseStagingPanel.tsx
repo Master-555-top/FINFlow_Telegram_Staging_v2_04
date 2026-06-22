@@ -62,7 +62,7 @@ export function SupabaseStagingPanel() {
   return (
     <section className="system-data-panel global-backbone-panel supabase-staging-panel">
       <div className="system-data-hero">
-        <span>v2.39 • Supabase Staging Foundation</span>
+        <span>v2.46 • Supabase Staging + Preflight</span>
         <b>{readiness.readinessPercent}% staging</b>
         <p>{readiness.headline}. Cloud writes остаются safe-off до backup + RLS + conflict проверки. Секреты в UI не выводятся.</p>
       </div>

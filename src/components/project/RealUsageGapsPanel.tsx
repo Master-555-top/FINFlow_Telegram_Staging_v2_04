@@ -37,9 +37,9 @@ export function RealUsageGapsPanel(props: { dayInput: DayCoreInputModel; records
 
   return (
     <section className={`card money-engine-panel real-usage-gaps-panel money-engine-${snapshot.mode === 'blocked' ? 'red' : snapshot.mode === 'staging_ready_local' ? 'green' : 'amber'} ${props.compact ? 'compact' : ''}`}>
-      <div className="section-kicker">Проблемы перед запуском</div>
-      <h2 className="card-heading">Что мешает пользоваться</h2>
-      <p className="card-description">Практические проблемы перед тестовым запуском: записи, история, копия, Telegram и облако без включения записи.</p>
+      <div className="section-kicker">v2.48 • Bugfix/Staging Pass</div>
+      <h2 className="card-heading">Real Usage Gaps</h2>
+      <p className="card-description">Практические дыры перед staging: записи, save QA, история, backup, Telegram, Supabase и n8n без включения cloud writes.</p>
 
       <div className="money-engine-hero templates-engine-hero">
         <div>
@@ -60,21 +60,21 @@ export function RealUsageGapsPanel(props: { dayInput: DayCoreInputModel; records
       <div className="system-data-preview compact backbone-progress-grid">
         <div className="system-data-preview-head">
           <b>Gaps</b>
-          <span>актуально</span>
+          <span>{snapshot.version}</span>
         </div>
         {visibleGaps.length ? visibleGaps.map(gap => <GapRow key={gap.id} gap={gap} />) : (
-          <article><b>Критичных проблем не видно</b><span>можно переходить к проверке на телефоне</span></article>
+          <article><b>Критичных gaps не видно</b><span>можно переходить к staging QA</span></article>
         )}
       </div>
 
       {!props.compact ? (
         <>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Проверка перед запуском</b><span>без облачной записи</span></div>
-            {snapshot.stagingChecklist.map(item => <article key={item}><b>{item}</b><span>проверить</span></article>)}
+            <div className="system-data-preview-head"><b>Staging checklist</b><span>без cloud writes</span></div>
+            {snapshot.stagingChecklist.map(item => <article key={item}><b>{item}</b><span>v2.48</span></article>)}
           </div>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Стоп-факторы</b><span>stop</span></div>
+            <div className="system-data-preview-head"><b>Hard stops</b><span>stop</span></div>
             {snapshot.hardStops.map(item => <article className="danger" key={item}><b>{item}</b><span>blocked</span></article>)}
           </div>
         </>

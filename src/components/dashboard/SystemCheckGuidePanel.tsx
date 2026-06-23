@@ -15,8 +15,8 @@ export function SystemCheckGuidePanel() {
   return (
     <section className="system-check-guide-panel system-module-panel">
       <div className="system-check-hero">
-        <span>Проверка</span>
-        <h2>Проверка</h2>
+        <span>v2.14</span>
+        <h2>QA</h2>
       </div>
 
       <div className="system-check-grid">

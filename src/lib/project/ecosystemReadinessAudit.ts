@@ -1,6 +1,6 @@
 import { buildMiniAppDeliveryPlan } from '@/lib/project/miniAppDeliveryPlan';
 
-export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_60' as const;
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_50' as const;
 
 export type EcosystemReadinessArea = {
   id: string;
@@ -49,18 +49,18 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
 
   return {
     version: ECOSYSTEM_READINESS_AUDIT_VERSION,
-    previousOverallProductionPercent: 91,
+    previousOverallProductionPercent: 88,
     overallProductionPercent: delivery.overallStrongMiniAppPercent,
-    previousLocalDailyUsePercent: 95,
-    localDailyUsePercent: 95,
-    previousSafeLaunchPercent: 94,
-    safeLaunchPercent: 95,
+    previousLocalDailyUsePercent: 90,
+    localDailyUsePercent: 92,
+    previousSafeLaunchPercent: 84,
+    safeLaunchPercent: 88,
     areas,
     topRisks: [
-      `До сильного полностью рабочего mini app осталось примерно ${delivery.remainingPercent}%. Следующий риск — считать local-first слой готовым без реального Telegram phone acceptance, 2–3 дней данных, fresh backup, финальную проверку дизайна и screenshot bug log.`,
+      `До сильного полностью рабочего mini app осталось примерно ${delivery.remainingPercent}%. Следующий риск — считать local-first слой готовым без 2–3 реальных дней проверки, Telegram staging, Daily Save QA, Codex safety sync, Telegram device preflight, Real Data Week Test, Real Usage Gaps, QA MVP, RC screenshot bug log, backup и conflict review.`,
       'Исторические данные и daily apply нельзя заливать напрямую: нужен preview, dedupe, подтверждение, локальная запись и rollback.',
-      'Supabase writes остаются safe-off до миграций, RLS/cross-user/security review, backup и conflict test.',
-      'Автоматизации пока работают только как безопасная проверка; внешние вызовы остаются выключены до private staging/auth/redaction.'
+      'Supabase writes остаются safe-off до миграций, RLS/security review и backup.',
+      'n8n имеет dry-run contract, но внешние вызовы остаются заблокированы до private staging/auth/redaction; v2.50 не включает external automations и cloud writes.'
     ],
     nextActions: delivery.criticalPath
   };

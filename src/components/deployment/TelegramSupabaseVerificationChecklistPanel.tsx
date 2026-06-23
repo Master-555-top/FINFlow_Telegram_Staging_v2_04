@@ -97,7 +97,7 @@ export function TelegramSupabaseVerificationChecklistPanel() {
   return (
     <section className="verification-checklist-panel system-module-panel">
       <div className="verification-head compact">
-        <span>Проверка</span>
+        <span>v2.14</span>
         <b>Checklist</b>
       </div>
 

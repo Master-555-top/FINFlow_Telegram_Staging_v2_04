@@ -52,7 +52,9 @@ export function useDailyQuickInputDayActions(input: {
                 ...fund,
                 targetAmount: Math.max(fund.targetAmount, input.carRepairAllocation.targetRub),
                 priority: 'high' as const,
-                canReceiveToday: true
+                canReceiveToday: true,
+                fundType: fund.fundType ?? 'savings',
+                group: fund.group ?? 'required'
               }
             : fund)
           : [
@@ -63,7 +65,10 @@ export function useDailyQuickInputDayActions(input: {
                 targetAmount: input.carRepairAllocation.targetRub,
                 currentAmount: 0,
                 priority: 'high' as const,
-                canReceiveToday: true
+                canReceiveToday: true,
+                fundType: 'savings' as const,
+                group: 'required' as const,
+                sortOrder: 25
               }
             ];
 
@@ -124,7 +129,11 @@ export function useDailyQuickInputDayActions(input: {
         targetAmount: 5000,
         currentAmount: 0,
         priority: 'normal',
-        canReceiveToday: true
+        canReceiveToday: true,
+        fundType: 'savings',
+        group: 'savings',
+        sortOrder: 999,
+        note: ''
       };
       input.setDayInput(previous => ({
         ...previous,

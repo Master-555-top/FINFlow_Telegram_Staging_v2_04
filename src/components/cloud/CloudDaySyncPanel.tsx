@@ -141,11 +141,11 @@ export function CloudDaySyncPanel(props: {
         risk: 'safe',
         document: parsed,
         cloudRevision: payload.record.revision ?? null,
-        title: 'Облачная версия загружена',
-        summary: `Проверка для ${parsed.dayInput.localDate}: ${parsed.records.length} записей.`
+        title: 'Cloud preview загружен',
+        summary: `Preview для ${parsed.dayInput.localDate}: ${parsed.records.length} записей, revision ${payload.record.revision ?? '—'}.`
       }));
       setStatus('ready');
-      setMessage('Облачный день загружен для проверки. Нажмите «применить», чтобы заменить локальный день.');
+      setMessage(`Облачный день получен для проверки. Ревизия ${payload.record.revision ?? '—'}. Нажмите «применить», чтобы заменить локальный день.`);
     } catch (error) {
       setStatus('error');
       setMessage(`Не удалось загрузить: ${safeErrorMessage(error)}`);
@@ -160,7 +160,7 @@ export function CloudDaySyncPanel(props: {
       return;
     }
     if (cloudSavePreflight.level === 'watch') {
-      const confirmed = window.confirm(`${cloudSavePreflight.headline}. Продолжить сохранение в облако?`);
+      const confirmed = window.confirm(`${cloudSavePreflight.headline}. Продолжить cloud save?`);
       if (!confirmed) return;
     }
     setStatus('saving');
@@ -171,8 +171,8 @@ export function CloudDaySyncPanel(props: {
       risk: cloudSavePreflight.level === 'ready' ? 'safe' : 'watch',
       document: props.document,
       expectedRevision: revision,
-      title: 'Сохранение в облако подготовлено',
-      summary: `День ${props.document.dayInput.localDate}: ${props.document.records.length} записей.`
+      title: 'Cloud save поставлен в очередь',
+      summary: `День ${props.document.dayInput.localDate}: preflight ${cloudSavePreflight.level}, ${props.document.records.length} записей.`
     }));
 
     try {
@@ -203,8 +203,8 @@ export function CloudDaySyncPanel(props: {
           document: props.document,
           expectedRevision: revision,
           cloudRevision: payload.currentRevision ?? null,
-          title: 'Облачная версия изменилась',
-          summary: 'Автоперезапись заблокирована. Сначала загрузите свежие данные.'
+          title: 'Cloud conflict требует review',
+          summary: `Cloud revision ${payload.currentRevision ?? '—'} отличается от expected ${revision ?? '—'}. Автоперезапись заблокирована.`
         }));
         setStatus('conflict');
         setMessage(`Облако изменилось отдельно (ревизия ${payload.currentRevision ?? '—'}). Сначала загрузите данные; локальные данные не перезаписаны.`);
@@ -220,12 +220,12 @@ export function CloudDaySyncPanel(props: {
         document: props.document,
         expectedRevision: revision,
         cloudRevision: payload.revision ?? null,
-        title: 'День сохранён в облако',
-        summary: `День ${props.document.dayInput.localDate} сохранён.`,
+        title: 'Cloud save применён',
+        summary: `День ${props.document.dayInput.localDate} сохранён. Новая revision ${payload.revision ?? '—'}.`,
         rollbackAvailable: Boolean(lastRollback)
       }));
       setStatus('saved');
-      setMessage('День сохранён в облако.');
+      setMessage(`День сохранён в облако. Ревизия ${payload.revision ?? '—'}.`);
     } catch (error) {
       setStatus('error');
       setMessage(`Не удалось сохранить: ${safeErrorMessage(error)}`);
@@ -234,7 +234,7 @@ export function CloudDaySyncPanel(props: {
 
   function applyLoadedDocument() {
     if (!pendingDocument) return;
-    const confirmed = window.confirm('Применить облачную версию к локальному дню? Перед заменой будет создана точка отката. Облако не изменится.');
+    const confirmed = window.confirm('Применить cloud preview к локальному дню? Перед заменой будет создан rollback-снимок. Supabase не изменится.');
     if (!confirmed) return;
 
     const rollback = createCloudApplyRollbackSnapshot({
@@ -256,20 +256,20 @@ export function CloudDaySyncPanel(props: {
       risk: cloudRestoreDiff?.riskLevel === 'warning' ? 'watch' : 'safe',
       document: pendingDocument,
       cloudRevision: revision,
-      title: 'Облачная версия применена локально',
-      summary: `День ${pendingDocument.dayInput.localDate}: изменения применены, точка отката создана.`,
+      title: 'Cloud preview применён локально',
+      summary: `День ${pendingDocument.dayInput.localDate}: apply выполнен после preview, rollback snapshot создан.`,
       rollbackAvailable: true
     }));
     props.onLoad(pendingDocument);
     setPendingDocument(null);
     setStatus('ready');
-    setMessage('Облачная версия применена к локальному дню. Точка отката создана.');
+    setMessage(`Облачная ревизия ${revision ?? '—'} применена к локальному дню. Rollback-снимок создан.`);
   }
 
   function restoreLastRollback() {
     if (!lastRollback) return;
     const summary = summarizeCloudApplyRollbackSnapshot(lastRollback);
-    const confirmed = window.confirm(`Отменить применение облачной версии? Вернём день ${summary.localDateBeforeApply} с ${summary.localRecordsBeforeApply} записями. Облако не изменится.`);
+    const confirmed = window.confirm(`Откатить cloud apply? Вернём локальный день ${summary.localDateBeforeApply} с ${summary.localRecordsBeforeApply} records. Supabase не изменится.`);
     if (!confirmed) return;
 
     pushQueueItem(createCloudSyncQueueItem({
@@ -278,8 +278,8 @@ export function CloudDaySyncPanel(props: {
       risk: 'safe',
       document: lastRollback.localDocumentBeforeApply,
       cloudRevision: lastRollback.cloudRevision,
-      title: 'Применение облака отменено локально',
-      summary: `Вернули локальный день ${lastRollback.localDocumentBeforeApply.dayInput.localDate}. Облако не изменено.`,
+      title: 'Cloud apply откатан локально',
+      summary: `Вернули локальный день ${lastRollback.localDocumentBeforeApply.dayInput.localDate}. Supabase не изменён.`,
       rollbackAvailable: false
     }));
     props.onLoad(lastRollback.localDocumentBeforeApply);
@@ -290,12 +290,12 @@ export function CloudDaySyncPanel(props: {
       // Nothing else to do.
     }
     setStatus('ready');
-    setMessage('Применение облачной версии отменено локально. Облако не изменено.');
+    setMessage('Cloud apply rollback выполнен локально. Supabase не изменён.');
   }
 
   function clearLastRollback() {
     if (!lastRollback) return;
-    const confirmed = window.confirm('Удалить последнюю точку отката? Это не меняет локальные и облачные данные.');
+    const confirmed = window.confirm('Удалить последний rollback-снимок? Это не меняет локальные/cloud данные.');
     if (!confirmed) return;
     setLastRollback(null);
     try {
@@ -311,14 +311,14 @@ export function CloudDaySyncPanel(props: {
   return (
     <div className={`cloud-sync-panel ${status}`}>
       <div>
-        <b>Облачная синхронизация</b>
+        <b>Telegram + Supabase sync</b>
         <p>{message}</p>
       </div>
 
 
       <div className={`cloud-save-preflight ${cloudSavePreflight.level}`}>
         <div className="cloud-save-preflight-head">
-          <b>Проверка перед сохранением</b>
+          <b>Cloud save preflight</b>
           <span>{cloudSavePreflight.headline}</span>
           <p>{cloudSavePreflight.message}</p>
         </div>
@@ -336,13 +336,13 @@ export function CloudDaySyncPanel(props: {
       {cloudRestoreDiff ? (
         <div className={`cloud-restore-diff ${cloudRestoreDiff.riskLevel}`}>
           <div className="cloud-restore-diff-head">
-            <b>Что изменится при восстановлении</b>
+            <b>Cloud restore preview diff</b>
             <span>{cloudRestoreDiff.headline}</span>
           </div>
           <div className="cloud-restore-diff-summary">
-            <div><span>Изменения</span><b>{cloudRestoreDiff.summary.total}</b></div>
-            <div><span>Предупреждения</span><b>{cloudRestoreDiff.summary.warnings}</b></div>
-            <div><span>Проверить</span><b>{cloudRestoreDiff.summary.watches}</b></div>
+            <div><span>Changes</span><b>{cloudRestoreDiff.summary.total}</b></div>
+            <div><span>Warnings</span><b>{cloudRestoreDiff.summary.warnings}</b></div>
+            <div><span>Watch</span><b>{cloudRestoreDiff.summary.watches}</b></div>
           </div>
           {cloudRestoreDiff.hasDifferences ? (
             <div className="cloud-restore-diff-list">
@@ -351,14 +351,14 @@ export function CloudDaySyncPanel(props: {
                   <b>{item.title}</b>
                   <p>{item.message}</p>
                   <div>
-                    <span>сейчас: {item.currentValue}</span>
-                    <span>облако: {item.backupValue}</span>
+                    <span>local: {item.currentValue}</span>
+                    <span>cloud: {item.backupValue}</span>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="quick-note">Облачная версия совпадает с текущими данными.</p>
+            <p className="quick-note">Cloud preview совпадает с текущим локальным состоянием по ключевым полям.</p>
           )}
         </div>
       ) : null}
@@ -367,15 +367,15 @@ export function CloudDaySyncPanel(props: {
       {lastRollback ? (
         <div className="cloud-apply-rollback-box">
           <div>
-            <b>Откат после восстановления</b>
+            <b>Cloud apply rollback snapshot</b>
             <p>
-              Точка отката создана {lastRollback.createdAt.slice(0, 16).replace('T', ' ')}.
-              Откат локальный и не меняет облако.
+              Снимок до последнего cloud apply: {lastRollback.createdAt.slice(0, 16).replace('T', ' ')} • cloud rev {lastRollback.cloudRevision ?? '—'}.
+              Откат локальный и не пишет в Supabase.
             </p>
           </div>
           <div className="cloud-sync-actions">
-            <button type="button" disabled={busy} onClick={restoreLastRollback}>отменить применение</button>
-            <button type="button" disabled={busy} onClick={clearLastRollback}>убрать точку отката</button>
+            <button type="button" disabled={busy} onClick={restoreLastRollback}>откатить cloud apply</button>
+            <button type="button" disabled={busy} onClick={clearLastRollback}>убрать snapshot</button>
           </div>
         </div>
       ) : null}
@@ -384,7 +384,7 @@ export function CloudDaySyncPanel(props: {
         <button type="button" disabled={!enabled} onClick={loadFromCloud}>загрузить из облака</button>
         <button type="button" disabled={!enabled || !cloudSavePreflight.canSave || Boolean(pendingDocument)} onClick={saveToCloud}>сохранить в облако</button>
         {pendingDocument ? (
-          <button type="button" disabled={busy} onClick={applyLoadedDocument}>применить после проверки</button>
+          <button type="button" disabled={busy} onClick={applyLoadedDocument}>применить после preview</button>
         ) : null}
       </div>
     </div>
@@ -415,6 +415,6 @@ function readLocalBackupSummary() {
 }
 
 function safeErrorMessage(error: unknown) {
-  if (!(error instanceof Error)) return 'неизвестная ошибка';
-  return error.message.replace(/[_-]/g, ' ').replace(/[^a-zA-Zа-яА-Я0-9ёЁ:., ]/g, '').slice(0, 180);
+  if (!(error instanceof Error)) return 'unknown_error';
+  return error.message.replace(/[^a-zA-Z0-9_:\-.]/g, '_').slice(0, 180);
 }

@@ -1296,6 +1296,405 @@ button { cursor: pointer; }
   color: var(--muted);
   font-size: 11px;
 }
+
+.fund-planning-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+
+.fund-planning-summary > div {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 10px;
+  background: rgba(255,255,255,.025);
+}
+
+.fund-planning-summary span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.fund-details-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: .8fr .8fr .8fr 1.7fr;
+  gap: 7px;
+}
+
+.fund-system-note {
+  display: grid;
+  gap: 5px;
+  margin: 0 0 15px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 13px 13px 0;
+  padding: 11px 13px;
+  background: rgba(122, 92, 255, .055);
+}
+
+.fund-system-note span,
+.fund-system-note em {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.private-import-center {
+  display: grid;
+  gap: 16px;
+}
+
+.private-import-warning,
+.private-import-upload,
+.private-import-message,
+.private-import-validation,
+.private-template-panel {
+  border: 1px solid rgba(122, 92, 255, 0.2);
+  border-radius: 16px;
+  padding: 14px;
+  background: rgba(122, 92, 255, 0.06);
+}
+
+.private-import-warning,
+.private-import-upload {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.private-import-warning span,
+.private-import-upload span,
+.private-import-upload label span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.private-import-upload label {
+  display: grid;
+  gap: 6px;
+}
+
+.private-import-upload button,
+.private-import-toolbar button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 12px;
+  padding: 0 14px;
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+}
+
+.private-import-upload button:disabled {
+  opacity: 0.45;
+}
+
+.private-import-validation p {
+  margin: 4px 0;
+  font-size: 12px;
+}
+
+.private-import-validation .error {
+  color: #c34258;
+}
+
+.private-import-message {
+  font-size: 13px;
+}
+
+.private-import-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.private-import-stats > div {
+  display: grid;
+  gap: 4px;
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--surface-soft);
+}
+
+.private-import-stats span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.private-import-stats b {
+  font-size: 20px;
+}
+
+.private-import-toolbar {
+  display: grid;
+  grid-template-columns: 0.8fr 0.8fr minmax(180px, 1.5fr) auto auto auto;
+  gap: 8px;
+}
+
+.private-import-toolbar input,
+.private-import-toolbar select,
+.private-import-editor input,
+.private-import-editor select,
+.private-import-editor textarea {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.private-import-editor-actions {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.private-import-editor-actions button {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 0 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 700;
+}
+
+.private-import-editor-actions button.primary {
+  margin-left: auto;
+  border-color: transparent;
+  background: var(--accent);
+  color: white;
+}
+
+.private-template-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.private-template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.private-template-grid button,
+.private-template-chip-row button {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  text-align: left;
+}
+
+.private-template-grid button {
+  display: grid;
+  gap: 4px;
+  min-height: 66px;
+  padding: 10px 12px;
+}
+
+.private-template-grid button:hover,
+.private-template-chip-row button:hover {
+  border-color: rgba(122, 92, 255, 0.55);
+  box-shadow: 0 8px 22px rgba(122, 92, 255, 0.12);
+}
+
+.private-template-grid span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.private-import-template-tools {
+  display: grid !important;
+  gap: 9px !important;
+  border: 1px solid rgba(122, 92, 255, 0.18);
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(122, 92, 255, 0.05);
+}
+
+.private-template-chip-row {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.private-template-chip-row button {
+  min-height: 30px;
+  padding: 0 9px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.historical-analytics-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.historical-analytics-head,
+.historical-analytics-foot {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.historical-analytics-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  min-width: 260px;
+}
+
+.historical-analytics-controls select,
+.historical-analytics-controls input {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 9px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.historical-analytics-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.historical-analytics-metrics > div,
+.historical-analytics-secondary span {
+  display: grid;
+  gap: 4px;
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--surface-soft);
+}
+
+.historical-analytics-metrics span,
+.historical-analytics-secondary span,
+.historical-analytics-foot {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.historical-analytics-metrics b { font-size: 19px; }
+
+.historical-analytics-secondary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.historical-analytics-secondary b { color: var(--text); font-size: 14px; }
+
+.historical-analytics-categories {
+  display: grid;
+  gap: 7px;
+}
+
+.historical-analytics-categories > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 2px;
+  font-size: 12px;
+}
+
+.historical-analytics-categories span { color: var(--muted); }
+
+.private-import-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.private-import-list {
+  display: grid;
+  gap: 8px;
+  max-height: 620px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.private-import-list > button {
+  display: grid;
+  gap: 5px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-left: 4px solid #d4a72c;
+  border-radius: 14px;
+  padding: 11px 12px;
+  text-align: left;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.private-import-list > button.approved { border-left-color: #2f9b75; }
+.private-import-list > button.rejected { border-left-color: #c34258; opacity: 0.72; }
+.private-import-list > button.selected { box-shadow: 0 0 0 2px rgba(122, 92, 255, 0.2); }
+.private-import-list span,
+.private-import-list em { color: var(--muted); font-size: 11px; font-style: normal; }
+
+.private-import-editor {
+  position: sticky;
+  top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px;
+  background: var(--surface-soft);
+}
+
+.private-import-editor > div,
+.private-import-editor label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.private-import-editor span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.private-import-editor .wide {
+  grid-column: 1 / -1;
+}
+
+.private-import-editor textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+@media (max-width: 760px) {
+  .fund-planning-summary { grid-template-columns: 1fr 1fr; }
+  .fund-details-row { grid-template-columns: 1fr; }
+  .private-import-warning,
+  .private-import-upload { align-items: stretch; flex-direction: column; }
+  .private-import-stats { grid-template-columns: 1fr 1fr; }
+  .private-import-toolbar { grid-template-columns: 1fr 1fr; }
+  .private-import-toolbar input { grid-column: 1 / -1; }
+  .private-import-workbench { grid-template-columns: 1fr; }
+  .private-import-editor { position: static; grid-template-columns: 1fr; }
+  .private-import-editor .wide { grid-column: auto; }
+  .private-import-editor-actions button.primary { margin-left: 0; }
+  .historical-analytics-head,
+  .historical-analytics-foot { flex-direction: column; }
+  .historical-analytics-controls { width: 100%; min-width: 0; }
+  .historical-analytics-metrics,
+  .historical-analytics-secondary { grid-template-columns: 1fr 1fr; }
+}
 @media (max-width: 720px) {
   .editable-record,
   .editable-record.fund-record {

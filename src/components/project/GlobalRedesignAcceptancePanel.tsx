@@ -7,7 +7,7 @@ import { browserLocalDailyHistoryAdapter, createInitialDailyHistoryState, type D
 import { buildGlobalRedesignAcceptanceSnapshot, type GlobalRedesignGate } from '@/lib/project/globalRedesignAcceptance';
 import { getTelegramWebApp } from '@/lib/telegram/telegramWebApp';
 
-const REDESIGN_STATE_KEY = 'finflow.globalRedesign.v2_56';
+const REDESIGN_STATE_KEY = 'finflow.globalRedesign.v2_51';
 
 type LocalRedesignState = {
   redesignedSurfacesChecked: boolean;
@@ -71,42 +71,42 @@ export function GlobalRedesignAcceptancePanel(props: { dayInput: DayCoreInputMod
 
   return (
     <section className={`card money-engine-panel global-redesign-panel money-engine-${snapshot.mode === 'blocked' ? 'red' : snapshot.mode === 'accepted_baseline_safe' ? 'green' : 'amber'}`}>
-      <div className="section-kicker">Дизайн</div>
-      <h2 className="card-heading">Дизайн и проверка на телефоне</h2>
-      <p className="card-description">Внешний вид обновлён, но логика денег, работы, сна и сохранения не меняется.</p>
+      <div className="section-kicker">v2.51 • Global redesign</div>
+      <h2 className="card-heading">Редизайн + phone acceptance</h2>
+      <p className="card-description">Глобальный визуальный слой разрешён, но строится поверх locked baseline и не меняет деньги, работу, сон, cloud или storage.</p>
 
       <div className="money-engine-hero templates-engine-hero">
         <div>
           <span>{snapshot.headline}</span>
           <b>{snapshot.percent}%</b>
-          <small>проверка</small>
+          <small>{snapshot.version}</small>
         </div>
         <p>{snapshot.nextAction}</p>
       </div>
 
       <div className="telegram-device-actions premium-actions">
-        <button type="button" onClick={() => patch({ phoneSmokePassed: true, bottomNavChecked: true })}>проверил на телефоне</button>
-        <button type="button" onClick={() => patch({ readabilityChecked: true, longRussianTextChecked: true })}>текст понятный</button>
-        <button type="button" onClick={() => patch({ phoneScreenshotsCaptured: state.phoneScreenshotsCaptured + 1 })}>+ скриншот</button>
+        <button type="button" onClick={() => patch({ phoneSmokePassed: true, bottomNavChecked: true })}>phone pass</button>
+        <button type="button" onClick={() => patch({ readabilityChecked: true, longRussianTextChecked: true })}>текст ok</button>
+        <button type="button" onClick={() => patch({ phoneScreenshotsCaptured: state.phoneScreenshotsCaptured + 1 })}>+ скрин</button>
       </div>
 
       <div className="system-data-preview compact backbone-progress-grid">
-        <div className="system-data-preview-head"><b>Проверка дизайна</b><span>{snapshot.mode}</span></div>
+        <div className="system-data-preview-head"><b>Redesign gates</b><span>{snapshot.mode}</span></div>
         {gates.map(gate => <GateRow key={gate.id} gate={gate} />)}
       </div>
 
       {!props.compact ? (
         <>
           <div className="system-data-preview compact redesign-baseline-lock">
-            <div className="system-data-preview-head"><b>Что нельзя ломать</b><span>locked</span></div>
+            <div className="system-data-preview-head"><b>Protected baseline</b><span>locked</span></div>
             {snapshot.protectedBaseline.map(item => <article key={item}><b>{item}</b><span>не ломать</span></article>)}
           </div>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Обновлённые экраны</b><span>новый стиль</span></div>
-            {snapshot.redesignedSurfaces.map(item => <article key={item}><b>{item}</b><span>единый стиль</span></article>)}
+            <div className="system-data-preview-head"><b>Redesigned surfaces</b><span>v2.51</span></div>
+            {snapshot.redesignedSurfaces.map(item => <article key={item}><b>{item}</b><span>style contract</span></article>)}
           </div>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Стоп-факторы</b><span>security</span></div>
+            <div className="system-data-preview-head"><b>Hard stops</b><span>security</span></div>
             {snapshot.hardStops.map(stop => <article key={stop} className="danger"><b>{stop}</b><span>stop</span></article>)}
           </div>
         </>

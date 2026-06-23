@@ -20,7 +20,7 @@ export function TelegramStagingDeployPanel() {
     <section className="telegram-staging-panel system-module-panel">
       <div className="deployment-head compact">
         <div>
-          <span>Публикация</span>
+          <span>v2.14</span>
           <b>Launch</b>
         </div>
       </div>
@@ -52,7 +52,7 @@ export function TelegramStagingDeployPanel() {
               <b>{runbook.allowedUploadRoot}</b>
             </div>
             <div>
-              <span>Безопасный архив</span>
+              <span>Deploy-safe archive</span>
               <b>{runbook.deploySafePackageName}</b>
             </div>
           </div>

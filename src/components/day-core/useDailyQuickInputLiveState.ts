@@ -24,6 +24,7 @@ import {
   type ActiveDaySessionState
 } from '@/lib/day-core/activeDaySessionModel';
 import { bankDecisionsStorageKey, customTemplatesStorageKey, recordsStorageKey, storageKey } from '@/components/day-core/DailyQuickInputConfig';
+import { reconcileDayCoreFundSystem } from '@/lib/day-core/fundPlanningModel';
 
 type UseDailyQuickInputLiveStateInput = {
   onDayInputChange?: (input: DayCoreInputModel) => void;
@@ -32,7 +33,7 @@ type UseDailyQuickInputLiveStateInput = {
 export function useDailyQuickInputLiveState(input: UseDailyQuickInputLiveStateInput = {}) {
   const dailyLiveOriginId = useMemo(() => createDailyLiveStateOriginId(), []);
   const lastDailyLiveSignatureRef = useRef('');
-  const [dayInput, setDayInput] = useState<DayCoreInputModel>(dayCoreInputMock);
+  const [dayInput, setDayInput] = useState<DayCoreInputModel>(() => reconcileDayCoreFundSystem(dayCoreInputMock));
   const [hydrated, setHydrated] = useState(false);
   const [historyState, setHistoryState] = useState<DailyHistoryState>(() => ({
     ...createInitialDailyHistoryState(`${dayCoreInputMock.localDate}T00:00:00.000Z`),
@@ -53,7 +54,7 @@ export function useDailyQuickInputLiveState(input: UseDailyQuickInputLiveStateIn
       const liveSnapshot = readDailyLiveStateSnapshot();
 
       if (liveSnapshot) {
-        setDayInput(liveSnapshot.dayInput);
+        setDayInput(reconcileDayCoreFundSystem(liveSnapshot.dayInput));
         setRecords(liveSnapshot.records);
         setCustomTemplates(liveSnapshot.customTemplates);
         setBankDecisions(liveSnapshot.bankDecisions);
@@ -63,7 +64,7 @@ export function useDailyQuickInputLiveState(input: UseDailyQuickInputLiveStateIn
         lastDailyLiveSignatureRef.current = createDailyLiveStateSignature(liveSnapshot);
       } else {
         const raw = window.localStorage.getItem(storageKey);
-        if (raw) setDayInput(JSON.parse(raw) as DayCoreInputModel);
+        if (raw) setDayInput(reconcileDayCoreFundSystem(JSON.parse(raw) as DayCoreInputModel));
         const recordsRaw = window.localStorage.getItem(recordsStorageKey);
         if (recordsRaw) setRecords(JSON.parse(recordsRaw) as DailyRecord[]);
         const templatesRaw = window.localStorage.getItem(customTemplatesStorageKey);
@@ -101,7 +102,7 @@ export function useDailyQuickInputLiveState(input: UseDailyQuickInputLiveStateIn
       if (incomingSignature === lastDailyLiveSignatureRef.current) return;
 
       lastDailyLiveSignatureRef.current = incomingSignature;
-      setDayInput(snapshot.dayInput);
+      setDayInput(reconcileDayCoreFundSystem(snapshot.dayInput));
       setRecords(snapshot.records);
       setCustomTemplates(snapshot.customTemplates);
       setBankDecisions(snapshot.bankDecisions);

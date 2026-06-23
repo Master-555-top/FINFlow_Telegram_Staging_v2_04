@@ -13,7 +13,7 @@ export function WorkTaxiEnginePanel(props: { dayInput: DayCoreInputModel; record
 
   return (
     <section className={`card work-engine-panel work-engine-${snapshot.mode}`}>
-      <div className="section-kicker">Работа и такси</div>
+      <div className="section-kicker">v2.38 • Work / Taxi Engine</div>
       <h2 className="card-heading">Работа: смена, темп, издержки</h2>
       <p className="card-description">Рабочий слой такси: заказы, грязный оборот, ₽/час, бензин, Drivee и связь с Деньгами.</p>
 
@@ -40,7 +40,7 @@ export function WorkTaxiEnginePanel(props: { dayInput: DayCoreInputModel; record
       </div>
 
       <div className="money-engine-block compact work-lifecycle-block">
-        <div className="money-engine-head"><b>Состояние смены</b><span>{lifecycle.version}</span></div>
+        <div className="money-engine-head"><b>Lifecycle смены</b><span>{lifecycle.version}</span></div>
         <div className="money-engine-hero work-lifecycle-hero">
           <div>
             <span>{lifecycle.headline}</span>

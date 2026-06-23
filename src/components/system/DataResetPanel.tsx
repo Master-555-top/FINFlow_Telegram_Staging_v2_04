@@ -52,9 +52,9 @@ export function DataResetPanel() {
   return (
     <div className="system-data-panel">
       <div className="system-data-hero warn">
-        <span>Безопасный сброс</span>
+        <span>Безопасный MVP</span>
         <b>Сброс данных</b>
-        <p>Сначала выбираешь область и период, смотришь предпросмотр, вводишь RESET и только потом подтверждаешь. Сброс затрагивает выбранный раздел, а не всё приложение.</p>
+        <p>Сначала выбираешь область и период, видишь предпросмотр, вводишь RESET и только потом подтверждаешь. Для года/месяца/недели/дня section-scoped History Engine удаляет записи внутри поддерживаемых блоков, а не весь localStorage.</p>
       </div>
 
       <div className="system-data-controls">

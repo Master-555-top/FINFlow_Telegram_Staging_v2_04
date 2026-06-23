@@ -21,7 +21,7 @@ test('private import uses isolated section ledgers and never writes into active 
 });
 
 test('private import UI exposes upload, review, editing and local backup without cloud calls', () => {
-  assert.ok(importPanel.includes('Файл истории'));
+  assert.ok(importPanel.includes('Private JSON bundle'));
   assert.ok(importPanel.includes('HistoricalRecordEditor'));
   assert.ok(importPanel.includes('подтвердить безопасные'));
   assert.ok(importPanel.includes('backup JSON'));

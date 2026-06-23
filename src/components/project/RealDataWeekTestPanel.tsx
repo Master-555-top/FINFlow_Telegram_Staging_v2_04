@@ -81,9 +81,9 @@ export function RealDataWeekTestPanel(props: { dayInput: DayCoreInputModel; reco
 
   return (
     <section className={`card money-engine-panel real-data-week-test-panel money-engine-${snapshot.mode === 'blocked' ? 'red' : snapshot.mode === 'ready_local_week' ? 'green' : 'amber'} ${props.compact ? 'compact' : ''}`}>
-      <div className="section-kicker">Проверка недели</div>
+      <div className="section-kicker">v2.47 • Real Data Week Test</div>
       <h2 className="card-heading">Неделя реальных данных</h2>
-      <p className="card-description">7 дней: День → Деньги → Работа → Импорт → Проверка дня → История → Копия → Облако без записи.</p>
+      <p className="card-description">7 дней: День → Деньги → Работа → Apply/Import → Save QA → Period History → Backup → Supabase readonly.</p>
 
       <div className="money-engine-hero templates-engine-hero">
         <div>
@@ -112,7 +112,7 @@ export function RealDataWeekTestPanel(props: { dayInput: DayCoreInputModel; reco
       <div className="system-data-preview compact backbone-progress-grid">
         <div className="system-data-preview-head">
           <b>Проверки недели</b>
-          <span>неделя</span>
+          <span>{snapshot.version}</span>
         </div>
         {visibleChecks.map(check => <CheckRow key={check.id} check={check} />)}
       </div>
@@ -125,10 +125,10 @@ export function RealDataWeekTestPanel(props: { dayInput: DayCoreInputModel; reco
         <>
           <div className="system-data-preview compact">
             <div className="system-data-preview-head"><b>Runbook</b><span>phone/data first</span></div>
-            {snapshot.runbook.map(step => <article key={step}><b>{step}</b><span>проверить</span></article>)}
+            {snapshot.runbook.map(step => <article key={step}><b>{step}</b><span>v2.47</span></article>)}
           </div>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Стоп-факторы</b><span>stop ship</span></div>
+            <div className="system-data-preview-head"><b>Hard stops</b><span>stop ship</span></div>
             {snapshot.hardStops.map(stop => <article key={stop} className="danger"><b>{stop}</b><span>blocked</span></article>)}
           </div>
         </>

@@ -62,59 +62,59 @@ export function SupabaseStagingPanel() {
   return (
     <section className="system-data-panel global-backbone-panel supabase-staging-panel">
       <div className="system-data-hero">
-        <span>Подготовка облака</span>
-        <b>{readiness.readinessPercent}% готово</b>
-        <p>{cleanCloudCopy(readiness.headline)}. Запись в облако выключена до резервной копии и проверки безопасности. Секреты не показываются.</p>
+        <span>v2.46 • Supabase Staging + Preflight</span>
+        <b>{readiness.readinessPercent}% staging</b>
+        <p>{readiness.headline}. Cloud writes остаются safe-off до backup + RLS + conflict проверки. Секреты в UI не выводятся.</p>
       </div>
 
       <div className="system-data-preview compact backbone-progress-grid">
         <div className="system-data-preview-head">
-          <b>Проверки облака</b>
-          <span>{humanCloudMode(readiness.mode)}</span>
+          <b>Cloud gates</b>
+          <span>{readiness.mode}</span>
         </div>
         {readiness.gates.map(gate => (
           <article key={gate.id} className={gate.status === 'blocked' ? 'danger' : gate.status === 'watch' ? 'watch' : ''}>
             <b>{gate.title}</b>
-            <span>{humanGateStatus(gate.status)} · {humanOwner(gate.owner)}</span>
+            <span>{gate.status} · {gate.owner}</span>
           </article>
         ))}
       </div>
 
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">
-          <b>Схема базы</b>
-          <span>{readiness.migrations.length} файла</span>
+          <b>Migrations</b>
+          <span>{readiness.migrations.length} files</span>
         </div>
         {readiness.migrations.map(migration => (
           <article key={migration.id} className={migration.applyMode === 'manual_review_required' ? 'danger' : ''}>
             <b>{migration.file.replace('supabase/migrations/', '')}</b>
-            <span>{humanApplyMode(migration.applyMode)}</span>
+            <span>{migration.applyMode}</span>
           </article>
         ))}
       </div>
 
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">
-          <b>Доступ и безопасность</b>
-          <span>до записи</span>
+          <b>RLS / security checklist</b>
+          <span>before writes</span>
         </div>
         {readiness.rlsChecklist.slice(0, 6).map(item => (
           <article key={item}>
-            <b>{cleanCloudCopy(item)}</b>
-            <span>обязательно</span>
+            <b>{item}</b>
+            <span>required</span>
           </article>
         ))}
       </div>
 
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">
-          <b>Следующие действия</b>
-          <span>{readiness.canEnableWrites ? 'можно готовить' : 'без записи'}</span>
+          <b>Next actions</b>
+          <span>{readiness.canEnableWrites ? 'candidate' : 'safe-off'}</span>
         </div>
         {readiness.nextActions.slice(0, 5).map(action => (
           <article key={action}>
-            <b>{cleanCloudCopy(action)}</b>
-            <span>подготовка</span>
+            <b>{action}</b>
+            <span>staging</span>
           </article>
         ))}
       </div>
@@ -139,43 +139,4 @@ function readSessionValue(key: string) {
   } catch {
     return null;
   }
-}
-
-
-function humanCloudMode(mode: string) {
-  if (mode === 'ready_for_staging') return 'готово к проверке';
-  if (mode === 'blocked') return 'есть стоп-факторы';
-  if (mode === 'local_only') return 'локально';
-  return mode.replaceAll('_', ' ');
-}
-
-function humanGateStatus(status: string) {
-  if (status === 'pass') return 'готово';
-  if (status === 'watch') return 'проверить';
-  if (status === 'blocked') return 'стоп';
-  return status;
-}
-
-function humanOwner(owner: string) {
-  return owner.replaceAll('dev', 'система').replaceAll('security', 'безопасность').replaceAll('_', ' ');
-}
-
-function humanApplyMode(mode: string) {
-  if (mode === 'manual_review_required') return 'проверить вручную';
-  if (mode === 'already_applied') return 'уже применено';
-  return mode.replaceAll('_', ' ');
-}
-
-function cleanCloudCopy(text: string) {
-  return text
-    .replaceAll('RLS', 'доступ')
-    .replaceAll('writes', 'запись')
-    .replaceAll('write', 'запись')
-    .replaceAll('staging', 'подготовка')
-    .replaceAll('migration', 'схема')
-    .replaceAll('Supabase', 'облако')
-    .replaceAll('backup', 'копия')
-    .replaceAll('rollback', 'откат')
-    .replaceAll('cross-user', 'между пользователями')
-    .replaceAll('cloud', 'облако');
 }

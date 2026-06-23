@@ -70,14 +70,14 @@ export function LocalBackupRestorePanel(props: {
   }
 
   function confirmRestoreBackup(backup: LocalFinflowBackupEntry) {
-    const confirmed = window.confirm(`Восстановить копию "${backup.label}"? Текущий день будет заменён, облако не изменится.`);
+    const confirmed = window.confirm(`Восстановить локальный backup "${backup.label}"? Текущий локальный день будет заменён, cloud не изменится.`);
     if (!confirmed) return;
     props.onRestore(backup.document);
     setPreviewBackup(null);
   }
 
   function removeBackup(backupId: string) {
-    const confirmed = window.confirm('Удалить эту локальную копию? Облако и текущий день не изменятся.');
+    const confirmed = window.confirm('Удалить этот локальный backup? Cloud и текущий день не изменятся.');
     if (!confirmed) return;
     setState(previous => deleteLocalBackup({ state: previous, backupId }));
     window.setTimeout(notifyBackupRefresh, 0);
@@ -90,12 +90,12 @@ export function LocalBackupRestorePanel(props: {
   function importBackup() {
     const imported = parseImportedLocalBackup(importText);
     if (!imported) {
-      setExportText('Не удалось импортировать копию: файл не похож на FINFlow backup.');
+      setExportText('Import failed: invalid FINFlow local backup JSON.');
       return;
     }
     setState(previous => addLocalBackup({ state: previous, backup: imported }));
     setImportText('');
-    setExportText(`Копия импортирована: ${imported.label}`);
+    setExportText(`Imported backup: ${imported.label}`);
     window.setTimeout(notifyBackupRefresh, 0);
   }
 
@@ -111,27 +111,27 @@ export function LocalBackupRestorePanel(props: {
   return (
     <section className="local-backup-panel">
       <div className="local-backup-head">
-        <span>Резервные копии</span>
-        <b>Локальная копия дня</b>
+        <span>v1.89 • Backup Diff / Restore Preview</span>
+        <b>Локальный backup перед cloud sync</b>
         <p>
-          Перед восстановлением видно, что изменится: дата, деньги, записи, топливо и пробег. Всё остаётся локально.
+          Перед restore теперь видно, что изменится: дата, деньги, records, bank decisions, топливо/одометр. Restore всё ещё локальный и не пишет в Supabase.
         </p>
       </div>
 
       <div className="local-backup-summary">
-        <div><span>Копии</span><b>{summary.total}</b></div>
-        <div><span>Последняя</span><b>{summary.latestLabel ?? 'нет'}</b></div>
-        <div><span>Обновлено</span><b>{summary.latestBackupAt?.slice(0, 16).replace('T', ' ') ?? '—'}</b></div>
+        <div><span>Backups</span><b>{summary.total}</b></div>
+        <div><span>Latest</span><b>{summary.latestLabel ?? 'none'}</b></div>
+        <div><span>Updated</span><b>{summary.latestBackupAt?.slice(0, 16).replace('T', ' ') ?? '—'}</b></div>
       </div>
 
       <div className="local-backup-create">
-        <input placeholder="название копии" value={label} onChange={event => setLabel(event.target.value)} />
-        <textarea placeholder="заметка без токенов и банковских файлов" value={note} onChange={event => setNote(event.target.value)} />
-        <button type="button" onClick={createBackup}>создать копию</button>
+        <input placeholder="backup label" value={label} onChange={event => setLabel(event.target.value)} />
+        <textarea placeholder="note без токенов, .env.local, банковских raw data" value={note} onChange={event => setNote(event.target.value)} />
+        <button type="button" onClick={createBackup}>создать backup</button>
       </div>
 
       <div className="local-backup-list">
-        {state.backups.length === 0 ? <p className="quick-note">Локальных копий пока нет.</p> : null}
+        {state.backups.length === 0 ? <p className="quick-note">Локальных backup пока нет.</p> : null}
         {state.backups.map(backup => (
           <div className="local-backup-row" key={backup.id}>
             <div>
@@ -140,9 +140,9 @@ export function LocalBackupRestorePanel(props: {
               {backup.note ? <small>{backup.note}</small> : null}
             </div>
             <div className="local-backup-actions">
-              <button type="button" onClick={() => previewRestoreBackup(backup)}>проверить</button>
-              <button type="button" onClick={() => exportBackup(backup)}>экспорт</button>
-              <button type="button" onClick={() => removeBackup(backup.id)}>удалить</button>
+              <button type="button" onClick={() => previewRestoreBackup(backup)}>preview restore</button>
+              <button type="button" onClick={() => exportBackup(backup)}>export</button>
+              <button type="button" onClick={() => removeBackup(backup.id)}>delete</button>
             </div>
           </div>
         ))}
@@ -153,12 +153,12 @@ export function LocalBackupRestorePanel(props: {
         <div className={`local-backup-preview ${restorePreview.hasDifferences ? 'has-diff' : 'no-diff'}`}>
           <div className="local-backup-preview-head">
             <div>
-              <b>Проверка восстановления: {previewBackup.label}</b>
-              <span>{restorePreview.summary.total} изменений • предупреждений {restorePreview.summary.warnings} • проверить {restorePreview.summary.watches}</span>
+              <b>Restore preview: {previewBackup.label}</b>
+              <span>{restorePreview.summary.total} changes • warnings {restorePreview.summary.warnings} • watch {restorePreview.summary.watches}</span>
             </div>
             <div className="local-backup-actions">
-              <button type="button" onClick={() => confirmRestoreBackup(previewBackup)}>восстановить</button>
-              <button type="button" onClick={() => setPreviewBackup(null)}>отмена</button>
+              <button type="button" onClick={() => confirmRestoreBackup(previewBackup)}>confirm restore</button>
+              <button type="button" onClick={() => setPreviewBackup(null)}>cancel</button>
             </div>
           </div>
           {restorePreview.hasDifferences ? (
@@ -168,28 +168,28 @@ export function LocalBackupRestorePanel(props: {
                   <b>{item.title}</b>
                   <p>{item.message}</p>
                   <div>
-                    <span>сейчас: {item.currentValue}</span>
-                    <span>копия: {item.backupValue}</span>
+                    <span>current: {item.currentValue}</span>
+                    <span>backup: {item.backupValue}</span>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="quick-note">Копия совпадает с текущим состоянием по ключевым полям.</p>
+            <p className="quick-note">Backup совпадает с текущим локальным состоянием по ключевым полям.</p>
           )}
         </div>
       ) : null}
 
       <div className="local-backup-import-export">
         <textarea
-          placeholder="вставь текст копии для импорта"
+          placeholder="paste backup JSON here to import"
           value={importText}
           onChange={event => setImportText(event.target.value)}
         />
-        <button type="button" onClick={importBackup}>импортировать копию</button>
+        <button type="button" onClick={importBackup}>import backup JSON</button>
         {exportText ? (
           <>
-            <button type="button" onClick={copyExport}>скопировать экспорт</button>
+            <button type="button" onClick={copyExport}>copy export/report</button>
             <textarea readOnly value={exportText} />
           </>
         ) : null}

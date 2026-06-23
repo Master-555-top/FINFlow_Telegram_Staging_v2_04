@@ -86,29 +86,35 @@ export function buildDailyAllocation(input: DayCoreInputModel, net: NetCalculati
 }
 
 function buildDesiredBuckets(input: DayCoreInputModel): Omit<DailyAllocationBucket, 'allocatedAmount' | 'remainingNeed'>[] {
-  const obligationBuckets = input.obligations.map(obligation => ({
+  const planning = buildFundPlanningSummary(input);
+  const planningBySourceId = new Map(planning.rows.map(row => [`${row.source}:${row.id}`, row]));
+  const obligationBuckets = input.obligations.map(obligation => {
+    const plan = planningBySourceId.get(`obligation:${obligation.id}`);
+    return ({
     id: `obligation-${obligation.id}`,
     title: obligation.title,
-    targetAmount: Math.max(0, obligation.amountDue - obligation.currentSaved),
+    targetAmount: Math.max(0, plan?.dailyNorm ?? obligation.amountDue - obligation.currentSaved),
     priority: mapInputPriority(obligation.priority),
     editableSource: 'obligation' as const,
-    reason: `Обязательство: нужно закрыть ${obligation.amountDue} ₽, накоплено ${obligation.currentSaved} ₽.`
-  }));
+    reason: plan?.formula ?? `Обязательство: нужно закрыть ${obligation.amountDue} ₽, накоплено ${obligation.currentSaved} ₽.`
+  });
+  });
 
-  const fundPlanning = buildFundPlanningSummary(input);
   const fundBuckets = input.funds
     .filter(fund => fund.canReceiveToday)
     .map(fund => {
-      const plan = fundPlanning.rows.find(row => row.source === 'fund' && row.id === fund.id);
-      const planTarget = plan?.dailyNorm ?? Math.max(0, Math.min(fund.targetAmount - fund.currentAmount, suggestedDailyFundAmount(fund.targetAmount, fund.priority)));
-      return {
-        id: `fund-${fund.id}`,
-        title: fund.title,
-        targetAmount: Math.max(0, planTarget),
-        priority: mapInputPriority(fund.priority),
-        editableSource: 'fund' as const,
-        reason: plan?.formula ?? `Фонд: цель ${fund.targetAmount} ₽, сейчас ${fund.currentAmount} ₽.`
-      };
+      const plan = planningBySourceId.get(`fund:${fund.id}`);
+      return ({
+      id: `fund-${fund.id}`,
+      title: fund.title,
+      targetAmount: Math.max(0, Math.min(
+        fund.targetAmount - fund.currentAmount,
+        plan?.dailyNorm ?? suggestedDailyFundAmount(fund.targetAmount, fund.priority)
+      )),
+      priority: mapInputPriority(fund.priority),
+      editableSource: 'fund' as const,
+      reason: plan?.formula ?? `Фонд: цель ${fund.targetAmount} ₽, сейчас ${fund.currentAmount} ₽.`
+    });
     });
 
   const taskBuckets = input.tasks
@@ -123,14 +129,14 @@ function buildDesiredBuckets(input: DayCoreInputModel): Omit<DailyAllocationBuck
     }));
 
   const systemBuckets: Omit<DailyAllocationBucket, 'allocatedAmount' | 'remainingNeed'>[] = [
-    {
+    ...(input.funds.some(fund => fund.id === 'working-fund') ? [] : [{
       id: 'system-tomorrow-work',
       title: 'Рабочий остаток на завтра',
       targetAmount: 1000,
-      priority: 'high',
-      editableSource: 'system',
+      priority: 'high' as const,
+      editableSource: 'system' as const,
       reason: 'Чтобы завтра не начинать с нуля и не ломать рабочий день.'
-    },
+    }]),
     {
       id: 'system-flexible-mini-goal',
       title: 'Гибкая мини-цель',

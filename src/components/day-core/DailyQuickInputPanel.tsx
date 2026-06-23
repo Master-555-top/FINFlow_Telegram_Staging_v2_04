@@ -20,6 +20,7 @@ import { calculateDayNet } from '@/lib/day-core/netCalculationModel';
 import { buildFuelNetIntegrationReport } from '@/lib/day-core/fuelNetIntegrationModel';
 import { buildDailyAllocation } from '@/lib/day-core/dailyAllocationModel';
 import { buildCarRepairAllocationAdvisor } from '@/lib/day-core/carRepairAllocationModel';
+import { buildFundPlanningSummary } from '@/lib/day-core/fundPlanningModel';
 import { buildDailyDecisionSummary } from '@/lib/day-core/dailyDecisionSummaryModel';
 import {
   DAILY_RECORD_FILTERS,
@@ -171,6 +172,8 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
   const historySummary = useMemo(() => summarizeDailyHistory(historyState), [historyState]);
   const historyAnalytics = useMemo(() => analyzeDailyHistory(historyState, net.targetNet), [historyState, net.targetNet]);
   const allocation = useMemo(() => buildDailyAllocation(dayInput, net), [dayInput, net]);
+  const fundPlanning = useMemo(() => buildFundPlanningSummary(dayInput), [dayInput]);
+  const fundPlanningByKey = useMemo(() => new Map(fundPlanning.rows.map(row => [`${row.source}:${row.id}`, row])), [fundPlanning]);
   const carRepairAllocation = useMemo(() => buildCarRepairAllocationAdvisor({ day: dayInput, allocation, net }), [dayInput, allocation, net]);
   const carRepairAllocationChatContext = useMemo(() => buildCarRepairAllocationChatContext({ repair: carRepairAllocation }), [carRepairAllocation]);
   const recordsSummary = useMemo(() => summarizeDailyRecords(records), [records]);
@@ -385,7 +388,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
         <div className="section-kicker">Active Day Session</div>
         <h2 className="card-heading">День: утро → смена → вечер</h2>
         <p className="card-description">
-          Ежедневный экран показывает только то, что нужно сегодня. Служебные проверки вынесены в “Система”.
+          Ежедневный режим теперь показывает только то, что нужно для сегодняшнего дня. Cloud, backup, deployment и dev-панели вынесены в “Система”.
         </p>
         <LiveStateStatus syncedAt={dailyLiveSyncedAt} />
         <RealDailyUseHardeningPanel dayInput={dayInput} records={records} />
@@ -611,7 +614,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       <section className={`card quick-input-card money-mode-card ${net.mode}`}>
         <div className="section-kicker">v1.98 • Money Flow</div>
         <h2 className="card-heading">Деньги и записи дня</h2>
-        <p className="card-description">Деньги, записи, шаблоны и проверка банка без лишнего шума.</p>
+        <p className="card-description">Деньги, записи, шаблоны и bank-review без deployment/dev шума.</p>
 
         <MoneyEnginePanel dayInput={dayInput} records={records} />
         <RealDailyUseHardeningPanel dayInput={dayInput} records={records} compact />
@@ -715,7 +718,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
   if (view === 'funds') {
     return (
       <section className={`card quick-input-card funds-mode-card ${allocation.mode}`}>
-        <div className="section-kicker">v1.98 • Funds & Allocation</div>
+        <div className="section-kicker">v2.54 • Funds & Allocation</div>
         <h2 className="card-heading">Фонды, обязательства и распределение</h2>
         <p className="card-description">Слой денег после смены: что обязательно закрыть, куда направить остаток и что переносить.</p>
 
@@ -725,9 +728,24 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
           <div><span>Дефицит</span><b>{formatRub(allocation.shortage)}</b></div>
         </div>
 
+        <div className="fund-planning-summary">
+          <div><span>Общая цель</span><b>{formatRub(fundPlanning.targetTotal)}</b></div>
+          <div><span>Сейчас в фондах</span><b>{formatRub(fundPlanning.currentTotal)}</b></div>
+          <div><span>Не хватает</span><b>{formatRub(fundPlanning.missingTotal)}</b></div>
+          <div><span>Норма сегодня</span><b>{formatRub(fundPlanning.dailyNormTotal)}</b></div>
+        </div>
+        <div className="fund-system-note">
+          <b>Актуальность на {dayInput.localDate}</b>
+          <span>1. Обязательные: Рабочий → Машина / Банк → Встречи / Личное → База.</span>
+          <span>2. Накопительные: ДР Ульяны → Полёт / переезд → Подушка → Подарок.</span>
+          <em>Рабочий, Встречи и База — оборотные: восстанавливают стабильный остаток, а не растут бесконечно.</em>
+        </div>
+
         <div className="editable-group-heading"><b>Обязательства</b><button type="button" onClick={addObligation}>+ обязательство</button></div>
         <div className="editable-record-list">
-          {dayInput.obligations.map(obligation => (
+          {dayInput.obligations.map(obligation => {
+            const plan = fundPlanningByKey.get(`obligation:${obligation.id}`);
+            return (
             <article className="editable-record" key={obligation.id}>
               <input value={obligation.title} onChange={event => updateObligation(obligation.id, { title: event.target.value })} />
               <input inputMode="numeric" value={String(obligation.amountDue)} onChange={event => updateObligation(obligation.id, { amountDue: parseMoney(event.target.value) })} />
@@ -737,14 +755,17 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
                 <option value="critical">critical</option><option value="high">high</option><option value="normal">normal</option><option value="flexible">flexible</option>
               </select>
               <button type="button" onClick={() => deleteObligation(obligation.id)}>удалить</button>
-              <small>сумма / накоплено / день месяца</small>
+              <small>{plan?.formula ?? 'сумма / накоплено / день месяца'}</small>
             </article>
-          ))}
+            );
+          })}
         </div>
 
         <div className="editable-group-heading"><b>Фонды</b><button type="button" onClick={addFund}>+ фонд</button></div>
         <div className="editable-record-list">
-          {dayInput.funds.map(fund => (
+          {dayInput.funds.map(fund => {
+            const plan = fundPlanningByKey.get(`fund:${fund.id}`);
+            return (
             <article className="editable-record fund-record" key={fund.id}>
               <input value={fund.title} onChange={event => updateFund(fund.id, { title: event.target.value })} />
               <input inputMode="numeric" value={String(fund.targetAmount)} onChange={event => updateFund(fund.id, { targetAmount: parseMoney(event.target.value) })} />
@@ -754,9 +775,20 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
               </select>
               <label className="editable-check"><input type="checkbox" checked={fund.canReceiveToday} onChange={event => updateFund(fund.id, { canReceiveToday: event.target.checked })} /><span>сегодня</span></label>
               <button type="button" onClick={() => deleteFund(fund.id)}>удалить</button>
-              <small>цель / накоплено / приоритет / участвует сегодня</small>
+              <div className="fund-details-row">
+                <select value={fund.fundType ?? 'savings'} onChange={event => updateFund(fund.id, { fundType: event.target.value as DayCoreFundInput['fundType'] })} aria-label="Тип фонда">
+                  <option value="revolving">оборотный</option><option value="savings">накопительный</option><option value="flexible">гибкий</option>
+                </select>
+                <select value={fund.group ?? 'required'} onChange={event => updateFund(fund.id, { group: event.target.value as DayCoreFundInput['group'] })} aria-label="Группа фонда">
+                  <option value="required">обязательный</option><option value="savings">накопительный</option>
+                </select>
+                <input type="date" value={fund.deadline ?? ''} onChange={event => updateFund(fund.id, { deadline: event.target.value || undefined })} aria-label="Срок фонда" />
+                <input value={fund.note ?? ''} onChange={event => updateFund(fund.id, { note: event.target.value })} placeholder="Назначение фонда" aria-label="Назначение фонда" />
+              </div>
+              <small>{fund.group === 'savings' ? '2. Накопительный' : '1. Обязательный'} · {fund.fundType === 'revolving' ? 'оборотный' : fund.fundType === 'flexible' ? 'гибкий' : 'накопительный'} · {plan?.formula ?? 'цель / накоплено / приоритет / участвует сегодня'}</small>
             </article>
-          ))}
+            );
+          })}
         </div>
 
         <div className={`allocation-panel ${allocation.mode}`}>
@@ -807,7 +839,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
               <button type="button" onClick={askAssistant}>спросить</button>
             </div>
           </div>
-          <div className="assistant-bridge-note"><b>AI-помощник:</b><span> сводка готова; внешний AI пока не вызывается.</span></div>
+          <div className="assistant-bridge-note"><b>External AI bridge draft:</b><span> payload готов: {externalAssistantPayload.privacyMode}; внешний AI пока не вызывается.</span></div>
           <p className="quick-note">{assistantAdvice.disclaimer}</p>
         </div>
 
@@ -830,12 +862,12 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       <section className="card quick-input-card system-mode-card">
         <div className="section-kicker">v1.98 • System / Dev only</div>
         <h2 className="card-heading">Системные инструменты дня</h2>
-        <p className="card-description">Сохранение, копии и проверки вынесены сюда, чтобы не мешать ежедневному режиму.</p>
+        <p className="card-description">Cloud save/load, local restore, self-check и технические панели не мешают ежедневному режиму и доступны только здесь.</p>
         <LiveStateStatus syncedAt={dailyLiveSyncedAt} />
         <CloudDaySyncPanel document={cloudDocument} onLoad={loadCloudDocument} />
         <LocalBackupRestorePanel document={cloudDocument} onRestore={loadCloudDocument} />
         <div className="project-self-check-panel">
-          <div className="audit-log-heading">Готовность приложения</div>
+          <div className="audit-log-heading">Project self-check / готовность mini app</div>
           <div className="readiness-grid">
             {projectSelfCheck.miniAppReadiness.map(item => (
               <div className="readiness-card" key={item.label}><b>{item.percent}</b><span>{item.label}</span><p>{item.meaning}</p></div>
@@ -857,7 +889,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       <div className="section-kicker">v1.87 • Local Backup / Restore Safety Layer</div>
       <h2 className="card-heading">Быстрый ввод дня</h2>
       <p className="card-description">
-        Перед реальными облачными проверками можно сделать локальную копию дня и восстановиться без записи в Supabase.
+        Перед реальными cloud save/load/conflict тестами можно сделать локальный backup дня и восстановиться без записи в Supabase.
       </p>
 
       <CloudDaySyncPanel document={cloudDocument} onLoad={loadCloudDocument} />
@@ -1191,7 +1223,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       </div>
 
       <div className="project-self-check-panel">
-        <div className="audit-log-heading">Готовность приложения</div>
+        <div className="audit-log-heading">Project self-check / готовность mini app</div>
         <div className="readiness-grid">
           {projectSelfCheck.miniAppReadiness.map(item => (
             <div className="readiness-card" key={item.label}>
@@ -1271,7 +1303,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
 
         <div className="assistant-bridge-note">
           <b>External AI bridge draft:</b>
-          <span> сводка готова; внешний AI пока не вызывается.</span>
+          <span> payload готов: {externalAssistantPayload.privacyMode}; внешний AI пока не вызывается.</span>
         </div>
 
         <p className="quick-note">{assistantAdvice.disclaimer}</p>
@@ -1513,12 +1545,21 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
           Это исходные данные для распределения. Их можно менять вручную. Итоговое распределение ниже пересчитывается автоматически.
         </p>
 
+        <div className="fund-planning-summary">
+          <div><span>Общая цель</span><b>{formatRub(fundPlanning.targetTotal)}</b></div>
+          <div><span>Сейчас</span><b>{formatRub(fundPlanning.currentTotal)}</b></div>
+          <div><span>Не хватает</span><b>{formatRub(fundPlanning.missingTotal)}</b></div>
+          <div><span>Норма сегодня</span><b>{formatRub(fundPlanning.dailyNormTotal)}</b></div>
+        </div>
+
         <div className="editable-group-heading">
           <b>Обязательства</b>
           <button type="button" onClick={addObligation}>+ обязательство</button>
         </div>
         <div className="editable-record-list">
-          {dayInput.obligations.map(obligation => (
+          {dayInput.obligations.map(obligation => {
+            const plan = fundPlanningByKey.get(`obligation:${obligation.id}`);
+            return (
             <article className="editable-record" key={obligation.id}>
               <input value={obligation.title} onChange={event => updateObligation(obligation.id, { title: event.target.value })} />
               <input inputMode="numeric" value={String(obligation.amountDue)} onChange={event => updateObligation(obligation.id, { amountDue: parseMoney(event.target.value) })} />
@@ -1531,9 +1572,10 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
                 <option value="flexible">flexible</option>
               </select>
               <button type="button" onClick={() => deleteObligation(obligation.id)}>удалить</button>
-              <small>сумма / накоплено / день месяца</small>
+              <small>{plan?.formula ?? 'сумма / накоплено / день месяца'}</small>
             </article>
-          ))}
+            );
+          })}
         </div>
 
         <div className="editable-group-heading">
@@ -1541,7 +1583,9 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
           <button type="button" onClick={addFund}>+ фонд</button>
         </div>
         <div className="editable-record-list">
-          {dayInput.funds.map(fund => (
+          {dayInput.funds.map(fund => {
+            const plan = fundPlanningByKey.get(`fund:${fund.id}`);
+            return (
             <article className="editable-record fund-record" key={fund.id}>
               <input value={fund.title} onChange={event => updateFund(fund.id, { title: event.target.value })} />
               <input inputMode="numeric" value={String(fund.targetAmount)} onChange={event => updateFund(fund.id, { targetAmount: parseMoney(event.target.value) })} />
@@ -1557,9 +1601,20 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
                 <span>сегодня</span>
               </label>
               <button type="button" onClick={() => deleteFund(fund.id)}>удалить</button>
-              <small>цель / накоплено / приоритет / участвует сегодня</small>
+              <div className="fund-details-row">
+                <select value={fund.fundType ?? 'savings'} onChange={event => updateFund(fund.id, { fundType: event.target.value as DayCoreFundInput['fundType'] })} aria-label="Тип фонда">
+                  <option value="revolving">оборотный</option><option value="savings">накопительный</option><option value="flexible">гибкий</option>
+                </select>
+                <select value={fund.group ?? 'required'} onChange={event => updateFund(fund.id, { group: event.target.value as DayCoreFundInput['group'] })} aria-label="Группа фонда">
+                  <option value="required">обязательный</option><option value="savings">накопительный</option>
+                </select>
+                <input type="date" value={fund.deadline ?? ''} onChange={event => updateFund(fund.id, { deadline: event.target.value || undefined })} aria-label="Срок фонда" />
+                <input value={fund.note ?? ''} onChange={event => updateFund(fund.id, { note: event.target.value })} placeholder="Назначение фонда" aria-label="Назначение фонда" />
+              </div>
+              <small>{plan?.formula ?? 'цель / накоплено / приоритет / участвует сегодня'}</small>
             </article>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -1610,7 +1665,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
 
         <div className={`daily-save-qa-panel ${dailySaveQa.status}`}>
           <div className="history-status-row">
-            <span>Проверка дня</span>
+            <span>v2.45 • Daily Save QA</span>
             <b>{dailySaveQa.headline}</b>
           </div>
           <p className="quick-note">{dailySaveQa.nextAction}</p>

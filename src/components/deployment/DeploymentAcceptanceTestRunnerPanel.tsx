@@ -191,7 +191,7 @@ export function DeploymentAcceptanceTestRunnerPanel() {
   return (
     <section className="deployment-acceptance-panel">
       <div className="acceptance-head">
-        <span>Прогон публикации</span>
+        <span>v1.85 • Deployment Acceptance Runner</span>
         <b>Acceptance tests</b>
         <p>
           Безопасный runner проверяет readiness routes и read-preview. Cloud save/conflict/RLS остаются ручными, чтобы не было случайной записи или silent overwrite.

@@ -1,6 +1,6 @@
 {
   "name": "finflow-v3-foundation",
-  "version": "0.2.60",
+  "version": "0.2.55",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",

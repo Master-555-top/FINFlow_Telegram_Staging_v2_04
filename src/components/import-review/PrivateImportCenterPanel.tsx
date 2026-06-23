@@ -32,7 +32,7 @@ export function PrivateImportCenterPanel() {
   const [section, setSection] = useState<'all' | HistoricalLedgerSection>('all');
   const [status, setStatus] = useState<'all' | HistoricalLedgerStatus>('all');
   const [query, setQuery] = useState('');
-  const [message, setMessage] = useState('История хранится на этом устройстве. Проверь записи перед сохранением.');
+  const [message, setMessage] = useState('Данные не уходят в сеть: импорт и редакторы работают только в localStorage этого устройства.');
   const parsed = useMemo(() => parsePrivateImportBundle(sourceText), [sourceText]);
   const parsedBackup = useMemo(() => parseHistoricalLedgerBackup(sourceText), [sourceText]);
   const allRecords = useMemo(() => [...ledgers.money.records, ...ledgers.work.records, ...ledgers.funds.records], [ledgers]);
@@ -122,7 +122,7 @@ export function PrivateImportCenterPanel() {
     }
     setManualDraft(null);
     setSelectedId(record.id);
-    setMessage(`Запись «${record.title.trim()}» сохранена. История обновлена.`);
+    setMessage(`Запись «${record.title.trim()}» сохранена. Живая история и статистика уже пересчитаны.`);
     return true;
   }
 
@@ -131,7 +131,7 @@ export function PrivateImportCenterPanel() {
     const draft = createManualHistoricalRecord(targetSection);
     setManualDraft(draft);
     setSelectedId('');
-    setMessage('Заполни поля и сохрани запись.');
+    setMessage('Новая историческая запись пока черновик: заполните поля и нажмите «сохранить».');
   }
 
   function addRecordFromTemplate(template: HistoricalLedgerTemplate) {
@@ -139,7 +139,7 @@ export function PrivateImportCenterPanel() {
     setManualDraft(draft);
     setSelectedId('');
     if (section !== 'all' && section !== template.section) setSection(template.section);
-    setMessage(`Шаблон «${template.label}» подготовил запись. Проверь сумму и дату.`);
+    setMessage(`Шаблон «${template.label}» подготовил запись: дата, раздел, тип, категория и сумма уже заполнены. Проверь сумму/дату и сохрани.`);
   }
 
   function approveSafeRecords() {
@@ -180,24 +180,24 @@ export function PrivateImportCenterPanel() {
 
   return (
     <section className="card private-import-center">
-      
-      <h2 className="card-heading">История и шаблоны</h2>
+      <div className="section-kicker">v2.54 • Private Local Import</div>
+      <h2 className="card-heading">Импорт банковской истории и Telegram-архивов</h2>
       <p className="card-description">
-        Добавляй старые записи через файл или шаблон. Активный день не перезаписывается.
+        Отдельный исторический реестр: записи сохраняют свою дату, проходят review и появляются в разделах Деньги / Работа / Фонды. Активный день не перезаписывается.
       </p>
 
       <div className="private-import-warning">
-        <b>Локально</b>
-        <span>Личные данные остаются на устройстве, пока ты сам не сделаешь backup или перенос.</span>
+        <b>Только локально</b>
+        <span>В bundle могут быть личные траты, маршруты и банковские описания. Cloud/Supabase/n8n для этого слоя не вызываются.</span>
       </div>
 
       <div className="private-import-upload">
         <label>
-          <span>Файл истории</span>
+          <span>Private JSON bundle</span>
           <input type="file" accept=".json,application/json" onChange={onFileChange} />
         </label>
-        <div><b>{fileName || 'файл не выбран'}</b><span>{parsedBackup.backup ? 'исторический backup готов к восстановлению' : parsed.bundle ? `${parsed.bundle.records.length} записей · ${parsed.bundle.sources.length} источника` : 'выбери файл истории или backup'}</span></div>
-        <button type="button" disabled={!parsed.bundle && !parsedBackup.backup} onClick={importBundleOrRestore}>{parsedBackup.backup ? 'восстановить backup' : 'проверить и добавить'}</button>
+        <div><b>{fileName || 'файл не выбран'}</b><span>{parsedBackup.backup ? 'исторический backup готов к восстановлению' : parsed.bundle ? `${parsed.bundle.records.length} записей · ${parsed.bundle.sources.length} источника` : 'ожидаю bundle или backup v2.53'}</span></div>
+        <button type="button" disabled={!parsed.bundle && !parsedBackup.backup} onClick={importBundleOrRestore}>{parsedBackup.backup ? 'восстановить backup' : 'проверить и импортировать'}</button>
       </div>
 
       {!parsedBackup.backup && (parsed.errors.length || parsed.warnings.length) ? (
@@ -212,7 +212,7 @@ export function PrivateImportCenterPanel() {
       <div className="private-import-stats">
         <Metric label="Всего" value={counts.total} />
         <Metric label="В истории" value={counts.approved} />
-        <Metric label="Проверить" value={counts.review} />
+        <Metric label="Review" value={counts.review} />
         <Metric label="Шаблонов" value={templateCounts.total} />
         <Metric label="Отклонено" value={counts.rejected} />
       </div>

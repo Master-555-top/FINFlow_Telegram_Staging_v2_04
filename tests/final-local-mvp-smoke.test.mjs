@@ -22,7 +22,7 @@ test('final local MVP smoke keeps release safety hard stops', () => {
 });
 
 test('final local MVP smoke is available only inside the System QA section', () => {
-  assert.ok(dashboard.includes("{ id: 'qa_mvp_smoke', label: 'Готовность' }"));
+  assert.ok(dashboard.includes("{ id: 'qa_mvp_smoke', label: 'MVP' }"));
   assert.ok(dashboard.includes('FinalLocalMvpSmokePanel'));
   assert.equal(dashboard.includes("{ id: 'history'"), false);
 });

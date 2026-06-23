@@ -93,10 +93,10 @@ export function ManualCloudTestWizardPanel() {
   return (
     <section className="manual-cloud-wizard-panel">
       <div className="manual-cloud-head">
-        <span>Проверка облака</span>
-        <b>Пошаговая проверка облака</b>
+        <span>v1.90 • Codex-Synced Backup-Aware Cloud Test Flow</span>
+        <b>Cloud sync test wizard</b>
         <p>
-          Перед облачными действиями нужна резервная копия. Без неё проверка не считается пройденной.
+          Пошаговая проверка cloud save/load/conflict теперь связана с local backup gate: manual write/conflict нельзя закрыть как passed без backup.
         </p>
       </div>
 

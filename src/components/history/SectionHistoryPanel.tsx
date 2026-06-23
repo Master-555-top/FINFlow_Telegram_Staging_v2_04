@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { buildFinflowHistoryTimeline, type FinflowDataSection } from '@/lib/data/finflowDataRegistry';
 import { buildHistoryTree, type FinflowHistoryEntry, type FinflowHistoryPeriod } from '@/lib/data/finflowHistoryEngine';
 import { getTodayDateInput } from '@/lib/sleep/sleepModel';
+import { HISTORICAL_LEDGER_UPDATED_EVENT } from '@/lib/data/privateImportBundle';
 
 type SectionHistoryPanelProps = {
   title: string;
@@ -34,9 +35,11 @@ export function SectionHistoryPanel(props: SectionHistoryPanelProps) {
     refresh();
     window.addEventListener('storage', refresh);
     window.addEventListener('focus', refresh);
+    window.addEventListener(HISTORICAL_LEDGER_UPDATED_EVENT, refresh);
     return () => {
       window.removeEventListener('storage', refresh);
       window.removeEventListener('focus', refresh);
+      window.removeEventListener(HISTORICAL_LEDGER_UPDATED_EVENT, refresh);
     };
   }, [props.sections, period, anchorDateIso]);
 
@@ -45,11 +48,11 @@ export function SectionHistoryPanel(props: SectionHistoryPanelProps) {
     return entries.filter(entry => props.categories?.includes(entry.category));
   }, [entries, props.categories]);
   const periodSummary = useMemo(() => {
-    const totalAmount = filteredEntries.reduce((sum, entry) => sum + (typeof entry.amount === 'number' ? entry.amount : 0), 0);
+    const income = filteredEntries.reduce((sum, entry) => sum + (entry.direction === 'income' && typeof entry.amount === 'number' ? entry.amount : 0), 0);
+    const expense = filteredEntries.reduce((sum, entry) => sum + (entry.direction === 'expense' && typeof entry.amount === 'number' ? entry.amount : 0), 0);
     const categoryCount = new Set(filteredEntries.map(entry => entry.category)).size;
-    const sectionCount = new Set(filteredEntries.map(entry => entry.section)).size;
     const latestDate = filteredEntries[0]?.dateIso ?? '—';
-    return { totalAmount, categoryCount, sectionCount, latestDate };
+    return { income, expense, net: income - expense, categoryCount, latestDate };
   }, [filteredEntries]);
   const tree = useMemo(() => buildHistoryTree(filteredEntries), [filteredEntries]);
   const activeYear = tree[0] ?? null;
@@ -90,7 +93,9 @@ export function SectionHistoryPanel(props: SectionHistoryPanelProps) {
 
       <div className="history-summary-grid section-period-summary">
         <div><span>Записей</span><b>{filteredEntries.length}</b></div>
-        <div><span>Сумма</span><b>{periodSummary.totalAmount ? `${periodSummary.totalAmount.toLocaleString('ru-RU')} ₽` : '—'}</b></div>
+        <div><span>Доход</span><b>{periodSummary.income ? `+${periodSummary.income.toLocaleString('ru-RU')} ₽` : '—'}</b></div>
+        <div><span>Расход</span><b>{periodSummary.expense ? `−${periodSummary.expense.toLocaleString('ru-RU')} ₽` : '—'}</b></div>
+        <div><span>Нетто</span><b>{`${periodSummary.net >= 0 ? '+' : '−'}${Math.abs(periodSummary.net).toLocaleString('ru-RU')} ₽`}</b></div>
         <div><span>Категорий</span><b>{periodSummary.categoryCount}</b></div>
         <div><span>Последняя дата</span><b>{periodSummary.latestDate}</b></div>
       </div>
@@ -103,7 +108,7 @@ export function SectionHistoryPanel(props: SectionHistoryPanelProps) {
               <span>{day.count} записей</span>
             </div>
             {day.entries.slice(0, 5).map(entry => (
-              <div className={`section-history-entry category-${entry.category}`} key={entry.id}>
+              <div className={`section-history-entry category-${entry.category} direction-${entry.direction}`} key={entry.id}>
                 <span>{entry.section}</span>
                 <b>{entry.title}</b>
                 <em>{entry.summary}</em>

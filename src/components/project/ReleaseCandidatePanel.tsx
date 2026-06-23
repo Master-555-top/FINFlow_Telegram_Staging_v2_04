@@ -95,11 +95,11 @@ export function ReleaseCandidatePanel(props: { dayInput: DayCoreInputModel; reco
   function addBug(severity: ReleaseCandidateBug['severity']) {
     const bug: ReleaseCandidateBug = {
       id: `bug-${Date.now()}`,
-      title: severity === 'blocker' ? 'Критичная проблема на телефоне' : severity === 'major' ? 'Важная проблема в использовании' : 'Мелкая визуальная правка',
+      title: severity === 'blocker' ? 'Телефонный blocker по скриншоту' : severity === 'major' ? 'Major баг реального использования' : 'Minor/UI watch пункт',
       area: severity === 'minor' ? 'visual' : 'release',
       severity,
       status: 'open',
-      note: 'Заполни по скриншоту; исправлять точечно, без нового редизайна.'
+      note: 'Заполни по скриншоту в чате; исправлять точечно, без глобального редизайна.'
     };
     patchState({ bugs: [bug, ...state.bugs] });
   }
@@ -110,68 +110,68 @@ export function ReleaseCandidatePanel(props: { dayInput: DayCoreInputModel; reco
 
   return (
     <section className={`card money-engine-panel release-candidate-panel money-engine-${snapshot.mode === 'blocked' ? 'red' : snapshot.mode === 'release_candidate' ? 'green' : 'amber'} ${props.compact ? 'compact' : ''}`}>
-      <div className="section-kicker">Финальный прогон</div>
-      <h2 className="card-heading">Проверка на телефоне</h2>
-      <p className="card-description">Финальная проверка: открыть в Telegram, отметить проблемы со скринов, проверить историю, день и резервную копию.</p>
+      <div className="section-kicker">v2.50 • Release Candidate</div>
+      <h2 className="card-heading">Phone bugfix + RC</h2>
+      <p className="card-description">Финальный локальный RC-gate: Telegram phone pass, screenshot bug log, Daily Save QA, Period History, backup и safe-off cloud.</p>
 
       <div className="money-engine-hero templates-engine-hero">
         <div>
           <span>{snapshot.headline}</span>
           <b>{snapshot.percent}%</b>
-          <small>финал</small>
+          <small>{snapshot.version}</small>
         </div>
         <p>{snapshot.nextAction}</p>
       </div>
 
       <div className="money-engine-metrics templates-engine-metrics">
-        <Metric label="Готово" value={`${snapshot.counters.pass}`} mode="green" />
-        <Metric label="Проверить" value={`${snapshot.counters.watch}`} mode={snapshot.counters.watch ? 'amber' : 'green'} />
-        <Metric label="Стоп" value={`${snapshot.counters.blocked}`} mode={snapshot.counters.blocked ? 'red' : 'green'} />
-        <Metric label="Проблемы" value={`${snapshot.counters.openBugs}`} mode={snapshot.counters.blockerBugs ? 'red' : snapshot.counters.openBugs ? 'amber' : 'green'} />
+        <Metric label="Pass" value={`${snapshot.counters.pass}`} mode="green" />
+        <Metric label="Watch" value={`${snapshot.counters.watch}`} mode={snapshot.counters.watch ? 'amber' : 'green'} />
+        <Metric label="Blocked" value={`${snapshot.counters.blocked}`} mode={snapshot.counters.blocked ? 'red' : 'green'} />
+        <Metric label="Bugs" value={`${snapshot.counters.openBugs}`} mode={snapshot.counters.blockerBugs ? 'red' : snapshot.counters.openBugs ? 'amber' : 'green'} />
       </div>
 
       <div className="system-data-preview compact backbone-progress-grid">
-        <div className="system-data-preview-head"><b>Финальные проверки</b><span>{humanRcMode(snapshot.mode)}</span></div>
+        <div className="system-data-preview-head"><b>RC gates</b><span>{snapshot.mode}</span></div>
         {visibleGates.map(gate => <GateRow key={gate.id} gate={gate} />)}
       </div>
 
       <div className="telegram-device-actions premium-actions">
-        <button type="button" onClick={runRcProbe} disabled={running}>{running ? 'проверяю…' : 'проверить'}</button>
-        <button type="button" onClick={() => patchState({ phoneSmokePassed: true })}>проверил на телефоне</button>
-        <button type="button" onClick={() => patchState({ dailySaveQaChecked: true, periodHistoryChecked: true })}>день и история ок</button>
-        <button type="button" onClick={() => patchState({ phoneScreenshotsCaptured: state.phoneScreenshotsCaptured + 1 })}>+ скриншот</button>
+        <button type="button" onClick={runRcProbe} disabled={running}>{running ? 'проверяю…' : 'запустить RC probe'}</button>
+        <button type="button" onClick={() => patchState({ phoneSmokePassed: true })}>phone pass</button>
+        <button type="button" onClick={() => patchState({ dailySaveQaChecked: true, periodHistoryChecked: true })}>save/history ok</button>
+        <button type="button" onClick={() => patchState({ phoneScreenshotsCaptured: state.phoneScreenshotsCaptured + 1 })}>+ скрин</button>
       </div>
 
       <div className="telegram-device-actions premium-actions">
-        <button type="button" onClick={() => addBug('blocker')}>+ критично</button>
-        <button type="button" onClick={() => addBug('major')}>+ важно</button>
-        <button type="button" onClick={() => addBug('minor')}>+ мелочь</button>
+        <button type="button" onClick={() => addBug('blocker')}>+ blocker</button>
+        <button type="button" onClick={() => addBug('major')}>+ major</button>
+        <button type="button" onClick={() => addBug('minor')}>+ minor</button>
       </div>
 
       <div className="system-data-preview compact">
-        <div className="system-data-preview-head"><b>Проблемы по скриншотам</b><span>{snapshot.counters.openBugs} открыто</span></div>
+        <div className="system-data-preview-head"><b>Screenshot bug log</b><span>{snapshot.counters.openBugs} open</span></div>
         {snapshot.bugs.length ? snapshot.bugs.slice(0, props.compact ? 3 : 8).map(bug => (
           <article key={bug.id} className={bug.status === 'open' && (bug.severity === 'blocker' || bug.severity === 'major') ? 'danger' : bug.status === 'open' ? 'watch' : ''}>
             <b>{bug.title}</b>
-            <span>{humanBugStatus(bug.status)} · {humanSeverity(bug.severity)} · {humanBugArea(bug.area)}</span>
+            <span>{bug.status} · {bug.severity} · {bug.area}</span>
             {bug.status === 'open' ? <button type="button" onClick={() => closeBug(bug.id)}>закрыть</button> : null}
           </article>
-        )) : <article><b>Багов по скриншотам пока нет</b><span>добавлять только реальные проблемы с телефона</span></article>}
+        )) : <article><b>Багов по скриншотам пока нет</b><span>добавлять только реальные phone issues</span></article>}
       </div>
 
       {!props.compact ? (
         <>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Путь проверки на телефоне</b><span>ручной путь</span></div>
-            {snapshot.phoneRcFlow.map(step => <article key={step}><b>{step}</b><span>проверить</span></article>)}
+            <div className="system-data-preview-head"><b>Phone RC flow</b><span>ручной путь</span></div>
+            {snapshot.phoneRcFlow.map(step => <article key={step}><b>{step}</b><span>v2.50</span></article>)}
           </div>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Что нельзя ломать</b><span>зафиксировано</span></div>
-            {snapshot.mustStayLocked.map(item => <article key={item}><b>{cleanRcCopy(item)}</b><span>зафиксировано</span></article>)}
+            <div className="system-data-preview-head"><b>Locked baseline</b><span>не ломать</span></div>
+            {snapshot.mustStayLocked.map(item => <article key={item}><b>{item}</b><span>locked</span></article>)}
           </div>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Стоп-факторы</b><span>нельзя пропускать</span></div>
-            {snapshot.hardStops.map(stop => <article key={stop} className="danger"><b>{cleanRcCopy(stop)}</b><span>остановить релиз</span></article>)}
+            <div className="system-data-preview-head"><b>Hard stops</b><span>blocked</span></div>
+            {snapshot.hardStops.map(stop => <article key={stop} className="danger"><b>{stop}</b><span>release stop</span></article>)}
           </div>
         </>
       ) : null}
@@ -193,7 +193,7 @@ function GateRow(props: { gate: ReleaseCandidateGate }) {
   return (
     <article className={className}>
       <b>{props.gate.title}</b>
-      <span>{humanGateStatus(props.gate.status)} · {humanBugArea(props.gate.area)}</span>
+      <span>{props.gate.status} · {props.gate.area}</span>
     </article>
   );
 }
@@ -318,53 +318,4 @@ function hasRawSecretLeak(data: unknown) {
     || /eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}/.test(text)
     || /sk-[A-Za-z0-9_-]{20,}/.test(text)
     || (/service[_-]?role/i.test(text) && /eyJ/.test(text));
-}
-
-
-function humanRcMode(mode: string) {
-  if (mode === 'release_candidate') return 'готово к проверке';
-  if (mode === 'blocked') return 'есть стоп-факторы';
-  return 'нужна проверка';
-}
-
-function humanGateStatus(status: string) {
-  if (status === 'pass') return 'готово';
-  if (status === 'watch') return 'проверить';
-  if (status === 'blocked') return 'стоп';
-  return status;
-}
-
-function humanBugStatus(status: string) {
-  if (status === 'open') return 'открыто';
-  if (status === 'fixed') return 'исправлено';
-  return status;
-}
-
-function humanSeverity(severity: string) {
-  if (severity === 'blocker') return 'критично';
-  if (severity === 'major') return 'важно';
-  if (severity === 'minor') return 'мелочь';
-  return severity;
-}
-
-function humanBugArea(area: string) {
-  return area
-    .replaceAll('release', 'финал')
-    .replaceAll('visual', 'визуал')
-    .replaceAll('cloud', 'облако')
-    .replaceAll('backup', 'копия')
-    .replaceAll('telegram', 'Telegram')
-    .replaceAll('_', ' ');
-}
-
-function cleanRcCopy(text: string) {
-  return text
-    .replaceAll('locked', 'зафиксировано')
-    .replaceAll('baseline', 'эталон')
-    .replaceAll('release stop', 'стоп')
-    .replaceAll('cloud', 'облако')
-    .replaceAll('backup', 'копия')
-    .replaceAll('phone', 'телефон')
-    .replaceAll('screenshot', 'скриншот')
-    .replaceAll('UI', 'интерфейс');
 }

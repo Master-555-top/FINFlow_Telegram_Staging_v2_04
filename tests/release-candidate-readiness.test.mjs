@@ -9,7 +9,7 @@ const plan = readFileSync(new URL('../src/lib/project/miniAppDeliveryPlan.ts', i
 
 test('release candidate readiness adds an explicit v2.50 RC gate without enabling writes', () => {
   assert.ok(source.includes('release_candidate_readiness_v2_50'));
-  assert.ok(source.includes('Phone bugfix + RC') || panel.includes('Проверка на телефоне'));
+  assert.ok(source.includes('Phone bugfix + RC') || panel.includes('Phone bugfix + RC'));
   assert.ok(source.includes('Supabase writes остаются safe-off'));
   assert.equal(source.includes('supabaseWritesEnabled: true'), false);
   assert.equal(source.includes('cloudSyncEnabled: true'), false);
@@ -23,18 +23,21 @@ test('release candidate gate preserves locked product and visual decisions', () 
 });
 
 test('release candidate panel is wired only inside System QA and tracks screenshot bugs', () => {
-  assert.ok(dashboard.includes("{ id: 'qa_release_candidate', label: 'Финал' }"));
+  assert.ok(dashboard.includes("{ id: 'qa_release_candidate', label: 'RC' }"));
   assert.ok(dashboard.includes('ReleaseCandidatePanel'));
   assert.ok(panel.includes('finflow.releaseCandidate.v2_50'));
-  assert.ok(panel.includes('Проблемы по скриншотам'));
-  assert.equal(panel.includes('Screenshot bug log'), false);
+  assert.ok(panel.includes('Screenshot bug log'));
   assert.equal(dashboard.includes("{ id: 'history'"), false);
 });
 
-test('mini app delivery plan preserves RC/redesign/senior-audit history and advances to v2.56 full redesign', () => {
-  assert.ok(plan.includes('mini_app_delivery_plan_v2_60'));
+test('mini app delivery plan preserves earlier history and advances to v2.55 template-first historical input', () => {
+  assert.ok(plan.includes('mini_app_delivery_plan_v2_55'));
   assert.ok(plan.includes('Release Candidate gate v2.50'));
   assert.ok(plan.includes('Release Candidate gate v2.50'));
-  assert.ok(plan.includes('v2.61 — Real Telegram Screenshot Acceptance'));
+  assert.ok(plan.includes('v2.56 — Real Telegram Device Acceptance'));
+  assert.ok(plan.includes('private bundle upload и schema validation v2.53'));
+  assert.ok(plan.includes('live historical analytics v2.54'));
+  assert.ok(plan.includes('template-first historical entry v2.55'));
+  assert.ok(plan.includes('МФН fund templates v2.55'));
   assert.ok(plan.includes('senior audit regression tests v2.52'));
 });

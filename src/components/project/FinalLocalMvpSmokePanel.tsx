@@ -60,15 +60,15 @@ export function FinalLocalMvpSmokePanel(props: { dayInput: DayCoreInputModel; re
 
   return (
     <section className={`card money-engine-panel final-local-mvp-smoke-panel money-engine-${snapshot.mode === 'blocked' ? 'red' : snapshot.mode === 'strong_local_mvp_candidate' ? 'green' : 'amber'} ${props.compact ? 'compact' : ''}`}>
-      <div className="section-kicker">Финальная проверка</div>
+      <div className="section-kicker">v2.49 • Final Local MVP Smoke</div>
       <h2 className="card-heading">Финальный local-first smoke</h2>
-      <p className="card-description">Проверка перед реальным использованием: телефон, история, сохранение, резервная копия и стабильный дизайн.</p>
+      <p className="card-description">Проверка перед сильным MVP: Telegram phone flow, Daily Save QA, Period History, backup, cloud safe-off и visual baseline lock.</p>
 
       <div className="money-engine-hero templates-engine-hero">
         <div>
           <span>{snapshot.headline}</span>
           <b>{snapshot.percent}%</b>
-          <small>готовность</small>
+          <small>{snapshot.version}</small>
         </div>
         <p>{snapshot.nextAction}</p>
       </div>
@@ -103,10 +103,10 @@ export function FinalLocalMvpSmokePanel(props: { dayInput: DayCoreInputModel; re
         <>
           <div className="system-data-preview compact">
             <div className="system-data-preview-head"><b>Phone smoke flow</b><span>ручной путь</span></div>
-            {snapshot.phoneSmokeFlow.map(step => <article key={step}><b>{step}</b><span>проверить</span></article>)}
+            {snapshot.phoneSmokeFlow.map(step => <article key={step}><b>{step}</b><span>v2.49</span></article>)}
           </div>
           <div className="system-data-preview compact">
-            <div className="system-data-preview-head"><b>Стоп-факторы</b><span>нельзя релизить</span></div>
+            <div className="system-data-preview-head"><b>Hard stops</b><span>нельзя релизить</span></div>
             {snapshot.hardStops.map(stop => <article key={stop} className="danger"><b>{stop}</b><span>blocked</span></article>)}
           </div>
         </>

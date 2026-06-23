@@ -4,7 +4,7 @@ import type { DailyRecord } from '@/lib/day-core/dailyRecordsModel';
 import type { DailyHistoryState } from '@/lib/day-core/dailyHistoryModel';
 import type { TelegramSupabasePreflightInput } from '@/lib/deployment/telegramSupabasePreflight';
 
-export const GLOBAL_REDESIGN_ACCEPTANCE_VERSION = 'global_redesign_acceptance_v2_56' as const;
+export const GLOBAL_REDESIGN_ACCEPTANCE_VERSION = 'global_redesign_acceptance_v2_51' as const;
 
 export type GlobalRedesignStatus = 'pass' | 'watch' | 'blocked';
 
@@ -63,7 +63,7 @@ export function buildGlobalRedesignAcceptanceSnapshot(input: {
   const gates: GlobalRedesignGate[] = [
     gate('explicit-redesign-request', 'Глобальный редизайн разрешён пользователем', globalRedesignRequested, true, 'Редизайн активирован только после прямой команды пользователя.'),
     gate('baseline-protected', 'Эталонные экраны защищены', protectedBaselineChecked, true, 'Sleep History list, Sleep 7-day chart ПН–ВС и System grid не перепридуманы.'),
-    gate('surfaces-redesigned', 'Все главные поверхности приведены к одному стилю', redesignedSurfacesChecked, false, 'День, Деньги, Работа, Фонды, Сон, AI, System/QA/Cloud используют общий v2.56 full-system visual contract.'),
+    gate('surfaces-redesigned', 'Все главные поверхности приведены к одному стилю', redesignedSurfacesChecked, false, 'День, Деньги, Работа, Фонды, Сон, AI, System/QA/Cloud используют общий v2.51 surface contract.'),
     gate('telegram-safe-area', 'Нижнее меню и safe-area готовы к phone pass', bottomNavChecked, false, 'Навигация закреплена через Telegram/WebView-friendly safe-area отступы.'),
     gate('readability', 'Текст и русские строки читаются компактно', readabilityChecked && longRussianTextChecked, false, 'Сохранён принцип: меньше лишнего текста, больше статусов, прогресса и action rows.'),
     gate('rc-not-regressed', 'RC-цепочка не сломана редизайном', rc.mode !== 'blocked', true, rc.headline),
@@ -94,11 +94,11 @@ export function buildGlobalRedesignAcceptanceSnapshot(input: {
       'System grid: Telegram / Аудит / Данные / Cloud / Backup / QA / Dev'
     ],
     redesignedSurfaces: [
-      'полный visual shell: command center, фон, glass surfaces, карточки и bento grid',
-      'единый section command center, статусы live-state и compact section headers',
+      'общий фон, glass surfaces, карточки и bento grid',
+      'верхняя панель, статусы live-state и compact section headers',
       'нижнее меню с safe-area и unified active state',
-      'System / QA / Cloud / Apply / Import cards with unified surface language without changing domain logic',
-      'forms, segmented controls, history rows, metric cards, buttons and mobile bottom navigation'
+      'System / QA / Cloud / Apply / Import cards without changing domain logic',
+      'forms, segmented controls, history rows, metric cards'
     ],
     hardStops: [
       'нельзя ломать protected baseline ради нового визуала',

@@ -51,14 +51,14 @@ export function TelegramSupabasePreflightPanel() {
   return (
     <section className="system-data-panel global-backbone-panel telegram-supabase-preflight-panel">
       <div className="system-data-hero">
-        <span>Проверка Telegram и облака</span>
+        <span>v2.46 • Telegram Device QA + Supabase Preflight</span>
         <b>{report.readinessPercent}% preflight</b>
-        <p>{report.headline}. Это проверка без записи в облако.</p>
+        <p>{report.headline}. Это readonly/device QA: cloud writes не включаются автоматически.</p>
       </div>
 
       <div className="system-data-preview compact backbone-progress-grid">
         <div className="system-data-preview-head">
-          <b>Проверки перед стартом</b>
+          <b>Preflight gates</b>
           <span>{report.mode}</span>
         </div>
         {report.checks.map(check => <PreflightRow key={check.id} check={check} />)}
@@ -89,7 +89,7 @@ export function TelegramSupabasePreflightPanel() {
         {report.runbook.slice(0, 6).map(step => (
           <article key={step}>
             <b>{step}</b>
-            <span>проверить</span>
+            <span>v2.46</span>
           </article>
         ))}
       </div>

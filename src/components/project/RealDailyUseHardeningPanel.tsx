@@ -12,9 +12,9 @@ export function RealDailyUseHardeningPanel(props: { dayInput: DayCoreInputModel;
 
   return (
     <section className={`card money-engine-panel daily-use-hardening-panel money-engine-${snapshot.mode} ${props.compact ? 'compact' : ''}`}>
-      <div className="section-kicker">Ежедневное использование</div>
+      <div className="section-kicker">v2.45 • Real Daily Use</div>
       <h2 className="card-heading">Ежедневный цикл</h2>
-      <p className="card-description">Проверяет, что деньги, работа, история и сохранение дня связаны между собой.</p>
+      <p className="card-description">Проверка, что Деньги / Работа / Apply / История реально связаны перед сохранением дня.</p>
 
       <div className="money-engine-hero templates-engine-hero">
         <div>
@@ -33,7 +33,7 @@ export function RealDailyUseHardeningPanel(props: { dayInput: DayCoreInputModel;
       </div>
 
       <div className="money-engine-block compact">
-        <div className="money-engine-head"><b>Что закрыть сегодня</b><span>сегодня</span></div>
+        <div className="money-engine-head"><b>Что закрыть сегодня</b><span>{snapshot.version}</span></div>
         {visibleSteps.map(step => (
           <article className={`daily-use-step daily-use-step-${step.status}`} key={step.id}>
             <div>

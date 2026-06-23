@@ -123,10 +123,10 @@ export function ImportReviewQueuePanel() {
 
   return (
     <section className="card import-review-card">
-      <div className="section-kicker">Проверка импорта</div>
+      <div className="section-kicker">v2.33 • Import preview + rollback</div>
       <h2 className="card-heading">Очередь проверки импорта</h2>
       <p className="card-description">
-        Исторические данные сначала проверяются, потом добавляются в день. Личные исходные файлы здесь не показываются.
+        Исторические данные проходят через preview: кандидат → проверка → применение в Day Core demo → audit → rollback. Сырые банковские и личные данные в UI не выводятся.
       </p>
 
       <div className="review-persistence-bar">
@@ -166,7 +166,7 @@ export function ImportReviewQueuePanel() {
 
       {applyPreview ? (
         <div className="day-apply-preview">
-          <div className="audit-log-heading">Проверка перед добавлением в день</div>
+          <div className="audit-log-heading">Preview применения в День • dry-run</div>
           <div className={`apply-status ${applyPreview.canApply ? 'ready' : 'blocked'}`}>
             {summarizeApplyPreview(applyPreview)}
           </div>
@@ -209,7 +209,7 @@ export function ImportReviewQueuePanel() {
 
       {dayCorePatchState.appliedRecords.length > 0 ? (
         <div className="apply-history-preview">
-          <div className="audit-log-heading">Добавленные изменения · можно отменить</div>
+          <div className="audit-log-heading">Применённые изменения • rollback</div>
           {dayCorePatchState.appliedRecords.slice(0, 6).map(record => (
             <div className={`audit-event rollback-record ${record.rolledBackAt ? 'rolled-back' : ''}`} key={record.id}>
               <b>{record.dayId}</b> • {record.historyEvent.patches.length} patch(es) • {record.rolledBackAt ? 'rolled back' : 'active'}
@@ -265,7 +265,7 @@ function CandidateCard(props: {
           <button disabled={!availability.attachToDay} onClick={() => props.onAction(candidate, 'attach_to_day')} type="button">привязать</button>
           <button disabled={!availability.mergeDuplicate} onClick={() => props.onAction(candidate, 'merge_duplicate')} type="button">дубль</button>
         </div>
-        <div className="candidate-apply-state">{canApply ? 'готов к дню' : 'не влияет на расчёты'}</div>
+        <div className="candidate-apply-state">{canApply ? 'готов к Day Core' : 'не влияет на расчёты'}</div>
       </div>
     </article>
   );

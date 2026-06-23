@@ -23,9 +23,9 @@ export function GlobalDataBackbonePanel() {
   return (
     <div className="system-data-panel global-backbone-panel">
       <div className="system-data-hero">
-        <span>v2.45 • Data Backbone + daily save QA</span>
+        <span>Основа данных</span>
         <b>{delivery.overallStrongMiniAppPercent}% готово</b>
-        <p>До сильного полностью рабочего mini app осталось примерно {delivery.remainingPercent}%. Теперь учитываются apply/rollback, lifecycle смены, CSV/JSON импорт, daily loop Деньги/Работа/Apply/История и readiness по слоям.</p>
+        <p>До сильного рабочего приложения осталось примерно {delivery.remainingPercent}%. Проверяются день, деньги, работа, импорт, история и сохранение.</p>
       </div>
 
       <div className="system-data-preview compact backbone-progress-grid">
@@ -72,7 +72,7 @@ export function GlobalDataBackbonePanel() {
 
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">
-          <b>CSV/JSON mapper</b>
+          <b>Импорт таблиц</b>
           <span>{tablePreview.readyAfterConfirm}/{tablePreview.totalRows} ready · {tablePreview.format}</span>
         </div>
         {tablePreview.rows.slice(0, 3).map(row => (

@@ -385,7 +385,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
         <div className="section-kicker">Active Day Session</div>
         <h2 className="card-heading">День: утро → смена → вечер</h2>
         <p className="card-description">
-          Ежедневный режим теперь показывает только то, что нужно для сегодняшнего дня. Cloud, backup, deployment и dev-панели вынесены в “Система”.
+          Ежедневный экран показывает только то, что нужно сегодня. Служебные проверки вынесены в “Система”.
         </p>
         <LiveStateStatus syncedAt={dailyLiveSyncedAt} />
         <RealDailyUseHardeningPanel dayInput={dayInput} records={records} />
@@ -611,7 +611,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       <section className={`card quick-input-card money-mode-card ${net.mode}`}>
         <div className="section-kicker">v1.98 • Money Flow</div>
         <h2 className="card-heading">Деньги и записи дня</h2>
-        <p className="card-description">Деньги, записи, шаблоны и bank-review без deployment/dev шума.</p>
+        <p className="card-description">Деньги, записи, шаблоны и проверка банка без лишнего шума.</p>
 
         <MoneyEnginePanel dayInput={dayInput} records={records} />
         <RealDailyUseHardeningPanel dayInput={dayInput} records={records} compact />
@@ -807,7 +807,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
               <button type="button" onClick={askAssistant}>спросить</button>
             </div>
           </div>
-          <div className="assistant-bridge-note"><b>External AI bridge draft:</b><span> payload готов: {externalAssistantPayload.privacyMode}; внешний AI пока не вызывается.</span></div>
+          <div className="assistant-bridge-note"><b>AI-помощник:</b><span> сводка готова; внешний AI пока не вызывается.</span></div>
           <p className="quick-note">{assistantAdvice.disclaimer}</p>
         </div>
 
@@ -830,12 +830,12 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       <section className="card quick-input-card system-mode-card">
         <div className="section-kicker">v1.98 • System / Dev only</div>
         <h2 className="card-heading">Системные инструменты дня</h2>
-        <p className="card-description">Cloud save/load, local restore, self-check и технические панели не мешают ежедневному режиму и доступны только здесь.</p>
+        <p className="card-description">Сохранение, копии и проверки вынесены сюда, чтобы не мешать ежедневному режиму.</p>
         <LiveStateStatus syncedAt={dailyLiveSyncedAt} />
         <CloudDaySyncPanel document={cloudDocument} onLoad={loadCloudDocument} />
         <LocalBackupRestorePanel document={cloudDocument} onRestore={loadCloudDocument} />
         <div className="project-self-check-panel">
-          <div className="audit-log-heading">Project self-check / готовность mini app</div>
+          <div className="audit-log-heading">Готовность приложения</div>
           <div className="readiness-grid">
             {projectSelfCheck.miniAppReadiness.map(item => (
               <div className="readiness-card" key={item.label}><b>{item.percent}</b><span>{item.label}</span><p>{item.meaning}</p></div>
@@ -857,7 +857,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       <div className="section-kicker">v1.87 • Local Backup / Restore Safety Layer</div>
       <h2 className="card-heading">Быстрый ввод дня</h2>
       <p className="card-description">
-        Перед реальными cloud save/load/conflict тестами можно сделать локальный backup дня и восстановиться без записи в Supabase.
+        Перед реальными облачными проверками можно сделать локальную копию дня и восстановиться без записи в Supabase.
       </p>
 
       <CloudDaySyncPanel document={cloudDocument} onLoad={loadCloudDocument} />
@@ -1191,7 +1191,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
       </div>
 
       <div className="project-self-check-panel">
-        <div className="audit-log-heading">Project self-check / готовность mini app</div>
+        <div className="audit-log-heading">Готовность приложения</div>
         <div className="readiness-grid">
           {projectSelfCheck.miniAppReadiness.map(item => (
             <div className="readiness-card" key={item.label}>
@@ -1271,7 +1271,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
 
         <div className="assistant-bridge-note">
           <b>External AI bridge draft:</b>
-          <span> payload готов: {externalAssistantPayload.privacyMode}; внешний AI пока не вызывается.</span>
+          <span> сводка готова; внешний AI пока не вызывается.</span>
         </div>
 
         <p className="quick-note">{assistantAdvice.disclaimer}</p>
@@ -1610,7 +1610,7 @@ export function DailyQuickInputPanel(props: { onDayInputChange?: (input: DayCore
 
         <div className={`daily-save-qa-panel ${dailySaveQa.status}`}>
           <div className="history-status-row">
-            <span>v2.45 • Daily Save QA</span>
+            <span>Проверка дня</span>
             <b>{dailySaveQa.headline}</b>
           </div>
           <p className="quick-note">{dailySaveQa.nextAction}</p>

@@ -12,7 +12,7 @@ export function MoneyEnginePanel(props: { dayInput: DayCoreInputModel; records: 
 
   return (
     <section className={`card money-engine-panel money-engine-${snapshot.mode}`}>
-      <div className="section-kicker">v2.34 • Money Engine</div>
+      <div className="section-kicker">Деньги</div>
       <h2 className="card-heading">Деньги: доходы, расходы, источники</h2>
       <p className="card-description">Рабочий слой денег: что пришло, что ушло, сколько реально свободно и где нужен контроль.</p>
 
@@ -63,7 +63,7 @@ export function MoneyEnginePanel(props: { dayInput: DayCoreInputModel; records: 
       </div>
 
       <div className="money-engine-block compact">
-        <div className="money-engine-head"><b>Шаблоны v2.34</b><span>foundation</span></div>
+        <div className="money-engine-head"><b>Шаблоны</b><span>основа</span></div>
         <div className="money-template-row">
           {snapshot.templateSuggestions.slice(0, 6).map(template => (
             <span key={template.id}>{template.label} · {formatRub(template.defaultAmount)}</span>

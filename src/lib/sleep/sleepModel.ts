@@ -1,3 +1,4 @@
+import { formatLocalIsoDate } from '@/lib/time/localDate';
 export type SleepStatusId = 'critical_short' | 'low' | 'normal' | 'recovery' | 'long' | 'overslept';
 export type SleepWorkMode = 'safe_rest' | 'light_shift' | 'normal_shift' | 'medium_shift' | 'soft_reset';
 
@@ -319,13 +320,13 @@ export function addMinutesToClock(clock: string, minutes: number) {
 }
 
 export function getTodayDateInput() {
-  return new Date().toISOString().slice(0, 10);
+  return formatLocalIsoDate();
 }
 
 export function getYesterdayDateInput() {
   const date = new Date();
   date.setDate(date.getDate() - 1);
-  return date.toISOString().slice(0, 10);
+  return formatLocalIsoDate(date);
 }
 
 // v2.18.1 — Live Sleep Session / Wake Decision Flow.
@@ -377,10 +378,7 @@ export type WakeDecision = {
 };
 
 export function getLocalDateInput(date = new Date()) {
-  const y = date.getFullYear();
-  const m = `${date.getMonth() + 1}`.padStart(2, '0');
-  const d = `${date.getDate()}`.padStart(2, '0');
-  return `${y}-${m}-${d}`;
+  return formatLocalIsoDate(date);
 }
 
 export function getLocalTimeInput(date = new Date()) {

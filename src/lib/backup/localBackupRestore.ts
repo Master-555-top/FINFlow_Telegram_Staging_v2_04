@@ -1,5 +1,7 @@
+import { APP_PACKAGE_VERSION } from '../appVersion.ts';
+
 export const FINFLOW_LOCAL_BACKUP_VERSION = 'finflow_local_backup_v1_90' as const;
-export const FINFLOW_LOCAL_BACKUP_APP_VERSION = '0.1.90' as const;
+export const FINFLOW_LOCAL_BACKUP_APP_VERSION = APP_PACKAGE_VERSION;
 export const FINFLOW_BACKUP_MAX_FILE_BYTES = 5_000_000;
 export const FINFLOW_BACKUP_MAX_TOTAL_VALUE_BYTES = 4_000_000;
 export const FINFLOW_BACKUP_MAX_ENTRIES = 100;
@@ -171,8 +173,10 @@ export function applyFinflowBackupRestore(storage: StorageWriter, backup: Finflo
     for (const entry of backup.entries) storage.setItem(entry.key, entry.value);
     return { ok: true as const, rollback, appliedEntries: backup.entries.length };
   } catch {
-    restoreRollbackSnapshot(storage, rollback);
-    return { ok: false as const, reason: 'local_storage_write_failed_and_rolled_back' };
+    const rollbackResult = restoreRollbackSnapshot(storage, rollback);
+    return rollbackResult.ok
+      ? { ok: false as const, reason: 'local_storage_write_failed_and_rolled_back', rolledBack: true as const }
+      : { ok: false as const, reason: 'local_storage_write_failed_rollback_failed', rolledBack: false as const };
   }
 }
 
@@ -194,13 +198,17 @@ export function parseRollbackSnapshot(raw: string | null): FinflowBackupRollback
     const parsed = JSON.parse(raw) as FinflowBackupRollbackSnapshot;
     if (parsed.schemaVersion !== 'finflow_backup_rollback_v1_90') return null;
     if (!Array.isArray(parsed.entries) || parsed.entries.length > FINFLOW_BACKUP_MAX_ENTRIES) return null;
-    if (typeof parsed.createdAt !== 'string') return null;
+    if (typeof parsed.createdAt !== 'string' || Number.isNaN(Date.parse(parsed.createdAt))) return null;
     const entries: FinflowBackupRollbackSnapshot['entries'] = [];
+    const seen = new Set<string>();
     for (const entry of parsed.entries) {
-      if (!entry || !isAllowedFinflowStorageKey(entry.key)) return null;
+      if (!entry || typeof entry.key !== 'string' || !isAllowedFinflowStorageKey(entry.key)) return null;
       if (entry.value !== null && typeof entry.value !== 'string') return null;
+      if (seen.has(entry.key)) return null;
+      seen.add(entry.key);
       entries.push({ key: entry.key, value: entry.value });
     }
+    if (measureRollbackEntries(entries) > FINFLOW_BACKUP_MAX_TOTAL_VALUE_BYTES) return null;
     return { schemaVersion: 'finflow_backup_rollback_v1_90', createdAt: parsed.createdAt, entries };
   } catch {
     return null;
@@ -244,6 +252,13 @@ function fnv1a32(value: string) {
 
 function measureEntries(entries: FinflowLocalBackupEntry[]) {
   return entries.reduce((sum, entry) => sum + utf8ByteLength(entry.key) + utf8ByteLength(entry.value), 0);
+}
+
+function measureRollbackEntries(entries: FinflowBackupRollbackSnapshot['entries']) {
+  return entries.reduce(
+    (sum, entry) => sum + utf8ByteLength(entry.key) + (entry.value === null ? 0 : utf8ByteLength(entry.value)),
+    0
+  );
 }
 
 function compareStorageKeys(left: FinflowLocalBackupEntry, right: FinflowLocalBackupEntry) {

@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { getTelegramWebApp } from '@/lib/telegram/telegramWebApp';
 import { buildTelegramSupabasePreflightReport, type TelegramSupabasePreflightCheck, type TelegramSupabasePreflightInput } from '@/lib/deployment/telegramSupabasePreflight';
+import { formatLocalIsoDate } from '@/lib/time/localDate';
 
 type ApiProbe = {
   deploymentReady?: boolean;
@@ -35,7 +36,7 @@ export function TelegramSupabasePreflightPanel() {
 
     const initData = getTelegramWebApp()?.initData ?? '';
     if (initData) {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = formatLocalIsoDate();
       const cloud = await getJson(`/api/sync/day?localDate=${encodeURIComponent(today)}`, { 'x-telegram-init-data': initData });
       next.cloudReadDryRunSafe = cloud.ok || cloud.expectedSafeFail;
       next.deploymentSecretsSafe = Boolean(next.deploymentSecretsSafe && !cloud.secretLeak);
@@ -50,14 +51,14 @@ export function TelegramSupabasePreflightPanel() {
   return (
     <section className="system-data-panel global-backbone-panel telegram-supabase-preflight-panel">
       <div className="system-data-hero">
-        <span>v2.46 • Telegram Device QA + Supabase Preflight</span>
+        <span>Проверка Telegram и облака</span>
         <b>{report.readinessPercent}% preflight</b>
-        <p>{report.headline}. Это readonly/device QA: cloud writes не включаются автоматически.</p>
+        <p>{report.headline}. Это проверка без записи в облако.</p>
       </div>
 
       <div className="system-data-preview compact backbone-progress-grid">
         <div className="system-data-preview-head">
-          <b>Preflight gates</b>
+          <b>Проверки перед стартом</b>
           <span>{report.mode}</span>
         </div>
         {report.checks.map(check => <PreflightRow key={check.id} check={check} />)}
@@ -88,7 +89,7 @@ export function TelegramSupabasePreflightPanel() {
         {report.runbook.slice(0, 6).map(step => (
           <article key={step}>
             <b>{step}</b>
-            <span>v2.46</span>
+            <span>проверить</span>
           </article>
         ))}
       </div>

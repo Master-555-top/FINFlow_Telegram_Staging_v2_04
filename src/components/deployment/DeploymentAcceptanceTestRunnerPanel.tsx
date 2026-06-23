@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { formatLocalDateStartIso } from '@/lib/time/localDate';
 import {
   DEPLOYMENT_ACCEPTANCE_TEST_STORAGE_KEY,
   createInitialDeploymentAcceptanceTestState,
@@ -18,7 +19,7 @@ import {
 
 export function DeploymentAcceptanceTestRunnerPanel() {
   const [hydrated, setHydrated] = useState(false);
-  const [state, setState] = useState<DeploymentAcceptanceTestState>(() => createInitialDeploymentAcceptanceTestState(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`));
+  const [state, setState] = useState<DeploymentAcceptanceTestState>(() => createInitialDeploymentAcceptanceTestState(formatLocalDateStartIso()));
   const [busy, setBusy] = useState(false);
   const summary = useMemo(() => summarizeDeploymentAcceptanceTests(state), [state]);
 
@@ -190,7 +191,7 @@ export function DeploymentAcceptanceTestRunnerPanel() {
   return (
     <section className="deployment-acceptance-panel">
       <div className="acceptance-head">
-        <span>v1.85 • Deployment Acceptance Runner</span>
+        <span>Прогон публикации</span>
         <b>Acceptance tests</b>
         <p>
           Безопасный runner проверяет readiness routes и read-preview. Cloud save/conflict/RLS остаются ручными, чтобы не было случайной записи или silent overwrite.

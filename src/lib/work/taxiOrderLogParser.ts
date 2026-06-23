@@ -1,4 +1,5 @@
 import { normalizeHistoryDate } from '@/lib/data/finflowHistoryEngine';
+import { formatLocalIsoDate } from '@/lib/time/localDate';
 
 export const TAXI_ORDER_LOG_PARSER_VERSION = 'taxi_order_log_parser_v2_37' as const;
 
@@ -122,7 +123,7 @@ function parseOrders(text: string, dateIso: string | null): ParsedTaxiOrderLogOr
     const routeLine = lines[index + 2] ?? '';
     const amount = parseMoney(metaMatch[2]);
     const durationMinutes = Number(metaMatch[1]);
-    const orderDateIso = dateIso ?? new Date().toISOString().slice(0, 10);
+    const orderDateIso = dateIso ?? formatLocalIsoDate();
     const startedAt = normalizeClock(timeMatch[2]);
     const endedAt = normalizeClock(timeMatch[3]);
     const route = splitRoute(routeLine);

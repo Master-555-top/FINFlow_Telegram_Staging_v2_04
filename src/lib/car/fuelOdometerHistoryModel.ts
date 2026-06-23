@@ -1,4 +1,5 @@
 import type { EditableFuelCalculation, EditableFuelInputState } from '@/lib/car/editableFuelInputsModel';
+import { formatLocalIsoDate } from '@/lib/time/localDate';
 
 export const FUEL_ODOMETER_HISTORY_VERSION = 'fuel_odometer_history_v1_68' as const;
 export const FUEL_ODOMETER_HISTORY_STORAGE_KEY = 'finflow.fuelOdometerHistory.v1_68';
@@ -45,7 +46,7 @@ export function createFuelOdometerHistoryEntry(input: {
 }): FuelOdometerHistoryEntry {
   return {
     id: `fuel_history_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-    date: new Date().toISOString().slice(0, 10),
+    date: formatLocalIsoDate(),
     previousOdometerKm: input.state.previousOdometerKm,
     currentOdometerKm: input.state.currentOdometerKm,
     kmDriven: input.calculation.kmDriven,

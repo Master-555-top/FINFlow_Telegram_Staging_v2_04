@@ -3,10 +3,14 @@ import Script from 'next/script';
 import './globals.css';
 import './finflow-ui-overrides.css';
 import './finflow-design-system.css';
+import './finflow-redesign-v2-51.css';
+import './finflow-redesign-v2-56.css';
+import './finflow-ux-copy-v2-57.css';
+import './finflow-declutter-v2-58.css';
 
 export const metadata: Metadata = {
   title: 'FinFlow',
-  description: 'Personal finance, work, sleep and AI operating system',
+  description: 'Личный план денег, работы, сна и дня',
   applicationName: 'FinFlow',
   appleWebApp: {
     capable: true,
@@ -30,7 +34,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ru">
-      <body className="finflow-app" data-design-version="2.42-baseline-merged-v2.45">
+      <body className="finflow-app" data-design-version="v2.58-decluttered-ui">
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
         {children}
       </body>

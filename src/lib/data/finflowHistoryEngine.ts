@@ -1,4 +1,5 @@
 import { formatIsoDateShort, getDateDayKey, getDateMonthKey, getDateYear } from '@/lib/data/dateInput';
+import { formatLocalIsoDate } from '@/lib/time/localDate';
 
 export type FinflowHistoryCategory =
   | 'day'
@@ -60,7 +61,7 @@ export function isDateInHistoryScope(dateIso: string | null, scope: FinflowHisto
   if (!dateIso) return false;
   const date = normalizeHistoryDate(dateIso);
   if (!date) return false;
-  const anchor = normalizeHistoryDate(scope.anchorDateIso) ?? new Date().toISOString().slice(0, 10);
+  const anchor = normalizeHistoryDate(scope.anchorDateIso) ?? formatLocalIsoDate();
   if (scope.period === 'day') return getDateDayKey(date) === getDateDayKey(anchor);
   if (scope.period === 'month') return getDateMonthKey(date) === getDateMonthKey(anchor);
   if (scope.period === 'year') return getDateYear(date) === getDateYear(anchor);
@@ -90,7 +91,7 @@ export function extractHistoryEntriesFromRaw(meta: SourceMeta, raw: string | nul
       sourceLabel: meta.label,
       section: meta.section,
       category: 'unknown',
-      dateIso: new Date().toISOString().slice(0, 10),
+      dateIso: formatLocalIsoDate(),
       title: meta.label,
       summary: 'Неструктурированный текстовый блок',
     }];

@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join, relative, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -135,8 +135,11 @@ function listFiles(root) {
   const files = [];
   for (const entry of readdirSync(root)) {
     const fullPath = join(root, entry);
-    if (statSync(fullPath).isDirectory()) files.push(...listFiles(fullPath));
-    else files.push(fullPath);
+    const stats = lstatSync(fullPath);
+    if (stats.isSymbolicLink()) throw new Error(`Symbolic links are forbidden in deploy-safe packages: ${fullPath}`);
+    if (stats.isDirectory()) files.push(...listFiles(fullPath));
+    else if (stats.isFile()) files.push(fullPath);
+    else throw new Error(`Unsupported filesystem entry in deploy-safe package: ${fullPath}`);
   }
   return files.sort();
 }

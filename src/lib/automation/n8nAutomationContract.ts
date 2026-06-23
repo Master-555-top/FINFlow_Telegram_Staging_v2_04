@@ -1,4 +1,5 @@
 import type { MiniAppDeliveryPlan } from '@/lib/project/miniAppDeliveryPlan';
+import { formatIsoDateInTimeZone } from '../time/localDate.ts';
 
 export const N8N_AUTOMATION_CONTRACT_VERSION = 'n8n_automation_contract_v2_41' as const;
 
@@ -309,5 +310,8 @@ export function isN8nWorkflowId(value: string | null): value is N8nAutomationWor
 }
 
 function todayIsoDate() {
-  return new Date().toISOString().slice(0, 10);
+  return formatIsoDateInTimeZone(
+    new Date(),
+    process.env.FINFLOW_DEFAULT_TIMEZONE ?? 'Asia/Kamchatka'
+  );
 }

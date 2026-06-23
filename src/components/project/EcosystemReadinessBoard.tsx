@@ -10,9 +10,9 @@ export function EcosystemReadinessBoard() {
   return (
     <section className="ecosystem-readiness-board">
       <div className="ecosystem-readiness-head">
-        <span>v2.47 • Strong mini app progress</span>
+        <span>v2.58 • Чистый интерфейс</span>
         <b>Сколько осталось до сильного mini app</b>
-        <p>Единая оценка без самообмана: данные, исторический импорт, деньги, работа, Supabase, n8n, безопасность и QA.</p>
+        <p>Единая оценка: данные, деньги, работа, история, безопасность и готовность к запуску.</p>
       </div>
 
       <div className="ecosystem-readiness-grid">

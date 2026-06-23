@@ -1,0 +1,221 @@
+/*
+ * FINFlow v2.51 — Global redesign contract.
+ * User explicitly requested global redesign. This layer is imported last and
+ * redesigns presentation while preserving locked domain logic, storage keys and
+ * the approved baseline: Sleep History list, Sleep 7-day chart, System grid.
+ */
+
+:root {
+  --ff-canvas: #050713;
+  --ff-canvas-raised: #080c1a;
+  --ff-surface: rgba(16, 20, 34, .86);
+  --ff-surface-strong: rgba(21, 27, 45, .94);
+  --ff-surface-soft: rgba(255, 255, 255, .052);
+  --ff-surface-hover: rgba(255, 255, 255, .085);
+  --ff-border: rgba(204, 214, 255, .13);
+  --ff-border-strong: rgba(220, 227, 255, .22);
+  --ff-text: #f8f9ff;
+  --ff-text-secondary: rgba(238, 241, 255, .76);
+  --ff-text-tertiary: rgba(229, 233, 247, .52);
+  --ff-accent: #8a7cff;
+  --ff-accent-strong: #a89cff;
+  --ff-accent-blue: #5aa2ff;
+  --ff-accent-cyan: #52e4ff;
+  --ff-shadow-card: 0 18px 52px rgba(0, 0, 0, .36), inset 0 1px 0 rgba(255,255,255,.05);
+  --ff-shadow-float: 0 24px 68px rgba(0, 0, 0, .54), inset 0 1px 0 rgba(255,255,255,.08);
+  --ff-radius-card: 26px;
+  --ff-radius-inner: 18px;
+  --ff-radius-control: 15px;
+}
+
+body.finflow-app {
+  background:
+    radial-gradient(ellipse 78% 45% at 50% -14%, rgba(138, 124, 255, .22), transparent 70%),
+    radial-gradient(ellipse 58% 28% at 104% 20%, rgba(82, 228, 255, .10), transparent 72%),
+    radial-gradient(ellipse 50% 24% at -12% 72%, rgba(116, 94, 255, .11), transparent 72%),
+    linear-gradient(180deg, #050713 0%, #080b17 47%, #05060d 100%);
+}
+
+.finflow-app .app-shell {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  padding-inline: max(14px, env(safe-area-inset-left));
+  padding-right: max(14px, env(safe-area-inset-right));
+}
+
+.finflow-app :where(.card, .premium-screen, .system-premium-window, .money-engine-panel, .sleep-card, .sleep-stat-card, .system-data-preview, .quick-input-card) {
+  border-color: var(--ff-border);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.033)),
+    var(--ff-surface);
+  box-shadow: var(--ff-shadow-card);
+  backdrop-filter: blur(22px) saturate(138%);
+  -webkit-backdrop-filter: blur(22px) saturate(138%);
+}
+
+.finflow-app :where(.card, .premium-screen, .system-premium-window, .money-engine-panel, .quick-input-card)::before {
+  opacity: .62;
+}
+
+.finflow-app .topbar {
+  position: sticky;
+  top: max(8px, env(safe-area-inset-top));
+  z-index: 20;
+  border: 1px solid rgba(205, 215, 255, .11);
+  border-radius: 22px;
+  margin-bottom: 12px;
+  background: rgba(8, 12, 26, .72);
+  box-shadow: 0 16px 42px rgba(0,0,0,.28);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.finflow-app .logo-title,
+.finflow-app .premium-screen-head h1,
+.finflow-app .card-heading,
+.finflow-app h1,
+.finflow-app h2 {
+  letter-spacing: -.035em;
+}
+
+.finflow-app .daily-live-state-banner {
+  display: grid;
+  gap: 4px;
+  border-radius: 18px;
+  padding: 10px 12px;
+  color: var(--ff-text-secondary);
+  border: 1px solid rgba(205, 215, 255, .09);
+  background: rgba(255, 255, 255, .035);
+}
+
+.finflow-app .daily-live-state-banner b { color: var(--ff-text); }
+.finflow-app .daily-live-state-banner span { color: var(--ff-text-tertiary); font-size: 12px; }
+
+.finflow-app .premium-screen-head {
+  align-items: center;
+  min-height: 52px;
+  margin-bottom: 14px;
+}
+
+.finflow-app .premium-screen-head span,
+.finflow-app .section-kicker {
+  letter-spacing: .035em;
+  text-transform: none;
+  color: var(--ff-text-tertiary);
+}
+
+.finflow-app .system-premium-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.finflow-app .system-premium-tile {
+  min-height: 104px;
+  border-radius: 24px;
+  border-color: rgba(208, 218, 255, .14);
+  background:
+    radial-gradient(circle at 24% 0%, rgba(255,255,255,.12), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.034));
+  box-shadow: 0 18px 46px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.finflow-app .system-premium-tile.primary {
+  grid-column: span 2;
+  min-height: 94px;
+}
+
+.finflow-app .system-premium-tile b { font-size: 16px; }
+.finflow-app .system-premium-tile i { opacity: .86; }
+
+.finflow-app .premium-segmented,
+.finflow-app .sleep-segmented {
+  gap: 6px;
+  border-radius: 18px;
+  padding: 5px;
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(208,218,255,.10);
+}
+
+.finflow-app .premium-segmented button,
+.finflow-app .sleep-segmented button {
+  min-height: 38px;
+  border-radius: 14px;
+}
+
+.finflow-app .premium-segmented button.active,
+.finflow-app .sleep-segmented button.active,
+.finflow-app [role='tab'][aria-selected='true'] {
+  background: linear-gradient(135deg, rgba(138,124,255,.30), rgba(82,162,255,.18));
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.09), 0 10px 24px rgba(72, 88, 230, .18);
+}
+
+.finflow-app .bottom-nav.premium-bottom-nav {
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100% - 20px), 420px);
+  bottom: max(10px, env(safe-area-inset-bottom));
+  border-radius: 24px;
+  border-color: rgba(208,218,255,.16);
+  background: rgba(8, 11, 24, .78);
+  box-shadow: var(--ff-shadow-float);
+  backdrop-filter: blur(24px) saturate(145%);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+}
+
+.finflow-app .bottom-nav .nav-btn {
+  min-height: 48px;
+  border-radius: 18px;
+}
+
+.finflow-app .bottom-nav .nav-btn.active {
+  background: linear-gradient(180deg, rgba(138,124,255,.24), rgba(82,162,255,.11));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
+}
+
+.finflow-app .money-engine-hero,
+.finflow-app .templates-engine-hero {
+  border-radius: 24px;
+  border-color: rgba(138,124,255,.22);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(138,124,255,.28), transparent 44%),
+    linear-gradient(135deg, rgba(138,124,255,.13), rgba(82,162,255,.065));
+}
+
+.finflow-app .money-engine-hero b,
+.finflow-app .templates-engine-hero b {
+  letter-spacing: -.055em;
+}
+
+.finflow-app .system-data-preview article,
+.finflow-app .system-premium-row,
+.finflow-app .money-engine-metric {
+  border-color: rgba(208,218,255,.10);
+  background: rgba(255,255,255,.044);
+}
+
+.finflow-app .sleep-history-list article,
+.finflow-app .sleep-week-chart,
+.finflow-app .system-premium-grid {
+  /* Protected baseline: sharpened only through shared surface tokens. */
+  isolation: isolate;
+}
+
+.finflow-app .global-redesign-panel .redesign-baseline-lock article b {
+  font-size: 13px;
+}
+
+@media (max-width: 360px) {
+  .finflow-app .app-shell { padding-inline: 10px; padding-right: 10px; }
+  .finflow-app .bottom-nav.premium-bottom-nav { width: min(calc(100% - 12px), 420px); border-radius: 20px; }
+  .finflow-app .bottom-nav .nav-btn span { font-size: 10px; }
+  .finflow-app .system-premium-grid { gap: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finflow-app *, .finflow-app *::before, .finflow-app *::after {
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

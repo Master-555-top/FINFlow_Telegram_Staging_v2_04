@@ -59,7 +59,7 @@ export function DevErrorLogPanel() {
   return (
     <section className="dev-panel">
       <h3>Dev / Error Log</h3>
-      <p className="card-description">Ошибки интерфейса сохраняются локально. Позже подключим Supabase.</p>
+      <p className="card-description">Ошибки интерфейса сохраняются только на устройстве. Облако подключим позже.</p>
       <div className="dev-actions">
         <button className="dev-button" type="button" onClick={addTestLog}>+ тест лог</button>
         <button className="dev-button" type="button" onClick={clear}>очистить</button>

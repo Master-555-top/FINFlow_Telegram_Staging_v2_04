@@ -20,7 +20,7 @@ const rollbackSessionKey = 'finflow.backupRestoreRollback.v1_87';
 export function LocalBackupRestorePanel() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [hydrated, setHydrated] = useState(false);
-  const [message, setMessage] = useState('Подготовка локального backup-инструмента…');
+  const [message, setMessage] = useState('Готовим резервную копию…');
   const [pendingBackup, setPendingBackup] = useState<FinflowLocalBackup | null>(null);
   const [preview, setPreview] = useState<FinflowBackupPreview | null>(null);
   const [confirmation, setConfirmation] = useState('');
@@ -29,7 +29,7 @@ export function LocalBackupRestorePanel() {
 
   useEffect(() => {
     setHydrated(true);
-    setMessage('Backup создаётся только из FINFlow localStorage и никуда не отправляется.');
+    setMessage('Копия создаётся только на этом устройстве и никуда не отправляется.');
     try {
       setRollback(parseRollbackSnapshot(window.sessionStorage.getItem(rollbackSessionKey)));
     } catch {
@@ -57,9 +57,9 @@ export function LocalBackupRestorePanel() {
       anchor.click();
       anchor.remove();
       URL.revokeObjectURL(url);
-      setMessage(`Backup сохранён: ${backup.entries.length} FINFlow-ключей, checksum ${backup.checksum}.`);
+      setMessage(`Копия сохранена: ${backup.entries.length} записей.`);
     } catch (error) {
-      setMessage(`Не удалось создать backup: ${safeError(error)}.`);
+      setMessage(`Не удалось создать копию: ${safeError(error)}.`);
     } finally {
       setBusy(false);
     }
@@ -71,7 +71,7 @@ export function LocalBackupRestorePanel() {
     setConfirmation('');
     if (!file) return;
     if (file.size > FINFLOW_BACKUP_MAX_FILE_BYTES) {
-      setMessage('Файл слишком большой для безопасного локального restore.');
+      setMessage('Файл слишком большой для безопасного восстановления.');
       return;
     }
 
@@ -79,15 +79,15 @@ export function LocalBackupRestorePanel() {
     try {
       const parsed = parseFinflowLocalBackup(await file.text());
       if (!parsed.ok) {
-        setMessage(`Restore отклонён: ${parsed.reason}. Локальные данные не изменены.`);
+        setMessage(`Восстановление отклонено: ${safeError(parsed.reason)}. Данные не изменены.`);
         return;
       }
       const nextPreview = previewFinflowBackupRestore(window.localStorage, parsed.backup);
       setPendingBackup(parsed.backup);
       setPreview(nextPreview);
-      setMessage('Backup проверен. Просмотрите preview и введите ВОССТАНОВИТЬ для применения.');
+      setMessage('Копия проверена. Посмотрите изменения и введите ВОССТАНОВИТЬ.');
     } catch (error) {
-      setMessage(`Не удалось прочитать backup: ${safeError(error)}.`);
+      setMessage(`Не удалось прочитать копию: ${safeError(error)}.`);
     } finally {
       setBusy(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -97,14 +97,16 @@ export function LocalBackupRestorePanel() {
   function applyRestore() {
     if (!pendingBackup || !canApply) return;
     const accepted = window.confirm(
-      `Применить ${pendingBackup.entries.length} FINFlow-ключей? Restore работает в merge-only режиме и не удаляет отсутствующие ключи.`
+      `Применить ${pendingBackup.entries.length} записей? Восстановление добавляет и обновляет данные, но не удаляет отсутствующие.`
     );
     if (!accepted) return;
 
     setBusy(true);
     const result = applyFinflowBackupRestore(window.localStorage, pendingBackup);
     if (!result.ok) {
-      setMessage(`Restore не выполнен: ${result.reason}. Выполнен автоматический откат.`);
+      setMessage(result.rolledBack
+        ? `Восстановление не выполнено: ${safeError(result.reason)}. Автоматический откат подтверждён.`
+        : `Восстановление не выполнено: ${safeError(result.reason)}. Откат тоже не завершён — не закрывайте страницу и сохраните текущие данные.`);
       setBusy(false);
       return;
     }
@@ -118,16 +120,16 @@ export function LocalBackupRestorePanel() {
     setPendingBackup(null);
     setPreview(null);
     setConfirmation('');
-    setMessage(`Restore применён к ${result.appliedEntries} ключам. Перезагрузите интерфейс для чтения восстановленного состояния.`);
+    setMessage(`Восстановлено ${result.appliedEntries} записей. Перезагрузите интерфейс.`);
     setBusy(false);
   }
 
   function rollbackRestore() {
     if (!rollback) return;
-    if (!window.confirm('Откатить последний restore к состоянию до его применения?')) return;
+    if (!window.confirm('Отменить последнее восстановление?')) return;
     const result = restoreRollbackSnapshot(window.localStorage, rollback);
     if (!result.ok) {
-      setMessage(`Откат не завершён: ${result.reason}. Не закрывайте страницу и сохраните текущий backup.`);
+      setMessage(`Откат не завершён: ${safeError(result.reason)}. Не закрывайте страницу и сохраните текущую копию.`);
       return;
     }
     setRollback(null);
@@ -136,25 +138,25 @@ export function LocalBackupRestorePanel() {
     } catch {
       // Nothing else to do.
     }
-    setMessage('Последний restore отменён. Перезагрузите интерфейс.');
+    setMessage('Последнее восстановление отменено. Перезагрузите интерфейс.');
   }
 
   return (
     <section className="local-backup-panel">
       <div className="local-backup-head">
-        <span>v1.90 • Codex Browser LocalStorage Backup</span>
+        <span>Резервная копия</span>
         <b>Резервная копия FINFlow</b>
         <p>
-          Экспортирует только FINFlow-данные браузера в JSON. Restore проверяет схему и checksum, показывает preview и не удаляет лишние ключи.
+          Сохраняет данные FINFlow в файл. Перед восстановлением показывает, что изменится.
         </p>
       </div>
 
       <div className="local-backup-status" role="status">{message}</div>
 
       <div className="local-backup-actions">
-        <button type="button" disabled={!hydrated || busy} onClick={downloadBackup}>скачать backup JSON</button>
+        <button type="button" disabled={!hydrated || busy} onClick={downloadBackup}>скачать копию</button>
         <label className={busy ? 'disabled' : ''}>
-          выбрать backup для preview
+          выбрать копию для проверки
           <input
             ref={fileInputRef}
             type="file"
@@ -168,33 +170,33 @@ export function LocalBackupRestorePanel() {
       {pendingBackup && preview ? (
         <div className="local-backup-preview">
           <div><span>Создан</span><b>{formatDate(pendingBackup.createdAt)}</b></div>
-          <div><span>Всего ключей</span><b>{preview.totalEntries}</b></div>
+          <div><span>Всего записей</span><b>{preview.totalEntries}</b></div>
           <div><span>Новых</span><b>{preview.newEntries}</b></div>
           <div><span>Будут заменены</span><b>{preview.changedEntries}</b></div>
           <div><span>Без изменений</span><b>{preview.unchangedEntries}</b></div>
           <div><span>Объём</span><b>{formatBytes(preview.totalValueBytes)}</b></div>
-          <p>Checksum: <code>{pendingBackup.checksum}</code>. Файл никуда не загружался.</p>
+          <p>Файл проверен. Никуда не загружался.</p>
           <input
             value={confirmation}
             onChange={event => setConfirmation(event.target.value)}
             placeholder="Введите ВОССТАНОВИТЬ"
             autoComplete="off"
           />
-          <button type="button" disabled={!canApply} onClick={applyRestore}>применить restore</button>
+          <button type="button" disabled={!canApply} onClick={applyRestore}>восстановить</button>
         </div>
       ) : null}
 
       {rollback ? (
         <div className="local-backup-rollback">
-          <b>Доступен откат последнего restore</b>
+          <b>Можно отменить последнее восстановление</b>
           <span>Снимок создан {formatDate(rollback.createdAt)}.</span>
-          <button type="button" disabled={busy} onClick={rollbackRestore}>откатить restore</button>
+          <button type="button" disabled={busy} onClick={rollbackRestore}>отменить восстановление</button>
           <button type="button" disabled={busy} onClick={() => window.location.reload()}>перезагрузить интерфейс</button>
         </div>
       ) : null}
 
       <p className="local-backup-warning">
-        Backup может содержать личные финансовые данные из браузера. Храните файл приватно. Исходные PDF/CSV из `private_raw_data` этим инструментом не копируются.
+        Копия может содержать личные финансовые данные. Храните её приватно и не отправляйте посторонним.
       </p>
     </section>
   );
@@ -202,7 +204,7 @@ export function LocalBackupRestorePanel() {
 
 function buildBackupFilename(createdAt: string) {
   const stamp = createdAt.replace(/[:.]/g, '-');
-  return `finflow-local-backup-v1_87-${stamp}.json`;
+  return `finflow-backup-${stamp}.json`;
 }
 
 function formatDate(value: string) {
@@ -217,6 +219,7 @@ function formatBytes(value: number) {
 }
 
 function safeError(error: unknown) {
-  if (!(error instanceof Error)) return 'unknown_error';
-  return error.message.replace(/[^a-zA-Z0-9_:\-.]/g, '_').slice(0, 160);
+  if (typeof error === 'string') return error.replace(/[_-]/g, ' ').slice(0, 160);
+  if (!(error instanceof Error)) return 'неизвестная ошибка';
+  return error.message.replace(/[_-]/g, ' ').replace(/[^a-zA-Zа-яА-Я0-9ёЁ:., ]/g, '').slice(0, 160);
 }

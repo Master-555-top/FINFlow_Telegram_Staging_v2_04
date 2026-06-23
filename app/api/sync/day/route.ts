@@ -3,6 +3,7 @@ import { parseFinflowCloudDayDocument } from '@/lib/cloud/finflowCloudDayDocumen
 import { loadCloudDay, saveCloudDay } from '@/lib/server/finflowCloudDayRepository';
 import { resolveOrCreateFinflowProfile } from '@/lib/server/finflowProfileRepository';
 import { authenticateTelegramInitData } from '@/lib/server/telegramRequestAuth';
+import { isValidIsoLocalDate } from '@/lib/time/localDate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,7 +19,7 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const localDate = url.searchParams.get('localDate') ?? '';
-  if (!isLocalDate(localDate)) {
+  if (!isValidIsoLocalDate(localDate)) {
     return NextResponse.json({ ok: false, reason: 'invalid_local_date' }, { status: 400 });
   }
 
@@ -99,9 +100,6 @@ function isCloudSyncEnabled() {
   return process.env.FINFLOW_ENABLE_CLOUD_SYNC === 'true';
 }
 
-function isLocalDate(value: string) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(value);
-}
 
 function safeProfile(profile: { id: string; display_name: string | null; timezone: string }) {
   return { id: profile.id, displayName: profile.display_name, timezone: profile.timezone };

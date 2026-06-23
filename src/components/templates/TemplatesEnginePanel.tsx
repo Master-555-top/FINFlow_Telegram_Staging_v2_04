@@ -40,9 +40,9 @@ export function TemplatesEnginePanel(props: {
 
   return (
     <section className={`card money-engine-panel templates-engine-panel ${props.compact ? 'compact' : ''}`}>
-      <div className="section-kicker">v2.38 • Templates Engine + Apply</div>
+      <div className="section-kicker">Шаблоны</div>
       <h2 className="card-heading">Шаблоны: быстрый ввод и повторения</h2>
-      <p className="card-description">Единый registry для денег, работы, фондов, дня и recurring-сценариев: шаблон → preview → confirm → запись → rollback.</p>
+      <p className="card-description">Шаблоны помогают быстро добавить повторяющиеся доходы, расходы, работу и цели.</p>
 
       <div className="money-engine-hero templates-engine-hero">
         <div>
@@ -71,7 +71,7 @@ export function TemplatesEnginePanel(props: {
 
 
       <div className="money-engine-block compact template-apply-preview">
-        <div className="money-engine-head"><b>Apply preview</b><span>{applyPreview.readyAfterConfirm}/{applyPreview.totalDrafts} ready · дублей {applyPreview.duplicateHints}</span></div>
+        <div className="money-engine-head"><b>Проверка перед добавлением</b><span>{applyPreview.readyAfterConfirm}/{applyPreview.totalDrafts} готово · дублей {applyPreview.duplicateHints}</span></div>
         <div className="money-template-row templates-template-row">
           {applyPreview.drafts.filter(draft => draft.safety === 'ready_after_confirm').slice(0, props.compact ? 4 : 8).map(draft => (
             <span key={draft.id}>{draft.templateLabel}{draft.amount ? ` · ${formatRub(draft.amount)}` : ''}</span>
@@ -83,7 +83,7 @@ export function TemplatesEnginePanel(props: {
             <button type="button" onClick={runRollbackPreview} disabled={!lastApplyResult}>Rollback</button>
           </div>
         ) : null}
-        {lastApplyResult ? <p className="system-data-status">Apply: {lastApplyResult.appliedCount} · rollback ids: {lastApplyResult.rollbackSnapshot.recordIdsToRemove.length}</p> : null}
+        {lastApplyResult ? <p className="system-data-status">Добавлено: {lastApplyResult.appliedCount} · можно отменить: {lastApplyResult.rollbackSnapshot.recordIdsToRemove.length}</p> : null}
       </div>
 
       <div className="money-engine-block compact template-recurring-preview">

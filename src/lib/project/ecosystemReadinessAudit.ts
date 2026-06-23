@@ -1,6 +1,6 @@
 import { buildMiniAppDeliveryPlan } from '@/lib/project/miniAppDeliveryPlan';
 
-export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_48' as const;
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_58' as const;
 
 export type EcosystemReadinessArea = {
   id: string;
@@ -49,18 +49,18 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
 
   return {
     version: ECOSYSTEM_READINESS_AUDIT_VERSION,
-    previousOverallProductionPercent: 85,
+    previousOverallProductionPercent: 91,
     overallProductionPercent: delivery.overallStrongMiniAppPercent,
-    previousLocalDailyUsePercent: 88,
-    localDailyUsePercent: 90,
-    previousSafeLaunchPercent: 82,
-    safeLaunchPercent: 84,
+    previousLocalDailyUsePercent: 95,
+    localDailyUsePercent: 95,
+    previousSafeLaunchPercent: 93,
+    safeLaunchPercent: 94,
     areas,
     topRisks: [
-      `До сильного полностью рабочего mini app осталось примерно ${delivery.remainingPercent}%. Следующий риск — считать local-first слой готовым без 2–3 реальных дней проверки, Telegram staging, Daily Save QA, Codex safety sync, Telegram device preflight, Real Data Week Test, Real Usage Gaps, backup и conflict review.`,
+      `До сильного полностью рабочего mini app осталось примерно ${delivery.remainingPercent}%. Следующий риск — считать local-first слой готовым без реального Telegram phone acceptance, 2–3 дней данных, fresh backup, финальную проверку дизайна и screenshot bug log.`,
       'Исторические данные и daily apply нельзя заливать напрямую: нужен preview, dedupe, подтверждение, локальная запись и rollback.',
-      'Supabase writes остаются safe-off до миграций, RLS/security review и backup.',
-      'n8n имеет dry-run contract, но внешние вызовы остаются заблокированы до private staging/auth/redaction; v2.48 не включает external automations и cloud writes.'
+      'Supabase writes остаются safe-off до миграций, RLS/cross-user/security review, backup и conflict test.',
+      'Автоматизации пока работают только как безопасная проверка; внешние вызовы остаются выключены до private staging/auth/redaction.'
     ],
     nextActions: delivery.criticalPath
   };

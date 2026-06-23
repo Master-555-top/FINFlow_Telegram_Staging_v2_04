@@ -1,3 +1,4 @@
+import { isValidIsoLocalDate } from '../time/localDate.ts';
 import type { EditableFuelInputState } from '@/lib/car/editableFuelInputsModel';
 import type { FuelOdometerHistoryState } from '@/lib/car/fuelOdometerHistoryModel';
 import type { BankCandidateDecision } from '@/lib/day-core/bankCandidateReviewModel';
@@ -183,9 +184,7 @@ function isTimestamp(value: unknown): value is string {
 }
 
 function isLocalDate(value: unknown): value is string {
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const parsed = new Date(`${value}T00:00:00.000Z`);
-  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+  return isValidIsoLocalDate(value);
 }
 
 function isObject(value: unknown): value is Record<string, any> {

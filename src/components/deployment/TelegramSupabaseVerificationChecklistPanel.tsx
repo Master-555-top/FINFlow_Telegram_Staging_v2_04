@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { buildTelegramSupabaseVerificationChecklist, type VerificationStage, type VerificationStageId } from '@/lib/deployment/telegramSupabaseVerificationChecklist';
 import { buildVerificationHandoffReport } from '@/lib/deployment/verificationHandoffReport';
+import { formatLocalDateStartIso } from '@/lib/time/localDate';
 import {
   VERIFICATION_CHECKLIST_PROGRESS_STORAGE_KEY,
   createInitialVerificationChecklistProgressState,
@@ -33,7 +34,7 @@ export function TelegramSupabaseVerificationChecklistPanel() {
   const [hydrated, setHydrated] = useState(false);
   const [activeView, setActiveView] = useState<VerificationView>('overview');
   const [areaFilter, setAreaFilter] = useState<StageAreaFilter>('all');
-  const [progressState, setProgressState] = useState<VerificationChecklistProgressState>(() => createInitialVerificationChecklistProgressState(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`));
+  const [progressState, setProgressState] = useState<VerificationChecklistProgressState>(() => createInitialVerificationChecklistProgressState(formatLocalDateStartIso()));
   const [handoffText, setHandoffText] = useState('');
   const [handoffMode, setHandoffMode] = useState<'markdown' | 'json'>('markdown');
 
@@ -96,7 +97,7 @@ export function TelegramSupabaseVerificationChecklistPanel() {
   return (
     <section className="verification-checklist-panel system-module-panel">
       <div className="verification-head compact">
-        <span>v2.14</span>
+        <span>Проверка</span>
         <b>Checklist</b>
       </div>
 

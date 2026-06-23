@@ -140,7 +140,7 @@ export function LocalApplyCenterPanel(props: {
     const nextState = createInitialLocalApplyState(baseRecords);
     persistState(nextState);
     setSelectedDraftIds([]);
-    setStatusText('Local Apply сброшен до текущих Daily Records.');
+    setStatusText('Черновики очищены. Текущие записи сохранены.');
   }
 
   const latestBatch = state.batches.find(batch => !batch.rolledBackAtIso) ?? state.batches[0];
@@ -148,52 +148,52 @@ export function LocalApplyCenterPanel(props: {
 
   return (
     <section className={`card money-engine-panel local-apply-panel ${props.compact ? 'compact' : ''}`}>
-      <div className="section-kicker">v2.42 • Local Apply Center</div>
+      <div className="section-kicker">Проверка записей</div>
       <h2 className="card-heading">Подтверждение записей</h2>
       <p className="card-description">
-        Практический слой: шаблон/импорт → preview → выбор → запись в Daily Records → связь Деньги/Работа → rollback batch.
+        Сначала проверь записи из шаблонов и импорта, потом добавь их в день. Всё можно откатить.
       </p>
 
       <div className="money-engine-hero templates-engine-hero">
         <div>
           <span>{hydrated ? getLocalApplyStorageLabel(state) : 'загрузка'}</span>
           <b>{localPreview.readyAfterConfirm}</b>
-          <small>готово к подтверждению · записей {state.records.length}</small>
+          <small>можно добавить · всего записей {state.records.length}</small>
         </div>
         <p>{localPreview.nextAction}</p>
       </div>
 
       <div className="money-engine-metrics templates-engine-metrics">
-        <Metric label="Ready" value={String(localPreview.readyAfterConfirm)} />
-        <Metric label="Review" value={String(localPreview.reviewNeeded)} />
+        <Metric label="Готово" value={String(localPreview.readyAfterConfirm)} />
+        <Metric label="Проверить" value={String(localPreview.reviewNeeded)} />
         <Metric label="Дубли" value={String(localPreview.duplicates)} />
-        <Metric label="Batches" value={String(state.batches.length)} />
+        <Metric label="Добавления" value={String(state.batches.length)} />
       </div>
 
       <div className="money-engine-block compact template-apply-preview">
-        <div className="money-engine-head"><b>Draft-записи</b><span>{selectedDraftIds.length} выбрано</span></div>
+        <div className="money-engine-head"><b>Черновики</b><span>{selectedDraftIds.length} выбрано</span></div>
         <div className="local-apply-draft-list">
           {visibleDrafts.map(draft => (
             <DraftRow key={draft.id} draft={draft} checked={selectedDraftIds.includes(draft.id)} onToggle={() => toggleDraft(draft.id)} />
           ))}
         </div>
         <div className="system-data-actions template-apply-actions">
-          <button type="button" onClick={selectReadyDrafts}>выбрать ready</button>
+          <button type="button" onClick={selectReadyDrafts}>выбрать готовые</button>
           <button type="button" onClick={applySelectedDrafts} disabled={selectedDraftIds.length === 0}>подтвердить и записать</button>
-          <button type="button" onClick={resetLocalApply}>сбросить apply-state</button>
+          <button type="button" onClick={resetLocalApply}>очистить черновики</button>
         </div>
         {statusText ? <p className="system-data-status">{statusText}</p> : null}
       </div>
 
       {latestBatch ? (
         <div className="money-engine-block compact local-apply-batch-block">
-          <div className="money-engine-head"><b>Последний batch</b><span>{latestBatch.rolledBackAtIso ? 'rolled back' : 'active'}</span></div>
+          <div className="money-engine-head"><b>Последнее добавление</b><span>{latestBatch.rolledBackAtIso ? 'отменено' : 'активно'}</span></div>
           <p className="quick-note">{latestBatch.recordIds.length} записей · {new Date(latestBatch.createdAtIso).toLocaleString('ru-RU')}</p>
           <div className="money-template-row templates-template-row">
             {latestBatch.recordIds.slice(0, 6).map(id => <span key={id}>{id.slice(0, 22)}</span>)}
           </div>
           <div className="system-data-actions template-apply-actions">
-            <button type="button" onClick={() => rollbackBatch(latestBatch)} disabled={Boolean(latestBatch.rolledBackAtIso)}>rollback batch</button>
+            <button type="button" onClick={() => rollbackBatch(latestBatch)} disabled={Boolean(latestBatch.rolledBackAtIso)}>отменить добавление</button>
           </div>
         </div>
       ) : null}
@@ -208,7 +208,7 @@ export function LocalApplyCenterPanel(props: {
       </div>
 
       <div className="money-engine-block compact">
-        <div className="money-engine-head"><b>Audit</b><span>{state.auditEvents.length} events</span></div>
+        <div className="money-engine-head"><b>Журнал</b><span>{state.auditEvents.length} событий</span></div>
         {state.auditEvents.slice(0, 5).map(event => (
           <article className="money-signal signal-green" key={event.id}>
             <div><b>{event.action}</b><span>{event.note}</span></div>

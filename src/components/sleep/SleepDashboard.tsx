@@ -238,7 +238,7 @@ export function SleepDashboard(props: { dayInput?: DayCoreInputModel }) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `finflow_sleep_history_${new Date().toISOString().slice(0, 10)}.json`;
+    link.download = `finflow_sleep_history_${getTodayDateInput()}.json`;
     link.click();
     URL.revokeObjectURL(url);
   }

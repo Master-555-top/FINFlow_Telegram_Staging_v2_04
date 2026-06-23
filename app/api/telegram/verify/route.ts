@@ -7,15 +7,30 @@ import { authenticateTelegramInitData } from '@/lib/server/telegramRequestAuth';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+const maxRequestBytes = 64_000;
+
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => null) as { initData?: string } | null;
-  const validation = authenticateTelegramInitData(body?.initData ?? '');
+  const contentLength = Number(request.headers.get('content-length'));
+  if (Number.isFinite(contentLength) && contentLength > maxRequestBytes) {
+    return errorResponse('payload_too_large', 413);
+  }
+
+  const rawBody = await request.text();
+  if (Buffer.byteLength(rawBody, 'utf8') > maxRequestBytes) {
+    return errorResponse('payload_too_large', 413);
+  }
+
+  let body: { initData?: unknown } | null = null;
+  try {
+    body = JSON.parse(rawBody) as { initData?: unknown };
+  } catch {
+    return errorResponse('invalid_json', 400);
+  }
+
+  const validation = authenticateTelegramInitData(typeof body?.initData === 'string' ? body.initData : '');
 
   if (!validation.ok || !validation.user) {
-    return NextResponse.json(
-      { ok: false, reason: validation.reason, profileReady: false },
-      { status: 401 }
-    );
+    return errorResponse(validation.reason ?? 'telegram_auth_failed', 401);
   }
 
   const serverStatus = getSupabaseServerClientStatus();
@@ -63,4 +78,11 @@ export async function POST(request: Request) {
       languageCode: validation.user.language_code
     }
   }, { headers: { 'Cache-Control': 'no-store' } });
+}
+
+function errorResponse(reason: string, status: number) {
+  return NextResponse.json(
+    { ok: false, reason, profileReady: false },
+    { status, headers: { 'Cache-Control': 'no-store' } }
+  );
 }

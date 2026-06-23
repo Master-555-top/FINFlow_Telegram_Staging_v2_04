@@ -18,11 +18,12 @@ import {
 } from '@/lib/deployment/manualCloudTestWizard';
 import { buildBackupAwareCloudTestGate, canMarkManualCloudStepAsPassed, getBackupGateBlockMessage } from '@/lib/deployment/backupAwareCloudTestFlow';
 import { LOCAL_BACKUP_STORAGE_KEY, parseLocalBackupState, summarizeLocalBackups, createInitialLocalBackupState } from '@/lib/local/localBackupModel';
+import { formatLocalDateStartIso } from '@/lib/time/localDate';
 
 export function ManualCloudTestWizardPanel() {
   const [hydrated, setHydrated] = useState(false);
-  const [state, setState] = useState<ManualCloudWizardState>(() => createInitialManualCloudWizardState(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`));
-  const [backupState, setBackupState] = useState(() => createInitialLocalBackupState(`${new Date().toISOString().slice(0, 10)}T00:00:00.000Z`));
+  const [state, setState] = useState<ManualCloudWizardState>(() => createInitialManualCloudWizardState(formatLocalDateStartIso()));
+  const [backupState, setBackupState] = useState(() => createInitialLocalBackupState(formatLocalDateStartIso()));
   const summary = useMemo(() => summarizeManualCloudWizard(state), [state]);
   const backupSummary = useMemo(() => summarizeLocalBackups(backupState), [backupState]);
   const backupGate = useMemo(() => buildBackupAwareCloudTestGate({ backupSummary }), [backupSummary]);
@@ -92,10 +93,10 @@ export function ManualCloudTestWizardPanel() {
   return (
     <section className="manual-cloud-wizard-panel">
       <div className="manual-cloud-head">
-        <span>v1.90 • Codex-Synced Backup-Aware Cloud Test Flow</span>
-        <b>Cloud sync test wizard</b>
+        <span>Проверка облака</span>
+        <b>Пошаговая проверка облака</b>
         <p>
-          Пошаговая проверка cloud save/load/conflict теперь связана с local backup gate: manual write/conflict нельзя закрыть как passed без backup.
+          Перед облачными действиями нужна резервная копия. Без неё проверка не считается пройденной.
         </p>
       </div>
 

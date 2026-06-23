@@ -1,5 +1,6 @@
 import { createDailyRecord, type DailyRecord, type DailyRecordType } from '@/lib/day-core/dailyRecordsModel';
 import type { FinflowTemplateCadence, FinflowTemplateDefinition } from '@/lib/templates/finflowTemplatesEngine';
+import { formatLocalIsoDate } from '@/lib/time/localDate';
 
 export const TEMPLATE_APPLY_ENGINE_VERSION = 'template_apply_engine_v2_38' as const;
 
@@ -231,7 +232,7 @@ function buildRecurringOccurrences(templates: FinflowTemplateDefinition[], nowIs
       const dueDate = nextDueDate(template, now);
       const canCreateRecord = mapTemplateToDailyRecordType(template) !== null && template.defaultAmount !== undefined;
       return {
-        id: `recurring-${template.id}-${dueDate.toISOString().slice(0, 10)}`,
+        id: `recurring-${template.id}-${formatLocalIsoDate(dueDate)}`,
         templateId: template.id,
         templateLabel: template.label,
         dueDateIso: dueDate.toISOString(),

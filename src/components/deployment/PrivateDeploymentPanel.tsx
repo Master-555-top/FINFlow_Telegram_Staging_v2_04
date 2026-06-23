@@ -48,7 +48,7 @@ export function PrivateDeploymentPanel() {
   if (error) {
     return (
       <section className="private-deployment-panel error">
-        <b>Private Deployment</b>
+        <b>Приватная публикация</b>
         <p>Не удалось проверить deployment readiness: {error}</p>
       </section>
     );
@@ -57,7 +57,7 @@ export function PrivateDeploymentPanel() {
   if (!payload) {
     return (
       <section className="private-deployment-panel checking">
-        <b>Private Deployment</b>
+        <b>Приватная публикация</b>
         <p>Проверяем env и режим запуска…</p>
       </section>
     );
@@ -67,7 +67,7 @@ export function PrivateDeploymentPanel() {
     <section className={`private-deployment-panel ${payload.mode}`}>
       <div className="deployment-head">
         <div>
-          <span>v1.80 • Private Deployment</span>
+          <span>v1.80 • Приватная публикация</span>
           <b>{getModeLabel(payload.mode)}</b>
         </div>
         <p>Секреты не должны быть в коде. Они должны лежать в environment variables хостинга и читаться только server-side.</p>

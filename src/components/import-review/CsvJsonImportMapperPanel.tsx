@@ -22,7 +22,7 @@ export function CsvJsonImportMapperPanel(props: { compact?: boolean }) {
 
   return (
     <section className={`card money-engine-panel csv-json-import-mapper-panel ${props.compact ? 'compact' : ''}`}>
-      <div className="section-kicker">v2.43 • CSV / JSON Import Mapper</div>
+      <div className="section-kicker">Импорт таблиц</div>
       <h2 className="card-heading">Табличный импорт</h2>
       <p className="card-description">
         CSV/JSON → сопоставление колонок → массовый preview → Import Review Queue → Local Apply. Автозаписи нет: только confirm/rollback.
@@ -83,7 +83,7 @@ function MappedRowCard(props: { row: CsvJsonImportMappedRow }) {
         </span>
         <em>{props.row.amount ?? 'сумма?'}</em>
       </label>
-      {props.row.reviewReasons.length > 0 ? <p>{props.row.reviewReasons.slice(0, 3).join(' · ')}</p> : <p>Готово к Import Review / Local Apply.</p>}
+      {props.row.reviewReasons.length > 0 ? <p>{props.row.reviewReasons.slice(0, 3).join(' · ')}</p> : <p>Готово к проверке и добавлению.</p>}
     </article>
   );
 }

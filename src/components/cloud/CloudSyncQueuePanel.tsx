@@ -89,37 +89,37 @@ export function CloudSyncQueuePanel() {
   return (
     <section className="system-data-panel global-backbone-panel cloud-sync-queue-panel">
       <div className="system-data-hero">
-        <span>v2.40 • Cloud Sync Queue</span>
-        <b>{100 - Math.min(30, snapshot.summary.conflicts * 12 + snapshot.summary.blocked * 8)}% safe flow</b>
+        <span>Очередь синхронизации</span>
+        <b>{100 - Math.min(30, snapshot.summary.conflicts * 12 + snapshot.summary.blocked * 8)}% готово</b>
         <p>{snapshot.nextAction}</p>
       </div>
 
       <div className="system-data-preview compact backbone-progress-grid">
         <div className="system-data-preview-head">
-          <b>Queue summary</b>
-          <span>{snapshot.mode}</span>
+          <b>Сводка</b>
+          <span>{cleanQueueCopy(snapshot.mode)}</span>
         </div>
         <article><b>{snapshot.summary.total}</b><span>в очереди</span></article>
-        <article className={snapshot.summary.conflicts > 0 ? 'danger' : ''}><b>{snapshot.summary.conflicts}</b><span>conflicts</span></article>
-        <article><b>{snapshot.summary.rollbackAvailable}</b><span>rollback</span></article>
-        <article className={writesEnabled ? 'watch' : ''}><b>{writesEnabled ? 'on' : 'safe-off'}</b><span>cloud flags</span></article>
+        <article className={snapshot.summary.conflicts > 0 ? 'danger' : ''}><b>{snapshot.summary.conflicts}</b><span>конфликты</span></article>
+        <article><b>{snapshot.summary.rollbackAvailable}</b><span>откат</span></article>
+        <article className={writesEnabled ? 'watch' : ''}><b>{writesEnabled ? 'вкл' : 'выкл'}</b><span>запись в облако</span></article>
       </div>
 
       {snapshot.conflicts.length > 0 ? (
         <div className="system-data-preview compact">
           <div className="system-data-preview-head">
-            <b>Conflict review cards</b>
-            <span>{snapshot.conflicts.length} open</span>
+            <b>Конфликты</b>
+            <span>{snapshot.conflicts.length} открыто</span>
           </div>
           {snapshot.conflicts.map(conflict => (
             <article key={conflict.id} className="danger cloud-conflict-card">
               <b>{conflict.headline}</b>
-              <span>{conflict.localDate} · cloud rev {conflict.cloudRevision ?? '—'}</span>
+              <span>{conflict.localDate} · облако {conflict.cloudRevision ?? '—'}</span>
               <p>{conflict.message}</p>
               <small>{conflict.recommendedAction}</small>
               <div className="cloud-conflict-actions">
-                <button type="button" onClick={() => markConflict(conflict.id, 'resolved_local')}>оставить local</button>
-                <button type="button" onClick={() => markConflict(conflict.id, 'resolved_cloud')}>принять cloud</button>
+                <button type="button" onClick={() => markConflict(conflict.id, 'resolved_local')}>оставить локальное</button>
+                <button type="button" onClick={() => markConflict(conflict.id, 'resolved_cloud')}>принять облачное</button>
                 <button type="button" onClick={() => markConflict(conflict.id, 'dismissed')}>отложить</button>
               </div>
             </article>
@@ -129,30 +129,30 @@ export function CloudSyncQueuePanel() {
 
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">
-          <b>Latest queue</b>
-          <span>{snapshot.queue.length} items</span>
+          <b>Последние действия</b>
+          <span>{snapshot.queue.length} записей</span>
         </div>
         {snapshot.queue.length > 0 ? snapshot.queue.map(item => (
           <article key={item.id} className={item.risk === 'danger' ? 'danger' : item.risk === 'watch' ? 'watch' : ''}>
             <b>{item.title}</b>
-            <span>{item.localDate} · {item.status} · rev {item.cloudRevision ?? item.expectedRevision ?? '—'}</span>
+            <span>{item.localDate} · {cleanQueueCopy(item.status)} · версия {item.cloudRevision ?? item.expectedRevision ?? '—'}</span>
             <p>{item.summary}</p>
           </article>
         )) : (
           <article>
             <b>Очередь чистая</b>
-            <span>готово к staging smoke test</span>
+            <span>готово к проверке</span>
           </article>
         )}
       </div>
 
       <div className="system-data-preview compact">
         <div className="system-data-preview-head">
-          <b>Safety rules</b>
-          <span>locked</span>
+          <b>Правила безопасности</b>
+          <span>зафиксировано</span>
         </div>
         {snapshot.safetyRules.map(rule => (
-          <article key={rule}><b>{rule}</b><span>required</span></article>
+          <article key={rule}><b>{cleanQueueCopy(rule)}</b><span>обязательно</span></article>
         ))}
       </div>
 
@@ -196,4 +196,22 @@ function writeConflicts(conflicts: CloudConflictReview[]) {
   } catch {
     // localStorage can be unavailable in private mode.
   }
+}
+
+
+function cleanQueueCopy(text: string) {
+  return text
+    .replaceAll('safe-off', 'без записи')
+    .replaceAll('cloud flags', 'запись в облако')
+    .replaceAll('Cloud', 'Облако')
+    .replaceAll('cloud', 'облако')
+    .replaceAll('queue', 'очередь')
+    .replaceAll('conflict', 'конфликт')
+    .replaceAll('staging', 'проверка')
+    .replaceAll('smoke test', 'проверка')
+    .replaceAll('preview', 'проверка')
+    .replaceAll('backup', 'копия')
+    .replaceAll('rollback', 'откат')
+    .replaceAll('required', 'обязательно')
+    .replaceAll('_', ' ');
 }

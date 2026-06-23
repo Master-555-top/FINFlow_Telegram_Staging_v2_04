@@ -48,7 +48,7 @@ export type SupabaseStagingReadiness = {
 const migrations: SupabaseStagingMigration[] = [
   {
     id: 'v1_73_cloud_day_documents',
-    file: 'supabase/migrations/20260620_finflow_v1_73_cloud_day_documents.sql',
+    file: 'supabase/migration_v1_73_telegram_cloud_day.sql',
     purpose: 'Telegram profile bridge, cloud day document storage, sync audit, service-role only table access.',
     applyMode: 'already_present'
   },

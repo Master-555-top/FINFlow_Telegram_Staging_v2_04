@@ -30,6 +30,8 @@ import { CsvJsonImportMapperPanel } from '@/components/import-review/CsvJsonImpo
 import { RealDataWeekTestPanel } from '@/components/project/RealDataWeekTestPanel';
 import { RealUsageGapsPanel } from '@/components/project/RealUsageGapsPanel';
 import { FinalLocalMvpSmokePanel } from '@/components/project/FinalLocalMvpSmokePanel';
+import { ReleaseCandidatePanel } from '@/components/project/ReleaseCandidatePanel';
+import { GlobalRedesignAcceptancePanel } from '@/components/project/GlobalRedesignAcceptancePanel';
 import { createInitialDailyRecordsFromInput } from '@/lib/day-core/dailyRecordsModel';
 
 type NavTabId = 'day' | 'money' | 'work' | 'funds' | 'sleep' | 'ai' | 'system';
@@ -55,6 +57,8 @@ type SystemSubsectionId =
   | 'qa_week_test'
   | 'qa_gaps'
   | 'qa_mvp_smoke'
+  | 'qa_release_candidate'
+  | 'qa_design_acceptance'
   | 'deploy_readiness'
   | 'deploy_acceptance'
   | 'dev_logs';
@@ -99,29 +103,41 @@ const NAV_TABS: { id: NavTabId; icon: IconName; label: string }[] = [
   { id: 'system', icon: 'system', label: 'Система' }
 ];
 
-const TAB_COMMANDS: Partial<Record<NavTabId, TabCommandMeta>> = {
+const COMMAND_CENTER_META: Record<Exclude<NavTabId, 'system'>, TabCommandMeta> = {
+  day: {
+    eyebrow: 'Главное',
+    title: 'Сегодняшний день',
+    description: 'Сегодняшние деньги, работа, сон и решения — в одном месте.',
+    chips: ['день', 'план', 'сохранение']
+  },
   money: {
-    eyebrow: 'Money OS',
+    eyebrow: 'Финансы',
     title: 'Деньги под контролем',
-    description: 'Баланс, записи, шаблоны и review собраны как финансовый cockpit.',
-    chips: ['баланс', 'review', 'шаблоны']
+    description: 'Баланс, расходы, доходы и обязательства — коротко и понятно.',
+    chips: ['баланс', 'обзор', 'шаблоны']
   },
   work: {
-    eyebrow: 'Taxi Work',
+    eyebrow: 'Работа',
     title: 'Рабочий режим',
-    description: 'Заказы, смена, бензин, пробег и машина — отдельно от dev-панелей.',
-    chips: ['заказы', 'топливо', 'машина']
+    description: 'Заказы, смена, бензин, пробег и машина — отдельно от личных трат.',
+    chips: ['заказы', 'топливо', 'смена']
   },
   funds: {
-    eyebrow: 'Funds System',
+    eyebrow: 'Цели',
     title: 'Фонды и обязательства',
-    description: 'Цели, ремонт, подушка и временные покупки как понятные контейнеры.',
+    description: 'Подушка, ремонт, обязательства и покупки — по понятным целям.',
     chips: ['подушка', 'ремонт', 'обязательства']
   },
+  sleep: {
+    eyebrow: 'Режим',
+    title: 'Сон и режим',
+    description: 'Сон, история и ручное редактирование без лишних экранов.',
+    chips: ['обзор', 'история', 'редактор']
+  },
   ai: {
-    eyebrow: 'AI Partner',
+    eyebrow: 'Помощник',
     title: 'Локальный помощник',
-    description: 'Контекст дня, денег, работы и рисков — в одном советнике.',
+    description: 'Советы по дню, деньгам, работе и рискам на основе твоих данных.',
     chips: ['совет', 'контекст', 'план']
   }
 };
@@ -135,10 +151,10 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     accent: 'cyan',
     primary: true,
     subsections: [
-      { id: 'telegram_device', label: 'Чек' },
-      { id: 'telegram_preflight', label: 'Preflight' },
+      { id: 'telegram_device', label: 'Проверка' },
+      { id: 'telegram_preflight', label: 'Перед стартом' },
       { id: 'telegram_launch', label: 'Старт' },
-      { id: 'telegram_checklist', label: 'Защита' }
+      { id: 'telegram_checklist', label: 'Безопасность' }
     ]
   },
   {
@@ -148,7 +164,7 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     shortTitle: 'Аудит',
     accent: 'violet',
     subsections: [
-      { id: 'overview_readiness', label: 'Статус' }
+      { id: 'overview_readiness', label: 'Готовность' }
     ]
   },
 
@@ -159,10 +175,10 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
     shortTitle: 'Данные',
     accent: 'amber',
     subsections: [
-      { id: 'data_backbone', label: 'Backbone' },
+      { id: 'data_backbone', label: 'Основа' },
       { id: 'data_templates', label: 'Шаблоны' },
-      { id: 'data_apply', label: 'Apply' },
-      { id: 'data_mapper', label: 'CSV/JSON' },
+      { id: 'data_apply', label: 'Применить' },
+      { id: 'data_mapper', label: 'Импорт' },
       { id: 'data_storage', label: 'Хранилище' },
       { id: 'data_reset', label: 'Сброс' }
     ]
@@ -170,49 +186,51 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
   {
     id: 'cloud',
     icon: 'cloud',
-    title: 'Cloud',
-    shortTitle: 'Cloud',
+    title: 'Облако',
+    shortTitle: 'Облако',
     accent: 'blue',
     subsections: [
-      { id: 'cloud_staging', label: 'Staging' },
-      { id: 'cloud_center', label: 'Sync' },
-      { id: 'cloud_wizard', label: 'Wizard' },
-      { id: 'cloud_n8n', label: 'n8n' }
+      { id: 'cloud_staging', label: 'Проверка' },
+      { id: 'cloud_center', label: 'Синхронизация' },
+      { id: 'cloud_wizard', label: 'Пошагово' },
+      { id: 'cloud_n8n', label: 'Автоматизация' }
     ]
   },
   {
     id: 'backup',
     icon: 'backup',
-    title: 'Backup',
-    shortTitle: 'Backup',
+    title: 'Копии',
+    shortTitle: 'Копии',
     accent: 'magenta',
     subsections: [
-      { id: 'backup_local', label: 'Backup' }
+      { id: 'backup_local', label: 'Копии' }
     ]
   },
   {
     id: 'qa',
     icon: 'qa',
-    title: 'QA',
-    shortTitle: 'QA',
+    title: 'Проверка',
+    shortTitle: 'Проверка',
     accent: 'green',
     subsections: [
       { id: 'qa_guide', label: 'План' },
       { id: 'qa_week_test', label: 'Неделя' },
-      { id: 'qa_gaps', label: 'Gaps' },
-      { id: 'qa_mvp_smoke', label: 'MVP' },
-      { id: 'deploy_readiness', label: 'Статус' },
-      { id: 'deploy_acceptance', label: 'Runner' }
+      { id: 'qa_gaps', label: 'Проблемы' },
+      { id: 'qa_mvp_smoke', label: 'Готовность' },
+      { id: 'qa_release_candidate', label: 'Финал' },
+      { id: 'qa_design_acceptance', label: 'Дизайн' },
+      { id: 'deploy_readiness', label: 'Публикация' },
+      { id: 'deploy_acceptance', label: 'Проверка' }
     ]
   },
   {
     id: 'dev',
     icon: 'dev',
-    title: 'Dev',
-    shortTitle: 'Dev',
+    title: 'Журнал',
+    shortTitle: 'Журнал',
     accent: 'blue',
     subsections: [
-      { id: 'dev_logs', label: 'Логи' }
+      { id: 'dev_logs', label: 'Журнал' }
     ]
   }
 ];
@@ -227,69 +245,86 @@ const DEFAULT_SYSTEM_SUBSECTIONS: Record<SystemSectionId, SystemSubsectionId> = 
   dev: 'dev_logs'
 };
 
-const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'telegram_preflight' | 'data_backbone' | 'data_templates' | 'data_apply' | 'data_mapper' | 'data_reset' | 'data_storage' | 'cloud_staging' | 'cloud_n8n' | 'qa_week_test' | 'qa_gaps' | 'qa_mvp_smoke'>, SystemRow[]> = {
+const SYSTEM_ROWS: Record<Exclude<SystemSubsectionId, 'telegram_device' | 'telegram_preflight' | 'data_backbone' | 'data_templates' | 'data_apply' | 'data_mapper' | 'data_reset' | 'data_storage' | 'cloud_staging' | 'cloud_n8n' | 'qa_week_test' | 'qa_gaps' | 'qa_mvp_smoke' | 'qa_release_candidate' | 'qa_design_acceptance'>, SystemRow[]> = {
   telegram_launch: [
-    { icon: 'telegram', title: 'Mini App URL', meta: 'BotFather → стабильный домен', tone: 'ok' },
-    { icon: 'sync', title: 'Vercel', meta: 'Deploy-safe пакет', tone: 'ok' },
-    { icon: 'check', title: 'Env', meta: 'TELEGRAM_BOT_TOKEN server-only', tone: 'safe' }
+    { icon: 'telegram', title: 'Ссылка приложения', meta: 'домен подключён', tone: 'ok' },
+    { icon: 'sync', title: 'Публикация', meta: 'чистый пакет', tone: 'ok' },
+    { icon: 'check', title: 'Ключи', meta: 'только на сервере', tone: 'safe' }
   ],
   telegram_checklist: [
-    { icon: 'check', title: 'Raw initData скрыт', meta: 'без hash в UI', tone: 'ok' },
-    { icon: 'check', title: 'Cloud write off', meta: 'PUT/save не запускается', tone: 'safe' },
-    { icon: 'warn', title: 'Секреты', meta: 'только Vercel env', tone: 'safe' }
+    { icon: 'check', title: 'Вход скрыт', meta: 'без лишнего на экране', tone: 'ok' },
+    { icon: 'check', title: 'Запись в облако', meta: 'только после проверки', tone: 'safe' },
+    { icon: 'warn', title: 'Секреты', meta: 'только настройки сервера', tone: 'safe' }
   ],
   overview_readiness: [
-    { icon: 'audit', title: 'Day Core', meta: '96%', tone: 'ok' },
-    { icon: 'money', title: 'Money Engine', meta: '76%', tone: 'ok' },
-    { icon: 'work', title: 'Work Engine', meta: '84%', tone: 'ok' },
-    { icon: 'cloud', title: 'Cloud', meta: 'safe-off', tone: 'safe' }
+    { icon: 'audit', title: 'День', meta: 'готов', tone: 'ok' },
+    { icon: 'money', title: 'Деньги', meta: 'готово', tone: 'ok' },
+    { icon: 'work', title: 'Работа', meta: 'готово', tone: 'ok' },
+    { icon: 'cloud', title: 'Облако', meta: 'без записи', tone: 'safe' }
   ],
   cloud_center: [
-    { icon: 'sync', title: 'Cloud sync', meta: 'выключено', tone: 'safe' },
-    { icon: 'telegram', title: 'Telegram context', meta: 'найден', tone: 'ok' },
-    { icon: 'warn', title: 'Writes', meta: 'заблокировано', tone: 'safe' }
+    { icon: 'sync', title: 'Синхронизация', meta: 'пока без записи', tone: 'safe' },
+    { icon: 'telegram', title: 'Telegram', meta: 'подключён', tone: 'ok' },
+    { icon: 'warn', title: 'Запись', meta: 'после проверки', tone: 'safe' }
   ],
   cloud_wizard: [
-    { icon: 'backup', title: 'Local backup', meta: 'сначала сохранить', tone: 'safe' },
-    { icon: 'cloud', title: 'Cloud preview', meta: 'после Supabase', tone: 'info' },
-    { icon: 'check', title: 'Manual apply', meta: 'только после подтверждения', tone: 'safe' }
+    { icon: 'backup', title: 'Копия', meta: 'сначала сохранить', tone: 'safe' },
+    { icon: 'cloud', title: 'Проверка облака', meta: 'после настройки', tone: 'info' },
+    { icon: 'check', title: 'Применение', meta: 'только вручную', tone: 'safe' }
   ],
   backup_local: [
     { icon: 'backup', title: 'Создать', meta: 'локальный бэкап', tone: 'ok' },
-    { icon: 'sync', title: 'Восстановить', meta: 'preview first', tone: 'info' },
+    { icon: 'sync', title: 'Восстановить', meta: 'сначала проверить', tone: 'info' },
     { icon: 'log', title: 'История', meta: 'точки отката', tone: 'info' }
   ],
   qa_guide: [
-    { icon: 'check', title: 'System screen', meta: 'без горизонтального скролла', tone: 'ok' },
-    { icon: 'telegram', title: 'Telegram check', meta: 'verify HTTP 200', tone: 'ok' },
-    { icon: 'cloud', title: 'Cloud dry-run', meta: 'safe fail допустим', tone: 'safe' }
+    { icon: 'check', title: 'Экран системы', meta: 'без лишнего скролла', tone: 'ok' },
+    { icon: 'telegram', title: 'Telegram', meta: 'открывается', tone: 'ok' },
+    { icon: 'cloud', title: 'Облако', meta: 'только проверка', tone: 'safe' }
   ],
   deploy_readiness: [
-    { icon: 'check', title: 'Deploy', meta: 'HTTP 200', tone: 'ok' },
-    { icon: 'telegram', title: 'Telegram', meta: 'ready', tone: 'ok' },
-    { icon: 'cloud', title: 'Supabase', meta: 'optional', tone: 'safe' }
+    { icon: 'check', title: 'Публикация', meta: 'страница открывается', tone: 'ok' },
+    { icon: 'telegram', title: 'Telegram', meta: 'готово', tone: 'ok' },
+    { icon: 'cloud', title: 'Облако', meta: 'позже', tone: 'safe' }
   ],
   deploy_acceptance: [
-    { icon: 'check', title: 'Manual QA', meta: 'запустить после deploy', tone: 'info' },
-    { icon: 'system', title: 'UI pass', meta: 'кнопки и отступы', tone: 'info' },
-    { icon: 'warn', title: 'No secrets', meta: 'скрины без токенов', tone: 'safe' }
+    { icon: 'check', title: 'Ручная проверка', meta: 'после публикации', tone: 'info' },
+    { icon: 'system', title: 'Экран', meta: 'кнопки и отступы', tone: 'info' },
+    { icon: 'warn', title: 'Безопасность', meta: 'без токенов на скринах', tone: 'safe' }
   ],
   dev_logs: [
-    { icon: 'warn', title: 'Ошибки', meta: 'dev log', tone: 'info' },
-    { icon: 'dev', title: 'Инструменты', meta: 'служебные утилиты', tone: 'info' },
-    { icon: 'log', title: 'О приложении', meta: SYSTEM_UI_VERSION, tone: 'info' }
+    { icon: 'warn', title: 'Ошибки', meta: 'журнал', tone: 'info' },
+    { icon: 'dev', title: 'Инструменты', meta: 'для проверки', tone: 'info' },
+    { icon: 'log', title: 'Состояние', meta: 'актуально', tone: 'info' }
   ]
 };
 
-function TabCommandCard(props: { meta: TabCommandMeta }) {
+function SectionCommandCenter(props: { activeTab: Exclude<NavTabId, 'system'>; syncedAt: string }) {
+  const meta = COMMAND_CENTER_META[props.activeTab];
+  const lastSync = props.syncedAt
+    ? new Date(props.syncedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+    : 'ожидаю ввод';
+
   return (
-    <section className="card tab-command-card">
-      <div className="tab-command-orb" aria-hidden="true" />
-      <div className="section-kicker">{props.meta.eyebrow}</div>
-      <h2>{props.meta.title}</h2>
-      <p>{props.meta.description}</p>
-      <div className="tab-command-chips">
-        {props.meta.chips.map(chip => <span key={chip}>{chip}</span>)}
+    <section className={`redesign-command-center redesign-command-center--${props.activeTab}`}>
+      <div className="redesign-command-main">
+        <div className="redesign-command-kicker">{meta.eyebrow}</div>
+        <h1>{meta.title}</h1>
+        <p>{meta.description}</p>
+        <div className="redesign-command-chips">
+          {meta.chips.map(chip => <span key={chip}>{chip}</span>)}
+        </div>
+      </div>
+      <div className="redesign-command-side" aria-label="Состояние приложения">
+        <div className="redesign-status-row">
+          <TelegramSessionPill />
+          <TimeOfDayPill />
+        </div>
+        <div className="redesign-sync-card">
+          <span>Обновлено</span>
+          <b>{lastSync}</b>
+          <small>Данные связаны между разделами</small>
+        </div>
       </div>
     </section>
   );
@@ -347,6 +382,8 @@ export function DashboardShell() {
     if (subsectionId === 'qa_week_test') return <RealDataWeekTestPanel dayInput={liveDayInput} records={systemTemplateRecords} />;
     if (subsectionId === 'qa_gaps') return <RealUsageGapsPanel dayInput={liveDayInput} records={systemTemplateRecords} />;
     if (subsectionId === 'qa_mvp_smoke') return <FinalLocalMvpSmokePanel dayInput={liveDayInput} records={systemTemplateRecords} />;
+    if (subsectionId === 'qa_release_candidate') return <ReleaseCandidatePanel dayInput={liveDayInput} records={systemTemplateRecords} />;
+    if (subsectionId === 'qa_design_acceptance') return <GlobalRedesignAcceptancePanel dayInput={liveDayInput} records={systemTemplateRecords} />;
     if (subsectionId === 'data_storage') return <DataStoragePanel />;
     if (subsectionId === 'data_reset') return <DataResetPanel />;
     return <SystemRows rows={SYSTEM_ROWS[subsectionId]} />;
@@ -357,31 +394,9 @@ export function DashboardShell() {
   return (
     <>
       <main className={`app-shell app-shell--${activeTab}`}>
-        {shouldShowDailyChrome && (
-          <header className="topbar">
-            <div className="logo">
-              <div className="logo-title">FinFlow</div>
-              <div className="logo-subtitle">{dayCoreMock.version}</div>
-            </div>
-            <div className="topbar-pills">
-              <TelegramSessionPill />
-              <TimeOfDayPill />
-            </div>
-          </header>
-        )}
+        {activeTab !== 'system' && <SectionCommandCenter activeTab={activeTab} syncedAt={dailyLiveStateSyncedAt} />}
 
         {shouldShowDailyChrome && <LiveTimeWidget />}
-
-        {shouldShowDailyChrome && (
-          <div className="daily-live-state-banner">
-            <b>Live-state:</b> День / Деньги / Работа / Фонды / AI читают общий локальный state.
-            <span>{dailyLiveStateSyncedAt ? `Последняя синхронизация: ${new Date(dailyLiveStateSyncedAt).toLocaleTimeString('ru-RU')}` : 'Ожидаю первый ввод дня.'}</span>
-          </div>
-        )}
-
-        {activeTab !== 'day' && activeTab !== 'system' && activeTab !== 'sleep' && TAB_COMMANDS[activeTab] ? (
-          <TabCommandCard meta={TAB_COMMANDS[activeTab] as TabCommandMeta} />
-        ) : null}
 
         {activeTab === 'day' && (
           <>
@@ -392,9 +407,9 @@ export function DashboardShell() {
 
         {activeTab === 'money' && (
           <>
-<NetCalculationPanel dayInput={liveDayInput} />
+            <NetCalculationPanel dayInput={liveDayInput} />
             <DailyQuickInputPanel view="money" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Деньги" subtitle="Только денежные записи этого раздела: доходы, расходы, банк-review и шаблоны." sections={['records', 'bank', 'templates']} />
+            <SectionHistoryPanel title="Деньги" subtitle="Доходы, расходы, обязательства и шаблоны без лишних технических деталей." sections={['records', 'bank', 'templates']} />
             <ImportReviewQueuePanel />
           </>
         )}
@@ -402,20 +417,20 @@ export function DashboardShell() {
         {activeTab === 'work' && (
           <>
             <DailyQuickInputPanel view="work" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Работа" subtitle="История смен, заказов, топлива и пробега без общей вкладки истории." sections={['records', 'fuel']} />
+            <SectionHistoryPanel title="Работа" subtitle="Смены, заказы, топливо и пробег по этому разделу." sections={['records', 'fuel']} />
           </>
         )}
         {activeTab === 'funds' && (
           <>
             <DailyQuickInputPanel view="funds" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Фонды" subtitle="История фондов и обязательств берётся из live-state Дня, не из отдельной копии." sections={['funds']} />
+            <SectionHistoryPanel title="Фонды" subtitle="Фонды и обязательства связаны с сегодняшним днём." sections={['funds']} />
           </>
         )}
         {activeTab === 'sleep' && <SleepDashboard dayInput={liveDayInput} />}
         {activeTab === 'ai' && (
           <>
             <DailyQuickInputPanel view="ai" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="AI контекст" subtitle="AI не имеет отдельной базы: история берётся из дневных данных, задач, сна и работы." sections={['day', 'sleep', 'records']} />
+            <SectionHistoryPanel title="AI контекст" subtitle="Помощник смотрит на день, деньги, работу и сон." sections={['day', 'sleep', 'records']} />
           </>
         )}
 
@@ -425,9 +440,9 @@ export function DashboardShell() {
               <>
                 <div className="premium-screen-head">
                   <h1>Система</h1>
-                  <span>{SYSTEM_UI_VERSION}</span>
+                  <span>готово</span>
                 </div>
-                <div className="system-premium-grid" role="tablist" aria-label="Разделы System">
+                <div className="system-premium-grid" role="tablist" aria-label="Разделы системы">
                   {SYSTEM_SECTIONS.map(section => (
                     <button
                       key={section.id}
@@ -451,11 +466,11 @@ export function DashboardShell() {
                     ←
                   </button>
                   <h1>{activeSystemMeta.shortTitle}</h1>
-                  <span>{SYSTEM_UI_VERSION}</span>
+                  <span>готово</span>
                 </div>
 
                 {activeSystemMeta.subsections.length > 1 ? (
-                  <div className="premium-segmented" role="tablist" aria-label={`${activeSystemMeta.shortTitle} окна`}>
+                  <div className="premium-segmented" role="tablist" aria-label={`${activeSystemMeta.shortTitle} разделы`}>
                     {activeSystemMeta.subsections.map(subsection => (
                       <button
                         key={subsection.id}

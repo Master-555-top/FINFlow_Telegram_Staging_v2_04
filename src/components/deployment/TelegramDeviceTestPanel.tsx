@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { getTelegramWebApp } from '@/lib/telegram/telegramWebApp';
+import { formatLocalIsoDate } from '@/lib/time/localDate';
 
 type RuntimeCheckStatus = 'idle' | 'running' | 'passed' | 'failed' | 'expected_safe_fail' | 'skipped';
 
@@ -59,7 +60,7 @@ export function TelegramDeviceTestPanel() {
     const nextResults: RuntimeCheckResult[] = [];
     const webApp = getTelegramWebApp();
     const initData = webApp?.initData ?? '';
-    const today = new Date().toISOString().slice(0, 10);
+    const today = formatLocalIsoDate();
 
     nextResults.push({
       id: 'device_bridge',

@@ -1,0 +1,64 @@
+/* FINFlow v2.58 — Deep UI declutter
+   Second cleanup pass after full redesign: reduce service copy, hide low-value
+   captions, and keep the phone view focused on actions and decisions. */
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .redesign-command-main p,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .card-description,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .quick-note,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .system-data-status {
+  max-width: 48rem;
+}
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .redesign-command-chips span,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .premium-segmented button,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .telegram-device-actions button,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .local-backup-actions button,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .local-backup-actions label {
+  text-transform: none;
+  letter-spacing: .01em;
+}
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] :where(.system-data-preview article p, .system-data-preview article small, .local-backup-row small) {
+  color: rgba(226, 236, 255, .58);
+  line-height: 1.45;
+}
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] :where(.system-data-preview-head span, .local-backup-summary span, .money-engine-metric span) {
+  color: rgba(226, 236, 255, .62);
+}
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .system-premium-row small,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .system-data-preview article span,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .local-backup-preview span,
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .cloud-restore-diff-summary span {
+  font-size: .76rem;
+}
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .system-data-preview.compact {
+  gap: 8px;
+}
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .system-data-preview.compact article {
+  padding: 10px 11px;
+}
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] code {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.finflow-app[data-design-version="v2.58-decluttered-ui"] .local-backup-import-export textarea[readonly] {
+  max-height: 120px;
+  opacity: .74;
+}
+
+@media (max-width: 430px) {
+  .finflow-app[data-design-version="v2.58-decluttered-ui"] .system-data-preview article p,
+  .finflow-app[data-design-version="v2.58-decluttered-ui"] .system-data-preview article small {
+    display: none;
+  }
+
+  .finflow-app[data-design-version="v2.58-decluttered-ui"] .redesign-command-chips {
+    gap: 6px;
+  }
+}

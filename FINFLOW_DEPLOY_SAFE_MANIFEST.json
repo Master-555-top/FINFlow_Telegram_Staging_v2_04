@@ -1,8 +1,8 @@
 {
-  "package": "FINFlow_v3_TELEGRAM_STAGING_DEPLOY_SAFE_v2_58.zip",
-  "appVersion": "0.2.58",
-  "version": "v2_58",
-  "createdAt": "2026-06-22T20:50:37.557Z",
+  "package": "FINFlow_v3_TELEGRAM_STAGING_DEPLOY_SAFE_v2_59.zip",
+  "appVersion": "0.2.59",
+  "version": "v2_59",
+  "createdAt": "2026-06-23T07:52:06.152Z",
   "createdBy": "FINFlow audited deploy-safe packaging script",
   "purpose": "Telegram Mini App private staging deploy-safe package",
   "sourceRoot": "finflow_app",
@@ -23,7 +23,7 @@
     ".vercelignore",
     ".dockerignore",
     "supabase",
-    "README_TELEGRAM_STAGING_v2.58.md"
+    "README_TELEGRAM_STAGING_v2.59.md"
   ],
   "forbiddenPathFragments": [
     "private_vault",
@@ -39,7 +39,7 @@
     ".env.development",
     "tsconfig.tsbuildinfo"
   ],
-  "fileCount": 191,
+  "fileCount": 193,
   "files": [
     {
       "path": ".dockerignore",
@@ -67,9 +67,9 @@
       "sha256": "9a0f51be252a834c243837362c44ae169c56fc7fda443d6582de96d0d1926800"
     },
     {
-      "path": "README_TELEGRAM_STAGING_v2.58.md",
+      "path": "README_TELEGRAM_STAGING_v2.59.md",
       "bytes": 1108,
-      "sha256": "a37ca41d3c8de7a50f1ad96b2aac0347742b226f630b7849d40b73037a452560"
+      "sha256": "6116d683426495ba0ef82276519771ba9dfd056b4d347ec79e857b20f50a13c6"
     },
     {
       "path": "app/api/assistant/dry-run/route.ts",
@@ -100,6 +100,11 @@
       "path": "app/api/telegram/verify/route.ts",
       "bytes": 2967,
       "sha256": "a34e33b9d25fe480be837ecca82a0ee0553bb0301f5a0278c245f5008ce5dc4f"
+    },
+    {
+      "path": "app/finflow-baseline-v2-59.css",
+      "bytes": 15746,
+      "sha256": "6abfa8b339169860ac9d6da487ac8b8aa6f9195cb3e94d619502cfd4e8328c99"
     },
     {
       "path": "app/finflow-declutter-v2-58.css",
@@ -138,8 +143,8 @@
     },
     {
       "path": "app/layout.tsx",
-      "bytes": 1186,
-      "sha256": "1daf2fda0255212b0d8127c3b3147cc4945601c20300e24e3bb0d43c7044e6cd"
+      "bytes": 1227,
+      "sha256": "02c67563f6d14a8f52a6be1558ef27298a6af12432bfefa4819a67019c29260a"
     },
     {
       "path": "app/page.tsx",
@@ -159,12 +164,12 @@
     {
       "path": "package-lock.json",
       "bytes": 35859,
-      "sha256": "dcca1fc0b93b65a0cc176fd61f321b0fd3362fb76d86a719eb22c67995ebc287"
+      "sha256": "65bf2a333c620775e3f4d41ad0750dd9ea29ce27f17c102060e6eef669647cac"
     },
     {
       "path": "package.json",
       "bytes": 1008,
-      "sha256": "a8b09746fa781f530725cf70f8052a97159e34e5985670be13fbd79f3f5154db"
+      "sha256": "3d49d8c06b17cd4195f951b70408610d43cc17ba4cb07ff79ef52e9e320ec1c7"
     },
     {
       "path": "scripts/build-next.mjs",
@@ -208,8 +213,8 @@
     },
     {
       "path": "src/components/dashboard/DashboardShell.tsx",
-      "bytes": 23379,
-      "sha256": "b8af8b8e21ee894c4bc66a18b8213a8207e730f0f843005fe136487e571bfb09"
+      "bytes": 22051,
+      "sha256": "8c02b455d8711c2f39d486bbfe75fdc2c1c940296bbbb63ace502ed69c26dcd5"
     },
     {
       "path": "src/components/dashboard/SystemCheckGuidePanel.tsx",
@@ -338,8 +343,8 @@
     },
     {
       "path": "src/components/project/EcosystemReadinessBoard.tsx",
-      "bytes": 2570,
-      "sha256": "02f624d7d055a1e71ff6d60bd3366cdc1b2994c3dd293e44a1497846522e2bd6"
+      "bytes": 2564,
+      "sha256": "2bf1a519350ac24be52619d6b774029c7c178822046056034633f7ff16573a59"
     },
     {
       "path": "src/components/project/FinalLocalMvpSmokePanel.tsx",
@@ -754,7 +759,7 @@
     {
       "path": "src/lib/project/ecosystemReadinessAudit.ts",
       "bytes": 2842,
-      "sha256": "fe9aeb8ff076540484e9075cb552347a02aee193b92db5ddc2c38de5a994bb60"
+      "sha256": "d6d695f8b10327bd8b3825b4924fe42a874cd43c06c43e8ee975bda9592bb766"
     },
     {
       "path": "src/lib/project/finalLocalMvpSmoke.ts",
@@ -778,8 +783,8 @@
     },
     {
       "path": "src/lib/project/miniAppDeliveryPlan.ts",
-      "bytes": 15730,
-      "sha256": "52a1b560e97672d2ad00e18d513f92bb2f279b883a2b7565dae29b0c2828165f"
+      "bytes": 16025,
+      "sha256": "24c7e45ba584bf64858fe8d2e3c3e1acf6156eb4e6f4973d265f2ae5f1264d08"
     },
     {
       "path": "src/lib/project/projectSelfCheck.ts",
@@ -937,9 +942,14 @@
       "sha256": "196df082f47312459d018fc889259bbacac1384919ba69d4e8aced330265d9c1"
     },
     {
+      "path": "tests/baseline-design-alignment.test.mjs",
+      "bytes": 2262,
+      "sha256": "4fe7d20aa3c5946e5c4edc83a27914fe224fadab0b3db627b2a9715284a9d615"
+    },
+    {
       "path": "tests/deep-declutter-ui.test.mjs",
-      "bytes": 2598,
-      "sha256": "dcaa8c4eb237bf48d6bcd61a4276a61357b2f2c139981711423c9a33b5d79037"
+      "bytes": 2662,
+      "sha256": "4ed1d3e78d1e74005a9ee085ef3969267723adf8cf0a45216e1d03246f3e4c86"
     },
     {
       "path": "tests/final-local-mvp-smoke.test.mjs",
@@ -948,18 +958,18 @@
     },
     {
       "path": "tests/full-redesign-system.test.mjs",
-      "bytes": 2022,
-      "sha256": "39f3b067a68caf4f57eac95522f2271f2683334df3d3fb618c21d99c6655bb92"
+      "bytes": 2086,
+      "sha256": "984bc116134e8a7e1157e525eed8f14c4a7c3e5937a716a2dc8d1ead9685e0c3"
     },
     {
       "path": "tests/global-redesign-acceptance.test.mjs",
       "bytes": 2539,
-      "sha256": "f2b1558aedce2af9988738af1a1daa9a2ece6ce30546a8e73edacedacc708500"
+      "sha256": "3dd414007e4b505271b24d8d175069e88e92a6c4cc9a4f4e3c411152408df00e"
     },
     {
       "path": "tests/metadata-freshness.test.mjs",
-      "bytes": 2384,
-      "sha256": "fa800a9195807eec96ac62d7c330918618379cd923fd43751973cc44b40a43c5"
+      "bytes": 2439,
+      "sha256": "32ee97b66ade94a508972eef1fd342ccfa393a7008052a04090f12862d22401a"
     },
     {
       "path": "tests/real-usage-gaps.test.mjs",
@@ -969,7 +979,7 @@
     {
       "path": "tests/release-candidate-readiness.test.mjs",
       "bytes": 2517,
-      "sha256": "575e446ced59b11de8c62c82f3e4ad2adfdf10bb334dddb096a3a71a502580fc"
+      "sha256": "60e0db846d3cf8374049a4f4bb58af9621a7109ec2530a4d3f0e604905ba7e98"
     },
     {
       "path": "tests/security-regression.test.mjs",
@@ -983,8 +993,8 @@
     },
     {
       "path": "tests/ux-copy-cleanup.test.mjs",
-      "bytes": 1937,
-      "sha256": "cbba8231d1ded1d04c8732dc6f7b5092f74643380633b64bc8dea7f71725422d"
+      "bytes": 2001,
+      "sha256": "c81b575bb8e490d683185234ae1d346358f66f57ad2ef1e65e79eb0c295fa49c"
     },
     {
       "path": "tsconfig.json",

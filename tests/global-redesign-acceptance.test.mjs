@@ -34,7 +34,7 @@ test('global redesign acceptance is wired in System QA without adding a global H
 });
 
 test('mini app plan stays current after v2.56 full redesign pass', () => {
-  assert.ok(plan.includes('mini_app_delivery_plan_v2_58'));
+  assert.ok(plan.includes('mini_app_delivery_plan_v2_59'));
   assert.ok(plan.includes('Global redesign contract v2.51'));
   assert.ok(plan.includes('Senior audit date/backup/API hardening sync v2.52'));
   assert.ok(plan.includes('metadata freshness pass v2.55') && plan.includes('Full system redesign v2.56') && plan.includes('Clean UX copy pass v2.57'));

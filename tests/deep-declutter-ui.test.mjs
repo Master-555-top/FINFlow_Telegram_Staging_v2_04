@@ -15,7 +15,8 @@ test('v2.58 declutter layer is active after redesign and clean copy', () => {
   assert.ok(layout.includes("./finflow-redesign-v2-56.css"));
   assert.ok(layout.includes("./finflow-ux-copy-v2-57.css"));
   assert.ok(layout.includes("./finflow-declutter-v2-58.css"));
-  assert.ok(layout.includes('data-design-version="v2.58-decluttered-ui"'));
+  assert.ok(layout.includes("./finflow-baseline-v2-59.css"));
+  assert.ok(layout.includes('data-design-version="v2.59-baseline-aligned"'));
   assert.ok(css.includes('FINFlow v2.58'));
 });
 

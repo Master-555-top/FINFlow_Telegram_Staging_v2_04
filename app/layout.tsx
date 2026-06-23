@@ -7,6 +7,7 @@ import './finflow-redesign-v2-51.css';
 import './finflow-redesign-v2-56.css';
 import './finflow-ux-copy-v2-57.css';
 import './finflow-declutter-v2-58.css';
+import './finflow-baseline-v2-59.css';
 
 export const metadata: Metadata = {
   title: 'FinFlow',
@@ -34,7 +35,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ru">
-      <body className="finflow-app" data-design-version="v2.58-decluttered-ui">
+      <body className="finflow-app" data-design-version="v2.59-baseline-aligned">
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
         {children}
       </body>

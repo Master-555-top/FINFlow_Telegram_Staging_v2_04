@@ -105,40 +105,40 @@ const NAV_TABS: { id: NavTabId; icon: IconName; label: string }[] = [
 
 const COMMAND_CENTER_META: Record<Exclude<NavTabId, 'system'>, TabCommandMeta> = {
   day: {
-    eyebrow: 'Главное',
-    title: 'Сегодняшний день',
-    description: 'Сегодняшние деньги, работа, сон и решения — в одном месте.',
-    chips: ['день', 'план', 'сохранение']
+    eyebrow: '',
+    title: 'День',
+    description: '',
+    chips: []
   },
   money: {
-    eyebrow: 'Финансы',
-    title: 'Деньги под контролем',
-    description: 'Баланс, расходы, доходы и обязательства — коротко и понятно.',
-    chips: ['баланс', 'обзор', 'шаблоны']
+    eyebrow: '',
+    title: 'Деньги',
+    description: '',
+    chips: []
   },
   work: {
-    eyebrow: 'Работа',
-    title: 'Рабочий режим',
-    description: 'Заказы, смена, бензин, пробег и машина — отдельно от личных трат.',
-    chips: ['заказы', 'топливо', 'смена']
+    eyebrow: '',
+    title: 'Работа',
+    description: '',
+    chips: []
   },
   funds: {
-    eyebrow: 'Цели',
-    title: 'Фонды и обязательства',
-    description: 'Подушка, ремонт, обязательства и покупки — по понятным целям.',
-    chips: ['подушка', 'ремонт', 'обязательства']
+    eyebrow: '',
+    title: 'Фонды',
+    description: '',
+    chips: []
   },
   sleep: {
-    eyebrow: 'Режим',
-    title: 'Сон и режим',
-    description: 'Сон, история и ручное редактирование без лишних экранов.',
-    chips: ['обзор', 'история', 'редактор']
+    eyebrow: '',
+    title: 'Сон',
+    description: '',
+    chips: []
   },
   ai: {
-    eyebrow: 'Помощник',
-    title: 'Локальный помощник',
-    description: 'Советы по дню, деньгам, работе и рискам на основе твоих данных.',
-    chips: ['совет', 'контекст', 'план']
+    eyebrow: '',
+    title: 'AI',
+    description: '',
+    chips: []
   }
 };
 
@@ -186,8 +186,8 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
   {
     id: 'cloud',
     icon: 'cloud',
-    title: 'Облако',
-    shortTitle: 'Облако',
+    title: 'Cloud',
+    shortTitle: 'Cloud',
     accent: 'blue',
     subsections: [
       { id: 'cloud_staging', label: 'Проверка' },
@@ -199,8 +199,8 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
   {
     id: 'backup',
     icon: 'backup',
-    title: 'Копии',
-    shortTitle: 'Копии',
+    title: 'Backup',
+    shortTitle: 'Backup',
     accent: 'magenta',
     subsections: [
       { id: 'backup_local', label: 'Копии' }
@@ -209,8 +209,8 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
   {
     id: 'qa',
     icon: 'qa',
-    title: 'Проверка',
-    shortTitle: 'Проверка',
+    title: 'QA',
+    shortTitle: 'QA',
     accent: 'green',
     subsections: [
       { id: 'qa_guide', label: 'План' },
@@ -226,8 +226,8 @@ const SYSTEM_SECTIONS: SystemSectionMeta[] = [
   {
     id: 'dev',
     icon: 'dev',
-    title: 'Журнал',
-    shortTitle: 'Журнал',
+    title: 'Dev',
+    shortTitle: 'Dev',
     accent: 'blue',
     subsections: [
       { id: 'dev_logs', label: 'Журнал' }
@@ -308,12 +308,14 @@ function SectionCommandCenter(props: { activeTab: Exclude<NavTabId, 'system'>; s
   return (
     <section className={`redesign-command-center redesign-command-center--${props.activeTab}`}>
       <div className="redesign-command-main">
-        <div className="redesign-command-kicker">{meta.eyebrow}</div>
+        {meta.eyebrow ? <div className="redesign-command-kicker">{meta.eyebrow}</div> : null}
         <h1>{meta.title}</h1>
-        <p>{meta.description}</p>
-        <div className="redesign-command-chips">
-          {meta.chips.map(chip => <span key={chip}>{chip}</span>)}
-        </div>
+        {meta.description ? <p>{meta.description}</p> : null}
+        {meta.chips.length ? (
+          <div className="redesign-command-chips">
+            {meta.chips.map(chip => <span key={chip}>{chip}</span>)}
+          </div>
+        ) : null}
       </div>
       <div className="redesign-command-side" aria-label="Состояние приложения">
         <div className="redesign-status-row">
@@ -409,7 +411,7 @@ export function DashboardShell() {
           <>
             <NetCalculationPanel dayInput={liveDayInput} />
             <DailyQuickInputPanel view="money" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Деньги" subtitle="Доходы, расходы, обязательства и шаблоны без лишних технических деталей." sections={['records', 'bank', 'templates']} />
+            <SectionHistoryPanel title="Деньги" subtitle="Доходы, расходы и обязательства." sections={['records', 'bank', 'templates']} />
             <ImportReviewQueuePanel />
           </>
         )}
@@ -417,20 +419,20 @@ export function DashboardShell() {
         {activeTab === 'work' && (
           <>
             <DailyQuickInputPanel view="work" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Работа" subtitle="Смены, заказы, топливо и пробег по этому разделу." sections={['records', 'fuel']} />
+            <SectionHistoryPanel title="Работа" subtitle="Смены, заказы, топливо." sections={['records', 'fuel']} />
           </>
         )}
         {activeTab === 'funds' && (
           <>
             <DailyQuickInputPanel view="funds" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Фонды" subtitle="Фонды и обязательства связаны с сегодняшним днём." sections={['funds']} />
+            <SectionHistoryPanel title="Фонды" subtitle="Цели и обязательства." sections={['funds']} />
           </>
         )}
         {activeTab === 'sleep' && <SleepDashboard dayInput={liveDayInput} />}
         {activeTab === 'ai' && (
           <>
             <DailyQuickInputPanel view="ai" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="AI контекст" subtitle="Помощник смотрит на день, деньги, работу и сон." sections={['day', 'sleep', 'records']} />
+            <SectionHistoryPanel title="AI контекст" subtitle="Советы по дню и деньгам." sections={['day', 'sleep', 'records']} />
           </>
         )}
 
@@ -440,7 +442,7 @@ export function DashboardShell() {
               <>
                 <div className="premium-screen-head">
                   <h1>Система</h1>
-                  <span>готово</span>
+                  <span>{SYSTEM_UI_VERSION}</span>
                 </div>
                 <div className="system-premium-grid" role="tablist" aria-label="Разделы системы">
                   {SYSTEM_SECTIONS.map(section => (
@@ -466,7 +468,7 @@ export function DashboardShell() {
                     ←
                   </button>
                   <h1>{activeSystemMeta.shortTitle}</h1>
-                  <span>готово</span>
+                  <span>{SYSTEM_UI_VERSION}</span>
                 </div>
 
                 {activeSystemMeta.subsections.length > 1 ? (

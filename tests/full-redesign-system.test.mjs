@@ -9,9 +9,10 @@ const model = readFileSync(new URL('../src/lib/project/globalRedesignAcceptance.
 
 test('v2.56 full redesign is active in the app shell, not only in a QA card', () => {
   assert.ok(layout.includes("./finflow-redesign-v2-56.css"));
-  assert.ok(layout.includes('data-design-version="v2.58-decluttered-ui"'));
+  assert.ok(layout.includes('data-design-version="v2.59-baseline-aligned"'));
   assert.ok(layout.includes("./finflow-ux-copy-v2-57.css"));
   assert.ok(layout.includes("./finflow-declutter-v2-58.css"));
+  assert.ok(layout.includes("./finflow-baseline-v2-59.css"));
   assert.ok(dashboard.includes('SectionCommandCenter'));
   assert.ok(dashboard.includes('redesign-command-center'));
   assert.ok(dashboard.includes('COMMAND_CENTER_META'));

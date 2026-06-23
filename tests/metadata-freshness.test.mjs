@@ -15,7 +15,7 @@ const currentUnderscoreVersion = `v${minor}_${patch}`;
 const staleNextBuildPattern = new RegExp(`nextBuild:\\s*['\"](?!${currentDotVersion}|v${minor}.${patch + 1})v${minor}\\.(?:${Array.from({ length: patch }, (_, index) => index).join('|')})\\b`);
 
 test('package and lockfile versions stay synchronized', () => {
-  assert.equal(packageJson.version, '0.2.58');
+  assert.equal(packageJson.version, '0.2.59');
   assert.equal(lockJson.version, packageJson.version);
   assert.equal(lockJson.packages[''].version, packageJson.version);
   assert.equal(packageJson.engines.node, '24.x');
@@ -25,13 +25,14 @@ test('package and lockfile versions stay synchronized', () => {
 test('delivery/readiness metadata is current and nextBuild points forward', () => {
   assert.ok(plan.includes(`mini_app_delivery_plan_${currentUnderscoreVersion}`));
   assert.ok(readiness.includes(`ecosystem_readiness_audit_${currentUnderscoreVersion}`));
-  assert.ok(plan.includes('v2.59 — Real Telegram Screenshot Acceptance')); 
+  assert.ok(plan.includes('v2.60 — Real Telegram Screenshot Acceptance'));  
   assert.equal(staleNextBuildPattern.test(plan), false);
   assert.equal(plan.includes('v2.53 — Real Telegram Screenshot Fixes'), false);
+  assert.equal(plan.includes('deploy-safe v2.58'), false);
 });
 
 test('visible readiness labels no longer show stale board versions', () => {
-  assert.ok(ecosystemPanel.includes('v2.58 • Чистый интерфейс')); 
+  assert.ok(ecosystemPanel.includes('v2.59 • Единый дизайн'));  
   assert.ok(backbonePanel.includes('Основа данных')); 
   assert.equal(ecosystemPanel.includes('v2.47 • Strong mini app progress'), false);
   assert.equal(backbonePanel.includes('v2.45 • Data Backbone + daily save QA'), false);

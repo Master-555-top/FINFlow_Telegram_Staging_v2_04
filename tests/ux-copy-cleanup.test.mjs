@@ -11,8 +11,9 @@ const readiness = readFileSync(new URL('../src/lib/project/ecosystemReadinessAud
 test('v2.57 clean UX copy layer is active after the full redesign', () => {
   assert.ok(layout.includes("./finflow-redesign-v2-56.css"));
   assert.ok(layout.includes("./finflow-ux-copy-v2-57.css"));
-  assert.ok(layout.includes('data-design-version="v2.58-decluttered-ui"'));
+  assert.ok(layout.includes('data-design-version="v2.59-baseline-aligned"'));
   assert.ok(layout.includes("./finflow-declutter-v2-58.css"));
+  assert.ok(layout.includes("./finflow-baseline-v2-59.css"));
   assert.ok(css.includes('FINFlow v2.57 — Clean UX copy pass'));
 });
 
@@ -27,8 +28,8 @@ test('top-level navigation copy avoids developer jargon', () => {
 });
 
 test('metadata points from v2.58 to the next real phone acceptance pass', () => {
-  assert.ok(plan.includes('mini_app_delivery_plan_v2_58'));
-  assert.ok(readiness.includes('ecosystem_readiness_audit_v2_58'));
-  assert.ok(plan.includes('v2.59 — Real Telegram Screenshot Acceptance'));
+  assert.ok(plan.includes('mini_app_delivery_plan_v2_59'));
+  assert.ok(readiness.includes('ecosystem_readiness_audit_v2_59'));
+  assert.ok(plan.includes('v2.60 — Real Telegram Screenshot Acceptance'));
   assert.ok(plan.includes('Deep declutter pass v2.58'));
 });

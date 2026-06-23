@@ -1,6 +1,6 @@
 import { buildMiniAppDeliveryPlan } from '@/lib/project/miniAppDeliveryPlan';
 
-export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_58' as const;
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_59' as const;
 
 export type EcosystemReadinessArea = {
   id: string;
@@ -53,8 +53,8 @@ export function buildEcosystemReadinessAudit(): EcosystemReadinessAudit {
     overallProductionPercent: delivery.overallStrongMiniAppPercent,
     previousLocalDailyUsePercent: 95,
     localDailyUsePercent: 95,
-    previousSafeLaunchPercent: 93,
-    safeLaunchPercent: 94,
+    previousSafeLaunchPercent: 94,
+    safeLaunchPercent: 95,
     areas,
     topRisks: [
       `До сильного полностью рабочего mini app осталось примерно ${delivery.remainingPercent}%. Следующий риск — считать local-first слой готовым без реального Telegram phone acceptance, 2–3 дней данных, fresh backup, финальную проверку дизайна и screenshot bug log.`,

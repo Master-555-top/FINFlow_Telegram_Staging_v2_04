@@ -1,0 +1,426 @@
+/* FINFlow v2.59 — Baseline Design Alignment
+   Source of truth: user-approved Sleep History, Sleep Weekly Chart and System Grid screenshots.
+   Goal: bring all visible sections back to that compact premium Telegram Mini App style,
+   remove verbose dashboard chrome, and keep runtime/domain logic untouched. */
+
+:root {
+  --ff59-bg: #03040d;
+  --ff59-panel: rgba(11, 12, 31, .88);
+  --ff59-card: rgba(19, 18, 45, .82);
+  --ff59-card-2: rgba(30, 27, 62, .72);
+  --ff59-line: rgba(151, 151, 209, .28);
+  --ff59-line-soft: rgba(151, 151, 209, .18);
+  --ff59-text: #fbfbff;
+  --ff59-muted: rgba(231, 227, 255, .67);
+  --ff59-dim: rgba(231, 227, 255, .42);
+  --ff59-violet: #9b73ff;
+  --ff59-violet-2: #d36bff;
+  --ff59-blue: #5ca4ff;
+  --ff59-cyan: #40dcff;
+  --ff59-green: #5df0a5;
+  --ff59-amber: #ffb24f;
+  --ff59-red: #ff5278;
+  --ff59-radius-xl: 34px;
+  --ff59-radius-lg: 27px;
+  --ff59-radius-md: 20px;
+  --ff59-shadow: 0 22px 70px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.055);
+  --ff59-tile-shadow: 0 16px 44px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.075);
+}
+
+body.finflow-app[data-design-version='v2.59-baseline-aligned'] {
+  min-height: 100dvh;
+  color: var(--ff59-text);
+  background:
+    radial-gradient(900px 420px at 52% -5%, rgba(113, 91, 255, .34), transparent 58%),
+    radial-gradient(560px 520px at -10% 67%, rgba(122, 55, 208, .28), transparent 62%),
+    radial-gradient(520px 560px at 112% 12%, rgba(34, 121, 255, .16), transparent 58%),
+    linear-gradient(180deg, #050712 0%, #07091a 42%, #03040d 100%);
+}
+
+body.finflow-app[data-design-version='v2.59-baseline-aligned']::before {
+  content: '';
+  position: fixed;
+  left: 7%;
+  right: 7%;
+  top: max(4px, env(safe-area-inset-top));
+  height: 28px;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(90deg, rgba(95, 69, 255, .72), rgba(227, 84, 255, .34), rgba(59, 151, 255, .55));
+  filter: blur(.2px);
+  opacity: .86;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .app-shell {
+  width: min(100%, 448px);
+  margin: 0 auto;
+  padding: max(18px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) calc(112px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .redesign-command-center {
+  overflow: visible;
+  display: block;
+  margin: 0 0 18px;
+  padding: 0 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .redesign-command-center::after,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .redesign-command-side,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .redesign-command-kicker,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .redesign-command-chips,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .redesign-command-main p {
+  display: none !important;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .redesign-command-main h1,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-screen-head h1 {
+  margin: 0;
+  font-size: clamp(46px, 13vw, 64px);
+  line-height: .88;
+  letter-spacing: -.09em;
+  color: var(--ff59-text);
+  text-shadow: 0 6px 22px rgba(0,0,0,.28);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-screen,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-screen {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-screen-head {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 0 22px;
+  padding: 0 2px;
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-screen-head > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 43px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(215, 221, 255, .18);
+  color: rgba(240, 237, 255, .78);
+  background: rgba(255,255,255,.075);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 10px 28px rgba(0,0,0,.28);
+  font-size: 20px;
+  font-weight: 850;
+  letter-spacing: -.035em;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-screen-head.detail {
+  justify-content: flex-start;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-screen-head.detail > span {
+  margin-left: auto;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-back-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  border: 1px solid rgba(215, 221, 255, .18);
+  color: var(--ff59-text);
+  background: rgba(255,255,255,.07);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.primary {
+  position: relative;
+  overflow: hidden;
+  grid-column: auto;
+  min-height: 124px;
+  padding: 16px 18px 14px;
+  border-radius: 28px;
+  border: 1px solid rgba(145, 149, 203, .34);
+  color: var(--ff59-text);
+  background:
+    radial-gradient(circle at 24% 0%, rgba(91, 210, 255, .20), transparent 43%),
+    radial-gradient(circle at 92% 0%, rgba(149, 111, 255, .16), transparent 48%),
+    linear-gradient(160deg, rgba(42, 49, 95, .66), rgba(14, 14, 39, .72));
+  box-shadow: var(--ff59-tile-shadow);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.primary,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.tone-cyan {
+  border-color: rgba(59, 220, 255, .52);
+  box-shadow: 0 0 0 1px rgba(59, 220, 255, .10), 0 18px 46px rgba(38, 171, 255, .18), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.tone-violet { border-color: rgba(157, 115, 255, .42); }
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.tone-blue { border-color: rgba(92, 164, 255, .42); }
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.tone-magenta { border-color: rgba(218, 90, 255, .42); }
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.tone-green { border-color: rgba(93, 240, 165, .42); }
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.tone-amber { border-color: rgba(255, 178, 79, .36); }
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile svg {
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  transform: translateX(-50%);
+  width: 58px;
+  height: 58px;
+  opacity: .98;
+  filter: drop-shadow(0 0 18px currentColor);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile b {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 16px;
+  text-align: center;
+  font-size: 28px;
+  line-height: .95;
+  letter-spacing: -.055em;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile i {
+  position: absolute;
+  top: 36px;
+  right: 28px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.14);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(.card, .premium-screen, .system-premium-window, .money-engine-panel, .quick-input-card, .sleep-card, .sleep-stat-card, .system-data-preview, .ecosystem-readiness-board, .global-backbone-panel, .cloud-sync-queue-panel, .local-apply-panel, .import-review-panel, .telegram-device-panel, .section-history-panel, .daily-save-qa-panel, .period-history-panel, .global-redesign-panel) {
+  border: 1px solid var(--ff59-line-soft) !important;
+  border-radius: var(--ff59-radius-xl) !important;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(94, 115, 255, .13), transparent 42%),
+    linear-gradient(180deg, rgba(31, 29, 65, .72), rgba(8, 10, 27, .86)) !important;
+  box-shadow: var(--ff59-shadow) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(.card, .premium-screen, .money-engine-panel, .quick-input-card, .sleep-card, .system-data-preview, .section-history-panel) {
+  margin-bottom: 16px;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(.card-description, .section-subtitle, .quick-note, .system-data-status, .system-data-preview article p, .system-data-preview article small, .local-backup-row small, .redesign-sync-card small) {
+  color: var(--ff59-muted) !important;
+  line-height: 1.35;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(.card-description, .quick-note, .system-data-preview article p, .system-data-preview article small) {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(.section-kicker, .redesign-command-kicker, .system-data-status code, code) {
+  display: none !important;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(h1, h2, h3, .card-heading, .premium-screen-head h1, .money-engine-hero b) {
+  color: var(--ff59-text);
+  letter-spacing: -.065em;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(button, input, textarea, select) {
+  font: inherit;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(button:not(.nav-btn):not(.system-premium-tile):not(.premium-back-button)) {
+  min-height: 46px;
+  border-radius: 18px !important;
+  border: 1px solid rgba(167, 167, 220, .24) !important;
+  color: var(--ff59-text) !important;
+  background: rgba(38, 35, 73, .74) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] :where(input, textarea, select) {
+  min-height: 46px;
+  border-radius: 18px !important;
+  border: 1px solid rgba(167, 167, 220, .24) !important;
+  color: var(--ff59-text) !important;
+  background: rgba(7, 9, 25, .72) !important;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-segmented,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .sleep-segmented {
+  position: sticky;
+  top: max(8px, env(safe-area-inset-top));
+  z-index: 15;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(151, 151, 209, .22) !important;
+  border-radius: 24px !important;
+  background: rgba(7, 8, 24, .78) !important;
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-segmented button.active,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .sleep-segmented button.active,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] [role='tab'][aria-selected='true'] {
+  border-color: rgba(158, 119, 255, .56) !important;
+  background: linear-gradient(180deg, rgba(128, 90, 255, .50), rgba(83, 64, 155, .38)) !important;
+  box-shadow: 0 12px 28px rgba(91, 64, 203, .30), inset 0 1px 0 rgba(255,255,255,.11) !important;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav.premium-bottom-nav {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(10px, env(safe-area-inset-bottom));
+  width: min(calc(100% - 24px), 422px);
+  padding: 9px;
+  border-radius: 32px;
+  border: 1px solid rgba(168, 150, 255, .24);
+  background:
+    radial-gradient(circle at 52% 0%, rgba(147, 91, 255, .22), transparent 56%),
+    linear-gradient(180deg, rgba(37, 22, 70, .91), rgba(11, 9, 30, .92));
+  box-shadow: 0 22px 70px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(26px) saturate(160%);
+  -webkit-backdrop-filter: blur(26px) saturate(160%);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav .nav-btn {
+  min-height: 58px;
+  border-radius: 24px;
+  color: rgba(232, 226, 255, .58);
+  background: transparent;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav .nav-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav .nav-btn span {
+  font-size: 11px;
+  letter-spacing: -.02em;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav .nav-btn.active {
+  color: var(--ff59-text);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.13), transparent 46%),
+    linear-gradient(180deg, rgba(132, 92, 255, .68), rgba(70, 55, 137, .58));
+  box-shadow: 0 12px 34px rgba(118, 82, 255, .34), inset 0 0 0 1px rgba(255,255,255,.10);
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .sleep-history-list article,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .sleep-week-chart {
+  border-color: rgba(114, 119, 204, .34) !important;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(44, 114, 255, .18), transparent 45%),
+    linear-gradient(180deg, rgba(30, 31, 75, .76), rgba(10, 11, 35, .88)) !important;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .sleep-history-list article button {
+  min-height: 50px;
+  font-size: 18px;
+  font-weight: 850;
+}
+
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .sleep-history-list article b,
+.finflow-app[data-design-version='v2.59-baseline-aligned'] .sleep-history-list article strong {
+  letter-spacing: -.05em;
+}
+
+@media (max-width: 430px) {
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .app-shell {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .redesign-command-main h1,
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-screen-head h1 {
+    font-size: clamp(44px, 13vw, 58px);
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .premium-screen-head > span {
+    min-height: 38px;
+    padding: 0 14px;
+    font-size: 17px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-grid {
+    gap: 14px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile,
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile.primary {
+    min-height: 106px;
+    border-radius: 24px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile svg {
+    width: 48px;
+    height: 48px;
+    top: 14px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile b {
+    font-size: 21px;
+    bottom: 12px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile i {
+    top: 28px;
+    right: 22px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav.premium-bottom-nav {
+    width: min(calc(100% - 20px), 422px);
+    padding: 8px;
+    border-radius: 28px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav .nav-btn {
+    min-height: 54px;
+    border-radius: 22px;
+  }
+}
+
+@media (max-width: 360px) {
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav .nav-btn span {
+    font-size: 9px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .bottom-nav .nav-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .finflow-app[data-design-version='v2.59-baseline-aligned'] .system-premium-tile b {
+    font-size: 19px;
+  }
+}

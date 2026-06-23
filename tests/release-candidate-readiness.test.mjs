@@ -32,9 +32,9 @@ test('release candidate panel is wired only inside System QA and tracks screensh
 });
 
 test('mini app delivery plan preserves RC/redesign/senior-audit history and advances to v2.56 full redesign', () => {
-  assert.ok(plan.includes('mini_app_delivery_plan_v2_59'));
+  assert.ok(plan.includes('mini_app_delivery_plan_v2_60'));
   assert.ok(plan.includes('Release Candidate gate v2.50'));
   assert.ok(plan.includes('Release Candidate gate v2.50'));
-  assert.ok(plan.includes('v2.60 — Real Telegram Screenshot Acceptance'));
+  assert.ok(plan.includes('v2.61 — Real Telegram Screenshot Acceptance'));
   assert.ok(plan.includes('senior audit regression tests v2.52'));
 });

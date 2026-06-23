@@ -1,5 +1,6 @@
 import type { DayCoreInputModel } from '@/lib/day-core/dayCoreInputModel';
 import type { NetCalculationResult } from '@/lib/day-core/netCalculationModel';
+import { buildFundPlanningSummary } from '@/lib/day-core/fundPlanningModel';
 
 export const DAILY_ALLOCATION_VERSION = 'daily_allocation_v1_37' as const;
 
@@ -94,16 +95,21 @@ function buildDesiredBuckets(input: DayCoreInputModel): Omit<DailyAllocationBuck
     reason: `Обязательство: нужно закрыть ${obligation.amountDue} ₽, накоплено ${obligation.currentSaved} ₽.`
   }));
 
+  const fundPlanning = buildFundPlanningSummary(input);
   const fundBuckets = input.funds
     .filter(fund => fund.canReceiveToday)
-    .map(fund => ({
-      id: `fund-${fund.id}`,
-      title: fund.title,
-      targetAmount: Math.max(0, Math.min(fund.targetAmount - fund.currentAmount, suggestedDailyFundAmount(fund.targetAmount, fund.priority))),
-      priority: mapInputPriority(fund.priority),
-      editableSource: 'fund' as const,
-      reason: `Фонд: цель ${fund.targetAmount} ₽, сейчас ${fund.currentAmount} ₽.`
-    }));
+    .map(fund => {
+      const plan = fundPlanning.rows.find(row => row.source === 'fund' && row.id === fund.id);
+      const planTarget = plan?.dailyNorm ?? Math.max(0, Math.min(fund.targetAmount - fund.currentAmount, suggestedDailyFundAmount(fund.targetAmount, fund.priority)));
+      return {
+        id: `fund-${fund.id}`,
+        title: fund.title,
+        targetAmount: Math.max(0, planTarget),
+        priority: mapInputPriority(fund.priority),
+        editableSource: 'fund' as const,
+        reason: plan?.formula ?? `Фонд: цель ${fund.targetAmount} ₽, сейчас ${fund.currentAmount} ₽.`
+      };
+    });
 
   const taskBuckets = input.tasks
     .filter(task => task.plannedToday && task.moneyCost > 0 && task.priority === 'critical')

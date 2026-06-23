@@ -1,5 +1,10 @@
 import { formatIsoDateShort, getDateDayKey, getDateMonthKey, getDateYear } from '@/lib/data/dateInput';
 import { formatLocalIsoDate } from '@/lib/time/localDate';
+import {
+  parseHistoricalLedgerStateRaw,
+  serializeHistoricalLedgerState,
+  type HistoricalLedgerSection
+} from '@/lib/data/privateImportBundle';
 
 export type FinflowHistoryCategory =
   | 'day'
@@ -29,6 +34,7 @@ export type FinflowHistoryEntry = {
   title: string;
   summary: string;
   amount?: number;
+  direction: 'income' | 'expense' | 'neutral';
 };
 
 type SourceMeta = {
@@ -81,6 +87,11 @@ export function getWeekKey(dateIso: string) {
 
 export function extractHistoryEntriesFromRaw(meta: SourceMeta, raw: string | null): FinflowHistoryEntry[] {
   if (!raw) return [];
+  const historicalSection = historicalSectionFromKey(meta.key);
+  if (historicalSection) {
+    const state = parseHistoricalLedgerStateRaw(historicalSection, raw);
+    return extractEntriesFromValue(meta, { records: state.records });
+  }
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
@@ -94,6 +105,7 @@ export function extractHistoryEntriesFromRaw(meta: SourceMeta, raw: string | nul
       dateIso: formatLocalIsoDate(),
       title: meta.label,
       summary: 'Неструктурированный текстовый блок',
+      direction: 'neutral'
     }];
   }
   return extractEntriesFromValue(meta, parsed);
@@ -106,6 +118,19 @@ export function filterHistoryEntries(entries: FinflowHistoryEntry[], scope: Finf
 export function filterRawValueByHistoryScope(meta: SourceMeta, raw: string | null, scope: FinflowHistoryScope) {
   if (!raw) return { changed: false, nextRaw: raw, removedCount: 0 };
   if (scope.period === 'all') return { changed: true, nextRaw: null, removedCount: extractHistoryEntriesFromRaw(meta, raw).length || 1 };
+
+  const historicalSection = historicalSectionFromKey(meta.key);
+  if (historicalSection) {
+    const state = parseHistoricalLedgerStateRaw(historicalSection, raw);
+    const records = state.records.filter(record => !isDateInHistoryScope(record.localDate, scope));
+    const removedCount = state.records.length - records.length;
+    if (!removedCount) return { changed: false, nextRaw: raw, removedCount: 0 };
+    return {
+      changed: true,
+      nextRaw: records.length ? serializeHistoricalLedgerState({ ...state, records, updatedAtIso: new Date().toISOString() }) : null,
+      removedCount
+    };
+  }
 
   let parsed: unknown;
   try {
@@ -203,6 +228,7 @@ function extractEntriesFromValue(meta: SourceMeta, parsed: unknown): FinflowHist
 
 function makeEntry(meta: SourceMeta, value: unknown, index: number, collectionKey?: string): FinflowHistoryEntry | null {
   if (!isObject(value)) return null;
+  if (meta.key.includes('historical') && value.status !== 'approved') return null;
   const dateIso = detectDateIso(value);
   if (!dateIso) return null;
   const id = typeof value.id === 'string' ? value.id : `${meta.key}:${collectionKey ?? 'item'}:${index}`;
@@ -212,6 +238,7 @@ function makeEntry(meta: SourceMeta, value: unknown, index: number, collectionKe
     : typeof value.gross === 'number'
       ? value.gross
       : undefined;
+  const direction = detectDirection(value);
   return {
     id: `${meta.key}:${id}`,
     sourceKey: meta.key,
@@ -220,8 +247,9 @@ function makeEntry(meta: SourceMeta, value: unknown, index: number, collectionKe
     category,
     dateIso,
     title: detectTitle(meta, value, category),
-    summary: detectSummary(value, category, amount),
-    amount
+    summary: detectSummary(value, category, amount, direction),
+    amount,
+    direction
   };
 }
 
@@ -240,6 +268,7 @@ function detectCategory(meta: SourceMeta, value: MutableJson, collectionKey?: st
   if (meta.key.includes('Rollover')) return 'rollover';
   if (meta.section === 'templates') return 'template';
   if (meta.section === 'bank') return 'bank';
+  if (meta.key.includes('historical')) return 'record';
   if (typeof value.type === 'string') return 'record';
   if (collectionKey === 'tasks') return 'day';
   return meta.section === 'records' ? 'record' : 'day';
@@ -255,17 +284,34 @@ function detectTitle(meta: SourceMeta, value: MutableJson, category: FinflowHist
   return meta.label;
 }
 
-function detectSummary(value: MutableJson, category: FinflowHistoryCategory, amount?: number) {
+function detectSummary(value: MutableJson, category: FinflowHistoryCategory, amount: number | undefined, direction: FinflowHistoryEntry['direction']) {
   if (category === 'sleep') {
     const slept = typeof value.sleptAt === 'string' ? value.sleptAt : '—';
     const woke = typeof value.wokeAt === 'string' ? value.wokeAt : '—';
     const minutes = typeof value.minutes === 'number' ? ` · ${Math.floor(value.minutes / 60)}ч ${value.minutes % 60}м` : '';
     return `уснул ${slept}, встал ${woke}${minutes}`;
   }
-  if (amount !== undefined) return `${amount.toLocaleString('ru-RU')} ₽`;
+  if (amount !== undefined) {
+    const sign = direction === 'income' ? '+' : direction === 'expense' ? '−' : '';
+    return `${sign}${amount.toLocaleString('ru-RU')} ₽`;
+  }
   if (typeof value.note === 'string' && value.note.trim()) return value.note;
   if (category === 'snapshot') return 'Сохранённое состояние дня';
   return 'Запись FINFlow';
+}
+
+function detectDirection(value: MutableJson): FinflowHistoryEntry['direction'] {
+  const kind = typeof value.entityKind === 'string' ? value.entityKind : typeof value.type === 'string' ? value.type : '';
+  if (kind === 'income' || kind === 'taxi_order') return 'income';
+  if (['expense', 'fuel', 'drivee_topup', 'fund', 'obligation'].includes(kind)) return 'expense';
+  return 'neutral';
+}
+
+function historicalSectionFromKey(key: string): HistoricalLedgerSection | null {
+  if (key.includes('historicalMoneyLedger')) return 'money';
+  if (key.includes('historicalWorkLedger')) return 'work';
+  if (key.includes('historicalFundsLedger')) return 'funds';
+  return null;
 }
 
 function removeScopedEntriesFromValue(parsed: unknown, scope: FinflowHistoryScope): { changed: boolean; value: unknown; removedCount: number } {

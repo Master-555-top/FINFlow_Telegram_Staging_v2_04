@@ -1,4 +1,4 @@
-export const MINI_APP_DELIVERY_PLAN_VERSION = 'mini_app_delivery_plan_v2_59' as const;
+export const MINI_APP_DELIVERY_PLAN_VERSION = 'mini_app_delivery_plan_v2_60' as const;
 
 export type MiniAppDeliveryStatus = 'ready' | 'usable_local' | 'in_progress' | 'blocked' | 'planned';
 
@@ -33,8 +33,8 @@ const areas: MiniAppDeliveryArea[] = [
     previousPercent: 98,
     status: 'usable_local',
     weight: 10,
-    summary: 'Основная оболочка и навигация уже есть; v2.51 добавил разрешённый пользователем global redesign contract; v2.52 синхронизировал senior audit bugfixes; v2.55 привёл package metadata и readiness labels к единой актуальной версии; v2.56 сделал полный редизайн, а v2.57 убрал лишний технический текст из основных экранов, а v2.58 добил видимый мусор в System/Cloud/Backup/Automation/RC; v2.59 вернул весь интерфейс к пользовательскому baseline: крупные заголовки, стеклянная сетка, компактные карточки, без лишнего текста.',
-    done: ['7 главных вкладок', 'Telegram viewport hook', 'текущий dark/glass визуал', 'Sleep 3-tab MVP', 'Real Daily Use card v2.44', 'Daily Save QA v2.45', 'Telegram/Supabase Preflight v2.46', '7-day Real Data Week Test v2.47', 'Real Usage Gaps pass v2.48', 'Final Local MVP Smoke v2.49', 'visual baseline lock v2.49', 'Release Candidate gate v2.50', 'screenshot bug log v2.50', 'Global redesign contract v2.51', 'Global redesign acceptance panel v2.51', 'Senior audit date/backup/API hardening sync v2.52', 'metadata freshness pass v2.55', 'Full system redesign v2.56', 'Clean UX copy pass v2.57', 'Deep declutter pass v2.58', 'Baseline design alignment v2.59'],
+    summary: 'Основная оболочка и навигация уже есть; v2.51 добавил разрешённый пользователем global redesign contract; v2.52 синхронизировал senior audit bugfixes; v2.55 привёл package metadata и readiness labels к единой актуальной версии; v2.56 сделал полный редизайн, а v2.57 убрал лишний технический текст из основных экранов, а v2.58 добил видимый мусор в System/Cloud/Backup/Automation/RC; v2.60 вернул весь интерфейс к пользовательскому baseline: крупные заголовки, стеклянная сетка, компактные карточки, без лишнего текста.',
+    done: ['7 главных вкладок', 'Telegram viewport hook', 'текущий dark/glass визуал', 'Sleep 3-tab MVP', 'Real Daily Use card v2.44', 'Daily Save QA v2.45', 'Telegram/Supabase Preflight v2.46', '7-day Real Data Week Test v2.47', 'Real Usage Gaps pass v2.48', 'Final Local MVP Smoke v2.49', 'visual baseline lock v2.49', 'Release Candidate gate v2.50', 'screenshot bug log v2.50', 'Global redesign contract v2.51', 'Global redesign acceptance panel v2.51', 'Senior audit date/backup/API hardening sync v2.52', 'metadata freshness pass v2.55', 'Full system redesign v2.56', 'Clean UX copy pass v2.57', 'Deep declutter pass v2.58', 'Baseline design alignment v2.60'],
     remaining: ['реальный Telegram screenshot acceptance уже после baseline-aligned редизайна', 'точечные багфиксы по скриншотам без переписывания логики']
   },
   {
@@ -151,15 +151,15 @@ export function buildMiniAppDeliveryPlan(): MiniAppDeliveryPlan {
     overallStrongMiniAppPercent,
     remainingPercent: 100 - overallStrongMiniAppPercent,
     realisticBuildsLeft: 'примерно 1 реальный phone acceptance pass до сильного local-first MVP: runtime очищен, metadata синхронизированы, baseline-дизайн встроен по трём эталонным скриншотам, технический текст и видимый мусор убраны, осталось проверить на Telegram/Vercel и закрыть фактические проблемы по скриншотам',
-    nextBuild: 'v2.60 — Real Telegram Screenshot Acceptance: загрузить deploy-safe v2.59 в private GitHub/Vercel staging, пройти Проверка Telegram → Неделя → Проблемы → Финал → Дизайн → Копия и закрыть только реальные UI/UX bugs',
+    nextBuild: 'v2.61 — Real Telegram Screenshot Acceptance: загрузить deploy-safe v2.60 в private GitHub/Vercel staging, пройти Проверка Telegram → Неделя → Проблемы → Финал → Дизайн → Копия и закрыть только реальные UI/UX bugs',
     areas,
     criticalPath: [
-      'загрузить deploy-safe v2.59 в private GitHub/Vercel staging и пройти Telegram phone acceptance',
+      'загрузить deploy-safe v2.60 в private GitHub/Vercel staging и пройти Telegram phone acceptance',
       'проверить CSV/JSON mapper на реальных исторических данных и добавить ручную правку mapping где нужно',
       'проверить историю Деньги/Работа по периодам, Daily Save QA и backup на реальных днях',
       'довести Supabase staging до real readonly/load/conflict теста из Telegram, writes включать только после backup/RLS/conflict',
       'прогнать n8n dry-run на реальных локальных агрегатах и не включать внешние calls до private staging',
-      'закрывать только реальные screenshot/UI bugs, не ломая locked baseline, v2.56 full redesign, v2.58 deep-declutter pass и v2.59 baseline alignment'
+      'закрывать только реальные screenshot/UI bugs, не ломая locked baseline, v2.56 full redesign, v2.58 deep-declutter pass и v2.60 baseline alignment'
     ],
     nonGoalsNow: [
       'не добавлять новые большие функции после cleanup-текста до real Telegram screenshot acceptance',

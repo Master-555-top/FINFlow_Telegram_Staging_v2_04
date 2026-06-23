@@ -19,6 +19,7 @@ import { useTelegramViewportCss } from '@/lib/telegram/useTelegramViewportCss';
 import { DataResetPanel } from '@/components/system/DataResetPanel';
 import { DataStoragePanel } from '@/components/system/DataStoragePanel';
 import { SectionHistoryPanel } from '@/components/history/SectionHistoryPanel';
+import { HistoricalLedgerAnalyticsPanel } from '@/components/history/HistoricalLedgerAnalyticsPanel';
 import { EcosystemReadinessBoard } from '@/components/project/EcosystemReadinessBoard';
 import { GlobalDataBackbonePanel } from '@/components/system/GlobalDataBackbonePanel';
 import { TemplatesEnginePanel } from '@/components/templates/TemplatesEnginePanel';
@@ -27,6 +28,7 @@ import { CloudSyncQueuePanel } from '@/components/cloud/CloudSyncQueuePanel';
 import { N8nAutomationPanel } from '@/components/automation/N8nAutomationPanel';
 import { LocalApplyCenterPanel } from '@/components/apply/LocalApplyCenterPanel';
 import { CsvJsonImportMapperPanel } from '@/components/import-review/CsvJsonImportMapperPanel';
+import { PrivateImportCenterPanel } from '@/components/import-review/PrivateImportCenterPanel';
 import { RealDataWeekTestPanel } from '@/components/project/RealDataWeekTestPanel';
 import { RealUsageGapsPanel } from '@/components/project/RealUsageGapsPanel';
 import { FinalLocalMvpSmokePanel } from '@/components/project/FinalLocalMvpSmokePanel';
@@ -377,7 +379,7 @@ export function DashboardShell() {
     if (subsectionId === 'data_backbone') return <GlobalDataBackbonePanel />;
     if (subsectionId === 'data_templates') return <TemplatesEnginePanel dayInput={liveDayInput} records={systemTemplateRecords} customTemplates={[]} />;
     if (subsectionId === 'data_apply') return <LocalApplyCenterPanel dayInput={liveDayInput} records={systemTemplateRecords} customTemplates={[]} />;
-    if (subsectionId === 'data_mapper') return <CsvJsonImportMapperPanel />;
+    if (subsectionId === 'data_mapper') return <><PrivateImportCenterPanel /><CsvJsonImportMapperPanel /></>;
     if (subsectionId === 'cloud_staging') return <SupabaseStagingPanel />;
     if (subsectionId === 'cloud_center') return <CloudSyncQueuePanel />;
     if (subsectionId === 'cloud_n8n') return <N8nAutomationPanel />;
@@ -411,7 +413,8 @@ export function DashboardShell() {
           <>
             <NetCalculationPanel dayInput={liveDayInput} />
             <DailyQuickInputPanel view="money" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Деньги" subtitle="Доходы, расходы и обязательства." sections={['records', 'bank', 'templates']} />
+            <HistoricalLedgerAnalyticsPanel section="money" />
+            <SectionHistoryPanel title="Деньги" subtitle="Доходы, расходы и история." sections={['records', 'bank', 'templates', 'money']} />
             <ImportReviewQueuePanel />
           </>
         )}
@@ -419,13 +422,15 @@ export function DashboardShell() {
         {activeTab === 'work' && (
           <>
             <DailyQuickInputPanel view="work" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Работа" subtitle="Смены, заказы, топливо." sections={['records', 'fuel']} />
+            <HistoricalLedgerAnalyticsPanel section="work" />
+            <SectionHistoryPanel title="Работа" subtitle="Смены, заказы, топливо." sections={['records', 'fuel', 'work']} />
           </>
         )}
         {activeTab === 'funds' && (
           <>
             <DailyQuickInputPanel view="funds" onDayInputChange={setLiveDayInput} />
-            <SectionHistoryPanel title="Фонды" subtitle="Цели и обязательства." sections={['funds']} />
+            <HistoricalLedgerAnalyticsPanel section="funds" />
+            <SectionHistoryPanel title="Фонды" subtitle="Цели, пополнения и обязательства." sections={['funds']} />
           </>
         )}
         {activeTab === 'sleep' && <SleepDashboard dayInput={liveDayInput} />}

@@ -35,7 +35,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ru">
-      <body className="finflow-app" data-design-version="v2.59-baseline-aligned">
+      <body className="finflow-app" data-design-version="v2.60-template-first-sync-baseline">
         <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive" />
         {children}
       </body>

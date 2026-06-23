@@ -1,6 +1,6 @@
 import { buildMiniAppDeliveryPlan } from '@/lib/project/miniAppDeliveryPlan';
 
-export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_59' as const;
+export const ECOSYSTEM_READINESS_AUDIT_VERSION = 'ecosystem_readiness_audit_v2_60' as const;
 
 export type EcosystemReadinessArea = {
   id: string;

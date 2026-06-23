@@ -43,6 +43,10 @@ export type DayCoreFundInput = {
   deadline?: string;
   priority: 'critical' | 'high' | 'normal' | 'flexible';
   canReceiveToday: boolean;
+  fundType?: 'revolving' | 'savings' | 'flexible';
+  group?: 'required' | 'savings';
+  sortOrder?: number;
+  note?: string;
 };
 
 export type DayCoreTaskInput = {
@@ -113,10 +117,15 @@ export const dayCoreInputMock: DayCoreInputModel = {
     { id: 'bankruptcy', title: 'Банкротство / банк', amountDue: 15000, dueDayOfMonth: 15, currentSaved: 0, priority: 'critical', source: 'system_default' }
   ],
   funds: [
-    { id: 'working-fund', title: 'Рабочий фонд завтра', targetAmount: 3000, currentAmount: 0, priority: 'critical', canReceiveToday: true },
-    { id: 'meetings', title: 'Встречи с девушкой', targetAmount: 3000, currentAmount: 800, priority: 'high', canReceiveToday: true },
-    { id: 'car-repair', title: 'Ремонт ходовки / подвески', targetAmount: 50000, currentAmount: 0, priority: 'high', canReceiveToday: true },
-    { id: 'safety-cushion', title: 'Подушка безопасности', targetAmount: 300000, currentAmount: 0, priority: 'normal', canReceiveToday: false }
+    { id: 'working-fund', title: '🔰 Рабочий', targetAmount: 2500, currentAmount: 0, priority: 'critical', canReceiveToday: true, fundType: 'revolving', group: 'required', sortOrder: 10, note: 'Бензин, комиссия и оборотка. Поддерживать стабильный остаток.' },
+    { id: 'car-repair', title: '🚗 Ремонт машины / рабочий актив', targetAmount: 50000, currentAmount: 0, priority: 'high', canReceiveToday: true, fundType: 'savings', group: 'required', sortOrder: 25 },
+    { id: 'meetings', title: '❤️ Встречи', targetAmount: 3000, currentAmount: 800, priority: 'high', canReceiveToday: true, fundType: 'revolving', group: 'required', sortOrder: 30 },
+    { id: 'personal', title: '👤 Личное', targetAmount: 0, currentAmount: 0, priority: 'high', canReceiveToday: true, fundType: 'flexible', group: 'required', sortOrder: 40 },
+    { id: 'base-business', title: '🎂 База', targetAmount: 10000, currentAmount: 0, priority: 'normal', canReceiveToday: true, fundType: 'revolving', group: 'required', sortOrder: 50 },
+    { id: 'ulyana-birthday', title: '🎁 ДР Ульяны', targetAmount: 50000, currentAmount: 0, priority: 'flexible', canReceiveToday: false, fundType: 'savings', group: 'savings', sortOrder: 70 },
+    { id: 'flight-move', title: '✈️ Полёт / переезд', targetAmount: 300000, currentAmount: 0, priority: 'flexible', canReceiveToday: false, fundType: 'savings', group: 'savings', sortOrder: 80 },
+    { id: 'safety-cushion', title: '🛟 Подушка', targetAmount: 50000, currentAmount: 0, priority: 'flexible', canReceiveToday: false, fundType: 'savings', group: 'savings', sortOrder: 90 },
+    { id: 'ulyana-gift', title: '🎁 Подарок Ульяне', targetAmount: 0, currentAmount: 0, priority: 'flexible', canReceiveToday: false, fundType: 'flexible', group: 'savings', sortOrder: 100 }
   ],
   tasks: [
     { id: 'fuel', title: 'Заправка', type: 'work', plannedToday: true, timeCostMinutes: 20, moneyCost: 2000, priority: 'critical' },

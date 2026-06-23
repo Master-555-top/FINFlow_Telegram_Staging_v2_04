@@ -8,9 +8,9 @@ const css = readFileSync(new URL('../app/finflow-baseline-v2-59.css', import.met
 const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 
 test('v2.59 baseline design layer is active', () => {
-  assert.equal(packageJson.version, '0.2.59');
+  assert.equal(packageJson.version, '0.2.60');
   assert.ok(layout.includes("import './finflow-baseline-v2-59.css';"));
-  assert.ok(layout.includes('data-design-version="v2.59-baseline-aligned"'));
+  assert.ok(layout.includes('data-design-version="v2.60-template-first-sync-baseline"'));
   assert.ok(css.includes('Baseline Design Alignment'));
 });
 
